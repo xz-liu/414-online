@@ -37,6 +37,10 @@ function getPlayer(name){
     return allPlayers[name];
 }
 
+function getRandomPasscode(){
+    return (Math.floor(Math.random()*899999)+100000).toString();
+}
+
 
 
 module.exports = {

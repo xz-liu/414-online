@@ -9,7 +9,7 @@ var status = {
     WIN: 3,
 };
 const
-    DTYPE_ENTERROOM = 'room',//{'passcode':passCode}
+    DTYPE_ENTERROOM = 'room',//
     DTYPE_BEGIN = 'begin',//no data 
     DTYPE_DRAWCARDS = 'draw',//{'cards':[card1,card2,card3...]}
     DTYPE_PASS = 'pass',//no data
@@ -17,6 +17,7 @@ const
     DTYPE_CHA = 'cha',//{'cards':[card1,card2]}
     DTYPE_GO = 'go';//{'card':card}
 const
+    STYPE_CREATESUCCESS='create',//{'passcode':passCode}
     STYPE_ENTERSUCCESS='enterSucc',//{'names':[names...]}
     STYPE_ENTERFAILED='enterFail',//{'reason':reason}
     STYPE_WINS = 'wins',//{'name':name} to all players
@@ -98,5 +99,6 @@ class Player {
 }
 
 module.exports = {
-    status, Player
+    status:status,
+    Player:Player
 };
