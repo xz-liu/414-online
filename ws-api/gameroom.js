@@ -11,8 +11,14 @@ class GameRoom{
         this.players.push(player);
         return true;
     }
-    beginGame()
+    beginGame(player){
+        if(player===players[0].name){
+            //game begins
+            
+        }
+        return false;
+    }
 }
 module.exports={
-    GameRoom
+    GameRoom:GameRoom
 };

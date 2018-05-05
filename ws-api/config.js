@@ -22,6 +22,23 @@ var allRooms = [];
 var allPlayers = [];
 
 
+function addPlayer(name,player){
+    allPlayers[name]=player;
+}
+function deletePlayer(name){
+    var ind=allPlayers.indexOf(name);
+    if(ind>=0)allPlayers.splice(ind,1);
+    return ind>=0;
+}
+function playerExists(name){
+    return allPlayers[name]!=undefined;
+}
+function getPlayer(name){
+    return allPlayers[name];
+}
+
+
+
 module.exports = {
     port: webSocketsServerPort,
     webSocketServer: _webSocketServer,
@@ -32,5 +49,9 @@ module.exports = {
         return ++idNow;
     },
     allPlayers: allPlayers,
-    allRooms: allRooms
+    allRooms: allRooms,
+    addPlayer:addPlayer,
+    deletePlayer:deletePlayer,
+    getPlayer:getPlayer,
+    playerExists:playerExists
 };
