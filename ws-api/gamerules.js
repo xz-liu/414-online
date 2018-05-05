@@ -8,7 +8,9 @@ var cardNBIndex = [];
     }
 })();
 
-var NBT_SINGLE = 'single',
+
+
+const NBT_SINGLE = 'single',
     NBT_PAIR = 'pair',
     NBT_TRIAD = 'triad',
     NBT_TRIAD_W = 'triadW',
@@ -16,15 +18,23 @@ var NBT_SINGLE = 'single',
     NBT_QUAD = 'quad',
     NBT_JOKER = 'joker',
     NBT_ROCKET = 'rocket',
-    NBT_INVALID = 'invalid';
-var NBC_LESS = 0,
+    NBT_INVALID = 'invalid',
+    NBT_HUI = 'hui',
+    NBT_CHA = 'cha',
+    NBT_GO = 'go';
+const NBC_LESS = 0,
     NBC_EQUAL = 1,
     NBC_ABOVE = 2;
-var NBI_TYPE = 0,
+const NBI_TYPE = 0,
     NBI_NBVAL = 1,
     NBI_CONT_TYPE = 2,
     NBI_CONT_SIZE = 3,
     NBI_TRAW_TYPE = 2;
+
+
+var VIRTUAL_HUI = ['hui'],
+    VIRTUAL_CHA = ['cha'],
+    VIRTUAL_GO = ['go'];
 
 var INVALID = [NBT_INVALID];
 function checkSame(cards) {
@@ -164,6 +174,10 @@ function combNBTypeCompare(nb1, nb2) {
                     && nb1[NBI_CONT_SIZE] == nb2[NBI_CONT_SIZE])
                     return NBC_EQUAL;
                 else return NBC_LESS;
+            case NBT_CHA:
+            case NBT_GO:
+            case NBT_HUI:
+                return NBC_LESS;
             default:
                 return NBC_EQUAL;
         }
@@ -180,6 +194,8 @@ function combNBTypeCompare(nb1, nb2) {
                 case NBT_TRIAD:
                 case NBT_PAIR:
                 case NBT_SINGLE:
+                case NBT_CHA:
+                case NBT_HUI:
                     return NBC_ABOVE;
                 case NBT_CONT:
                     if (nb2[NBI_CONT_TYPE] < 4)
@@ -192,6 +208,9 @@ function combNBTypeCompare(nb1, nb2) {
             switch (nb2[NBI_TYPE]) {
                 case NBT_PAIR:
                 case NBT_SINGLE:
+                case NBT_CHA:
+                case NBT_HUI:
+                case NBT_GO:
                     return NBC_ABOVE;
                 case NBT_CONT:
                     if (nb2[NBI_CONT_TYPE] < 3)
@@ -200,24 +219,30 @@ function combNBTypeCompare(nb1, nb2) {
                 default:
                     return NBC_LESS;
             }
+        case NBT_CHA:
+            return nb2[NBI_TYPE] == NBT_SINGLE ? NBC_ABOVE : NBC_LESS;
+        case NBT_GO:
+            return nb2[NBI_TYPE] == NBT_CHA ? NBC_ABOVE : NBC_LESS;
         case NBT_JOKER:
-            return nb2[NBI_TYPE]==NBT_ROCKET?NBC_LESS:NBC_ABOVE;
+            return nb2[NBI_TYPE] == NBT_ROCKET ? NBC_LESS : NBC_ABOVE;
         case NBT_ROCKET:
             return NBC_ABOVE;
     }
 }
 
+
 function combNBIndexCompare(cards1, cards2, hui) {
     var nb1 = calCombNBIndex(cards1, hui);
     var nb2 = calCombNBIndex(cards2, hui);
-    var cmpType=combNBTypeCompare(nb1,nb2);
-    if(cmpType!==NBC_EQUAL)return cmpType;
-    return nb1[NBI_NBVAL]>nb2[NBI_NBVAL];
+    var cmpType = combNBTypeCompare(nb1, nb2);
+    if (cmpType !== NBC_EQUAL) return cmpType;
+
+    return nb1[NBI_NBVAL] > nb2[NBI_NBVAL];
 }
 
-module.exports={
-    combCmp:combNBIndexCompare,
-    allCards:nbArray,
+module.exports = {
+    combCmp: combNBIndexCompare,
+    allCards: nbArray,
 };
 
 
