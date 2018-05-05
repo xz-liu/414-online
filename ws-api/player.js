@@ -49,6 +49,12 @@ class Player {
         this.cards=c;
     }
 
+    playerQuit(){
+        if(this.room){
+            this.room.endGame();
+        }
+    }
+
     handleMessage(data) {
         switch (data.type) {
             case DTYPE_CREATEROOM:
@@ -77,6 +83,7 @@ class Player {
                 if(data.data.cards){
                     this.drawCards(data.data.cards);
                 }
+                this.checkWin();
                 break;
             case DTYPE_PASS:
                 if(this.room){
@@ -85,6 +92,17 @@ class Player {
         }
     }
     
+    autoPass(){
+        this.room.passThisRound(this);
+    }
+
+    autoDraw(){
+        if(this.cards.length>0){
+           this.drawCards([this.cards.shift()]);
+        }
+        this.checkWin();
+    }
+
     checkWin(){
         if(this.cards.length===0){
             this.room.playerWins(this);

@@ -8,8 +8,6 @@ var cardNBIndex = [];
     }
 })();
 
-
-
 const NBT_SINGLE = 'single',
     NBT_PAIR = 'pair',
     NBT_TRIAD = 'triad',
@@ -30,9 +28,6 @@ const NBI_TYPE = 0,
     NBI_CONT_TYPE = 2,
     NBI_CONT_SIZE = 3,
     NBI_TRAW_TYPE = 2;
-
-
-
 
 var INVALID = [NBT_INVALID];
 function checkSame(cards) {

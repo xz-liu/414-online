@@ -70,6 +70,7 @@ class GameRoom {
                     this.sendToAllPlayer(types.STYPE_PLAYERDRAW,
                         { 'name': player.name, 'cards': cards }
                     );
+                    this.beginNotRespond=null;
                     return true;
                 case DRAW_CHA:
                     return this.drawNext(rules.types.VIRTUAL_CHA,
@@ -78,8 +79,10 @@ class GameRoom {
                     return this.drawNext(rules.types.VIRTUAL_GO,
                         types.STYPE_PLAYERGO, cards, player);
                 case DRAW_NEXT:
-                    return this.drawNext(rules.types.nbComb,
-                        types.STYPE_PLAYERDRAW, cards, player);
+                    if( this.drawNext(rules.types.nbComb,
+                        types.STYPE_PLAYERDRAW, cards, player)){
+                            this.nextNotRespond=null;
+                        }
 
             }
         }
@@ -192,12 +195,31 @@ class GameRoom {
         );
         this.lastNBString = undefined;
     }
-
+    beginAuto(){
+        if(this.beginNotRespond){
+            this.beginNotRespond.autoDraw();   
+        }
+    }
+    nextAuto(){
+        if(this.nextNotRespond){
+            this.nextNotRespond.autoPass();
+        }
+    }
     roundSendMsg(begin = null, nxt = null, cha = null, go = null) {
         var msg = {
-            'begin': begin,
-            'next': nxt, 'cha': cha, 'go': go
+            'begin': begin.name,
+            'next': nxt.name,
+            'cha': cha.name,
+             'go': go.name
         };
+        this.beginNotRespond=begin;
+        this.nextNotRespond=next;
+        if(begin){
+            setTimeout(this.beginAuto,this.interval);
+        }
+        if(this.next){
+            setTimeout(this.nextAuto,this.interval);
+        }
         this.sendToAllPlayer(types.STYPE_PLAYERROUND, msg);
     }
 
