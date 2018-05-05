@@ -230,6 +230,9 @@ function combNBTypeCompare(nb1, nb2) {
     }
 }
 
+function validComb(cards){
+    return calCombNBIndex(cards)!==INVALID;
+}
 
 function combNBIndexCompare(cards1, cards2, hui) {
     var nb1 = calCombNBIndex(cards1, hui);
@@ -241,6 +244,7 @@ function combNBIndexCompare(cards1, cards2, hui) {
 }
 
 module.exports = {
+    validComb:validComb,
     combCmp: combNBIndexCompare,
     allCards: nbArray,
 };
