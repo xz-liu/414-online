@@ -32,9 +32,7 @@ const NBI_TYPE = 0,
     NBI_TRAW_TYPE = 2;
 
 
-var VIRTUAL_HUI = ['hui'],
-    VIRTUAL_CHA = ['cha'],
-    VIRTUAL_GO = ['go'];
+
 
 var INVALID = [NBT_INVALID];
 function checkSame(cards) {
@@ -230,8 +228,8 @@ function combNBTypeCompare(nb1, nb2) {
     }
 }
 
-function validComb(cards){
-    return calCombNBIndex(cards)!==INVALID;
+function validComb(cards) {
+    return calCombNBIndex(cards) !== INVALID;
 }
 
 function combNBIndexCompare(cards1, cards2, hui) {
@@ -244,9 +242,29 @@ function combNBIndexCompare(cards1, cards2, hui) {
 }
 
 module.exports = {
-    validComb:validComb,
+    validComb: validComb,
     combCmp: combNBIndexCompare,
     allCards: nbArray,
+    getNBType: function (cards) {
+        return calCombNBIndex(cards)[0];
+    },
+    types: {
+        NBT_SINGLE: 'single',
+        NBT_PAIR: 'pair',
+        NBT_TRIAD: 'triad',
+        NBT_TRIAD_W: 'triadW',
+        NBT_CONT: 'cont',
+        NBT_QUAD: 'quad',
+        NBT_JOKER: 'joker',
+        NBT_ROCKET: 'rocket',
+        NBT_INVALID: 'invalid',
+        NBT_HUI: 'hui',
+        NBT_CHA: 'cha',
+        NBT_GO: 'go',
+        VIRTUAL_HUI: ['hui'],
+        VIRTUAL_CHA: ['cha'],
+        VIRTUAL_GO: ['go']
+    },
 };
 
 

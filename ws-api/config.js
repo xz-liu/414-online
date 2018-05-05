@@ -20,10 +20,11 @@ var _wsServer = new _webSocketServer({
 var idNow = 0;
 var allRooms = [];
 var allPlayers = [];
-
+var allConns=[];
 
 function addPlayer(name,player){
     allPlayers[name]=player;
+    allConns[player.connection]=name;
 }
 function deletePlayer(name){
     var ind=allPlayers.indexOf(name);
@@ -41,6 +42,9 @@ function getRandomPasscode(){
     return (Math.floor(Math.random()*899999)+100000).toString();
 }
 
+function sendMessage(connection,msg){
+    connection.sendUTF(JSON.stringify(msg));
+}
 
 
 module.exports = {
@@ -49,13 +53,18 @@ module.exports = {
     wsServer: _wsServer,
     http: http,
     server: thisServer,
-    idDistribute: function () {
-        return ++idNow;
-    },
     allPlayers: allPlayers,
     allRooms: allRooms,
+    allConns:allConns,
     addPlayer:addPlayer,
     deletePlayer:deletePlayer,
     getPlayer:getPlayer,
-    playerExists:playerExists
+    playerExists:playerExists,
+    getRandomPasscode:getRandomPasscode,
+    sendMessage:sendMessage,
+    deleteConnection:function (connection){
+        deletePlayer(allConns[connection]);
+    },getPlayerByConn:function(connection){
+        return getPlayer(allConns[connection]);
+    }
 };
