@@ -9,7 +9,7 @@ var status = {
     WIN: 3,
 };
 const
-    DTYPE_ENTERROOM = 'room',//{'roomId':id,'passcode':passCode}
+    DTYPE_ENTERROOM = 'room',//{'passcode':passCode}
     DTYPE_BEGIN = 'begin',//no data 
     DTYPE_DRAWCARDS = 'draw',//{'cards':[card1,card2,card3...]}
     DTYPE_PASS = 'pass',//no data
@@ -23,6 +23,7 @@ const
     STYPE_ENTERS = 'enters',//{'name':name} to all players
     STYPE_LEAVES = 'leaves',//{'name':name} to all players
     STYPE_PLAYERROUND = 'round',//{'begin':name,'next':name,'cha':name,'go':name}
+    STYPE_ROUNDENDS='endround',//no data
     STYPE_DRAWSUCCEED = 'drawSucceed',//{'combtype':type }  to current player
     STYPE_DRAWFAILED = 'drawFailed',//no data , to current player
     STYPE_PLAYERDRAW = 'draw',//{'name':name,'cards':[cards...]}
