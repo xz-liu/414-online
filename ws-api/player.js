@@ -83,7 +83,7 @@ class Player {
                 break;
             case types.DTYPE_BEGIN:
                 if (this.room) {
-                    this.room.beginGame(this.name);
+                    this.room.beginGame(this);
                 }
                 break;
             case types.DTYPE_DRAWCARDS:

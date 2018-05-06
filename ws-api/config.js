@@ -1,4 +1,3 @@
-
 "use strict";
 var webSocketsServerPort = 1337;
 var _webSocketServer = require('websocket').server;
@@ -28,9 +27,9 @@ module.exports = {
     allRooms: [],
     allPlayers: [],
     allConns: [],
-    addPlayer: function (name, player) {
+    addPlayer: function (name, player, connIndex) {
         module.exports.allPlayers[name] = player;
-        module.exports.allConns[player.connection] = name;
+        module.exports.allConns[connIndex] = name;
     },
     deletePlayer: function (name) {
         var ind = module.exports.allPlayers.indexOf(name);
@@ -50,14 +49,11 @@ module.exports = {
         connection.sendUTF(JSON.stringify(msg));
     },
     deleteConnection: function (connection) {
-        module.exports.deletePlayer
-            (module.exports.allConns[connection]);
+        this.deletePlayer
+            (this.allConns[connection]);
+        this.allConns.splice(connection, 1);
     }, getPlayerByConn: function (connection) {
-        return module.exports.getPlayer
-            (module.exports.allConns[connection]);
+        return this.getPlayer
+            (this.allConns[connection]);
     }
 };
-
-
-
-

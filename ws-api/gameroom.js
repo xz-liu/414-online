@@ -28,15 +28,15 @@ class GameRoom {
         config.allRooms[passCode] = this;
     }
     drawNext(nbComb, drawType, cards, player) {
-        var good=true;
+        var good = true;
         if (this.lastNBString) {
-            if(drawType===DRAW_CHA){
-                good=(cards.length===2&&cards[0][0]===cards[0][1]&&cards[0][0]===this.lastNBString[0]);
+            if (drawType === DRAW_CHA) {
+                good = (cards.length === 2 && cards[0][0] === cards[0][1] && cards[0][0] === this.lastNBString[0]);
             }
-            if(drawType===DRAW_GO){
-                good=(cards.length===1&&cards[0][0]===this.lastNBString[0]);               
+            if (drawType === DRAW_GO) {
+                good = (cards.length === 1 && cards[0][0] === this.lastNBString[0]);
             }
-            if (good&&rules.combCmp(nbComb, this.lastNBString)) {
+            if (good && rules.combCmp(nbComb, this.lastNBString)) {
                 this.sendToAllPlayer(drawType,
                     { 'name': player.name, 'cards': cards }
                 );
@@ -228,26 +228,29 @@ class GameRoom {
         this.sendToAllPlayer(types.STYPE_PLAYERROUND, msg);
     }
 
-    beginGame(playerName) {
-        if (playerName === this.players[0].name) {
-            //game begins
-            var cardsForEach = cardOps.distributeCards(this.players.length);
-            for (var i in cardsForEach) {
-                this.players[i].cards = cardsForEach[i];
-                this.players[i].sendMsgWithType('card',{'cards':cardsForEach[i]});
+    beginGame(player) {
+        if (this.players.length >= 2) {
+            if (player.name === this.players[0].name) {
+                //game begins
+                var cardsForEach = cardOps.distributeCards(this.players.length);
+                for (var i in cardsForEach) {
+                    this.players[i].cards = cardsForEach[i];
+                    this.players[i].sendMsgWithType('card', { 'cards': cardsForEach[i] });
+                }
+
+                var startWith = Math.floor(Math.random() * this.players.length);
+                this.roundSendMsg(this.players[startWith].name);
+                this.roundNow[DRAW_BEGIN] = startWith;
+
+                this.lastNBString = undefined;
+                this.lastPlayer = undefined;
+                this.lastType = undefined;
+                this.lastReal = undefined;
+                this.roundNow = [];
+                return true;
             }
-
-            var startWith = Math.floor(Math.random() * this.players.length);
-            this.roundSendMsg(this.players[startWith].name);
-            this.roundNow[DRAW_BEGIN] = startWith;
-
-            this.lastNBString = undefined;
-            this.lastPlayer = undefined;
-            this.lastType = undefined;
-            this.lastReal = undefined;
-            this.roundNow = [];
-            return true;
-        }
+            else player.sendFailMessage("Only room host can start game");
+        }else player.sendFailMessage("Room member not enough");
         return false;
     }
 }
