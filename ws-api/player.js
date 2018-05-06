@@ -73,9 +73,9 @@ class Player {
                         this.sendFailMessage('Already in a room');
                     }
                     else {
-                        if (roomNow.addNewPlayer(this, data.data.passCode)) {
+                        if(roomNow&& roomNow.addNewPlayer(this, data.data.passCode)) {
                             this.room = roomNow;
-                        }
+                        }else this.sendFailMessage('Passcode Incorrect :'+data.data.passCode);
                     }
                 } else {
                     this.sendFailMessage('Passcode Not Set');

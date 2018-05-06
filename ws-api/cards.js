@@ -29,8 +29,8 @@ function cardsSortComp(carda,cardb){
     var indA=nbString.indexOf(carda[0]),
         indB=nbString.indexOf(cardb[0]);
     if(indA==indB){
-        return carda[1]<cardb[1];
-    }else return indA<indB;
+        return carda[1]-cardb[1];
+    }else return indA-indB;
 }
 
 function distributeCards(playerCnt){
@@ -38,7 +38,7 @@ function distributeCards(playerCnt){
     var eachPlayer=Math.floor(cardsPerm.length/playerCnt);
     var ret=[];
     for(var i=0;i<playerCnt;i++){
-        ret[i]=cardsPerm.slice(i,i+eachPlayer);
+        ret[i]=cardsPerm.slice(i*eachPlayer,(i+1)*eachPlayer);
     }
     var mod=cardsPerm.length%playerCnt;
     for( var i=0;i<mod;i++){

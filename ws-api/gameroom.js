@@ -214,17 +214,21 @@ class GameRoom {
             this.nextNotRespond.autoPass();
         }
     }
-    roundSendMsg(begin = null, nxt = null, cha = null, go = null) {
+    roundSendMsg(begin, nxt, cha, go) {
         var msg = {
             'begin': begin ? begin.name : null,
             'next': nxt ? nxt.name : null,
             'cha': cha ? cha.name : null,
             'go': go ? go.name : null
         };
-        this.beginNotRespond = begin;
-        this.nextNotRespond = nxt;
-        if (begin) setTimeout(this.beginAuto, this.interval);
-        if (nxt) setTimeout(this.nextAuto, this.interval);
+        if (begin) {
+            this.beginNotRespond = begin;
+            setTimeout(this.beginAuto, this.interval);
+        }
+        if (nxt) {
+            this.nextNotRespond = nxt;
+            setTimeout(this.nextAuto, this.interval);
+        }
         this.sendToAllPlayer(types.STYPE_PLAYERROUND, msg);
     }
 
@@ -238,19 +242,18 @@ class GameRoom {
                     this.players[i].sendMsgWithType('card', { 'cards': cardsForEach[i] });
                 }
 
-                var startWith = Math.floor(Math.random() * this.players.length);
-                this.roundSendMsg(this.players[startWith].name);
-                this.roundNow[DRAW_BEGIN] = startWith;
-
+                var startWith = Math.floor(Math.random() *1000)%this.players.length;
                 this.lastNBString = undefined;
                 this.lastPlayer = undefined;
                 this.lastType = undefined;
                 this.lastReal = undefined;
                 this.roundNow = [];
+                this.roundNow[DRAW_BEGIN] = startWith;
+                this.roundSendMsg(this.players[startWith]);
                 return true;
             }
             else player.sendFailMessage("Only room host can start game");
-        }else player.sendFailMessage("Room member not enough");
+        } else player.sendFailMessage("Room member not enough");
         return false;
     }
 }
