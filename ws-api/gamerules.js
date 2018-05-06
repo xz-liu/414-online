@@ -8,16 +8,16 @@ var cardNBIndex = [];
     }
 })();
 
-const NBT_SINGLE = 'single',
-    NBT_PAIR = 'pair',
-    NBT_TRIAD = 'triad',
-    NBT_TRIAD_W = 'triadW',
-    NBT_CONT = 'cont',
-    NBT_QUAD = 'quad',
-    NBT_JOKER = 'joker',
-    NBT_ROCKET = 'rocket',
+const NBT_SINGLE = 'single',//单
+    NBT_PAIR = 'pair',//对
+    NBT_TRIAD = 'triad',//炸
+    NBT_TRIAD_W = 'triadW',//三带一 或 三带二
+    NBT_CONT = 'cont',//顺子
+    NBT_QUAD = 'quad',//炮
+    NBT_JOKER = 'joker',//大小王
+    NBT_ROCKET = 'rocket',//414
     NBT_INVALID = 'invalid',
-    NBT_HUI = 'hui',
+    NBT_HUI = 'hui',//没用到
     NBT_CHA = 'cha',
     NBT_GO = 'go';
 const NBC_LESS = 0,

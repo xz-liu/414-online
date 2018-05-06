@@ -28,8 +28,15 @@ class GameRoom {
         config.allRooms[passCode] = this;
     }
     drawNext(nbComb, drawType, cards, player) {
+        var good=true;
         if (this.lastNBString) {
-            if (rules.combCmp(nbComb, this.lastNBString)) {
+            if(drawType===DRAW_CHA){
+                good=(cards.length===2&&cards[0][0]===cards[0][1]&&cards[0][0]===this.lastNBString[0]);
+            }
+            if(drawType===DRAW_GO){
+                good=(cards.length===1&&cards[0][0]===this.lastNBString[0]);               
+            }
+            if (good&&rules.combCmp(nbComb, this.lastNBString)) {
                 this.sendToAllPlayer(drawType,
                     { 'name': player.name, 'cards': cards }
                 );
@@ -63,7 +70,7 @@ class GameRoom {
                 return true;
             }
         }
-        player.sendMsgWithType(types.STYPE_ENTERFAILED);
+        player.sendMsgWithType(types.STYPE_DRAWFAILED);
         return false;
     }
     playerDrawCards(player, cards, drawType) {

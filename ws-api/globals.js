@@ -5,7 +5,7 @@ global.types ={
     DTYPE_PASS : 'pass',//no data
     DTYPE_CREATEROOM : 'create',//{'passcode':passcode}
     DTYPE_CHA : 'cha',//{'cards':[card1,card2]}
-    DTYPE_GO : 'go',
+    DTYPE_GO : 'go',//{'cards':[card1]}
     DTYPE_RETURNHOME:'home',//return to homepage(leave current room)
     STYPE_CREATESUCCESS : 'create',//{'passcode':passCode}
     STYPE_ENTERSUCCESS : 'enterSucc',//{'names':[names...]}
