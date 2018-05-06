@@ -10,22 +10,25 @@ config.wsServer.on('request', function (request) {
     // type:"success"
     // type:"failed"
     connection.on('message', function (message) {
+        console.log(message);
         if (message.type === 'utf8') {
             var msg = JSON.parse(message.utf8Data);
             if (msg.type === 'name') {
-                if(!config.playerExists(msg.data)){
-                    var newPlayer=new Player(msg.data, connection);
-                    config.addPlayer(msg.data ,newPlayer);
-                    newPlayer.sendMessage({'type':'success'});
-                }else{
-                    config.sendMessage(connection,{'type':'failed'});
+                if (!config.playerExists(msg.data)) {
+                    var newPlayer = new Player(msg.data, connection);
+                    config.addPlayer(msg.data, newPlayer);
+                    newPlayer.sendMessage({ 'type': 'success' });
+                } else {
+                    config.sendMessage(connection, { 'type': 'failed' });
                 }
-            }else{
-                config.getPlayerByConn(connection).handleMessage(msg);
+            } else {
+                if (config.getPlayerByConn(connection)) {
+                    config.getPlayerByConn(connection).handleMessage(msg);
+                }
             }
         }
     });
-    connection.on('close',function(connection){
+    connection.on('close', function (connection) {
         config.getPlayerByConn(connection).playerQuit();
         config.deleteConnection(connection);
     });

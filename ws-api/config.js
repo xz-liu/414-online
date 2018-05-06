@@ -1,6 +1,6 @@
 
 "use strict";
-var webSocketsServerPort = 443;
+var webSocketsServerPort = 1337;
 var _webSocketServer = require('websocket').server;
 var http = require('http');
 var thisServer = http.createServer(function (request, response) {
@@ -17,35 +17,7 @@ var _wsServer = new _webSocketServer({
     // http://tools.ietf.org/html/rfc6455#page-6
     httpServer: thisServer
 });
-var idNow = 0;
-var allRooms = [];
-var allPlayers = [];
-var allConns=[];
-
-function addPlayer(name,player){
-    allPlayers[name]=player;
-    allConns[player.connection]=name;
-}
-function deletePlayer(name){
-    var ind=allPlayers.indexOf(name);
-    if(ind>=0)allPlayers.splice(ind,1);
-    return ind>=0;
-}
-function playerExists(name){
-    return allPlayers[name]!=undefined;
-}
-function getPlayer(name){
-    return allPlayers[name];
-}
-
-function getRandomPasscode(){
-    return (Math.floor(Math.random()*899999)+100000).toString();
-}
-
-function sendMessage(connection,msg){
-    connection.sendUTF(JSON.stringify(msg));
-}
-
+// var idNow = 0;
 
 module.exports = {
     port: webSocketsServerPort,
@@ -53,18 +25,39 @@ module.exports = {
     wsServer: _wsServer,
     http: http,
     server: thisServer,
-    allPlayers: allPlayers,
-    allRooms: allRooms,
-    allConns:allConns,
-    addPlayer:addPlayer,
-    deletePlayer:deletePlayer,
-    getPlayer:getPlayer,
-    playerExists:playerExists,
-    getRandomPasscode:getRandomPasscode,
-    sendMessage:sendMessage,
-    deleteConnection:function (connection){
-        deletePlayer(allConns[connection]);
-    },getPlayerByConn:function(connection){
-        return getPlayer(allConns[connection]);
+    allRooms: [],
+    allPlayers: [],
+    allConns: [],
+    addPlayer: function (name, player) {
+        module.exports.allPlayers[name] = player;
+        module.exports.allConns[player.connection] = name;
+    },
+    deletePlayer: function (name) {
+        var ind = module.exports.allPlayers.indexOf(name);
+        if (ind >= 0) module.exports.allPlayers.splice(ind, 1);
+        return ind >= 0;
+    },
+    getPlayer: function (name) {
+        return module.exports.allPlayers[name];
+    },
+    playerExists: function (name) {
+        return module.exports.allPlayers[name] != undefined;
+    },
+    getRandomPasscode: function () {
+        return (Math.floor(Math.random() * 899999) + 100000).toString();
+    },
+    sendMessage: function (connection, msg) {
+        connection.sendUTF(JSON.stringify(msg));
+    },
+    deleteConnection: function (connection) {
+        module.exports.deletePlayer
+            (module.exports.allConns[connection]);
+    }, getPlayerByConn: function (connection) {
+        return module.exports.getPlayer
+            (module.exports.allConns[connection]);
     }
 };
+
+
+
+

@@ -1,16 +1,18 @@
-
-var types = require('./player');
-var rules = require('./gamerules');
-var Player = types.Player;
+require('./globals');
 var config = require('./config');
 var cardOps = require('./cards');
+
+var filePlayer = require('./player');
+var rules = require('./gamerules');
+var Player = filePlayer.Player;
+// const types=filePlayer.types;
 const DRAW_BEGIN = 'begin',
     DRAW_NEXT = 'next',
     DRAW_CHA = 'cha',
     DRAW_GO = 'go';
+// console.log('check!'+types.STYPE_ENTERSUCCESS);
 class GameRoom {
     constructor(player) {
-        this.number = roomNumber;
         this.players = [player];
         this.interval = 30000;
         var passCode;
@@ -18,6 +20,8 @@ class GameRoom {
             passCode = config.getRandomPasscode();
         } while (config.allRooms[passCode]);
         this.passCode = passCode;
+        // console.log(types.STYPE_CREATESUCCESS);
+        // player.sendMessage({'type':types.STYPE_CREATESUCCESS});
         player.sendMsgWithType(types.STYPE_CREATESUCCESS, {
             'passcode': passCode
         });
@@ -59,7 +63,7 @@ class GameRoom {
                 return true;
             }
         }
-        player.sendMsgWithType(type.STYPE_ENTERFAILED);
+        player.sendMsgWithType(types.STYPE_ENTERFAILED);
         return false;
     }
     playerDrawCards(player, cards, drawType) {
@@ -70,19 +74,19 @@ class GameRoom {
                     this.sendToAllPlayer(types.STYPE_PLAYERDRAW,
                         { 'name': player.name, 'cards': cards }
                     );
-                    this.beginNotRespond=null;
+                    this.beginNotRespond = null;
                     return true;
                 case DRAW_CHA:
-                    return this.drawNext(rules.types.VIRTUAL_CHA,
+                    return this.drawNext(nbTypes.VIRTUAL_CHA,
                         types.STYPE_PLAYERCHA, cards, player);
                 case DRAW_GO:
-                    return this.drawNext(rules.types.VIRTUAL_GO,
+                    return this.drawNext(nbTypes.VIRTUAL_GO,
                         types.STYPE_PLAYERGO, cards, player);
                 case DRAW_NEXT:
-                    if( this.drawNext(rules.types.nbComb,
-                        types.STYPE_PLAYERDRAW, cards, player)){
-                            this.nextNotRespond=null;
-                        }
+                    if (this.drawNext(nbComb,
+                        types.STYPE_PLAYERDRAW, cards, player)) {
+                        this.nextNotRespond = null;
+                    }
 
             }
         }
@@ -98,16 +102,16 @@ class GameRoom {
         var type = rules.getNBType(nbS);
         // var ret;
         this.roundNow = [];
-        if (type === rules.types.NBT_CHA) {//go
+        if (type === nbTypes.NBT_CHA) {//go
             for (var i in this.players) {
                 if (this.players[i].haveGo(cards)) {
-                    this.roundNow[rules.types.NBT_GO] = this.players[i];
+                    this.roundNow[nbTypes.NBT_GO] = this.players[i];
                 }
             }
-        } else if (type === rules.types.NBT_SINGLE) {//cha check
+        } else if (type === nbTypes.NBT_SINGLE) {//cha check
             for (var i in this.players) {
                 if (this.players[i].haveCha(cards)) {
-                    this.roundNow[rules.types.NBT_CHA] = this.players[i];
+                    this.roundNow[nbTypes.NBT_CHA] = this.players[i];
                 }
             }
         }
@@ -171,7 +175,7 @@ class GameRoom {
     addNewPlayer(player, passCode) {
         if (passCode !== this.passCode) {
             player.sendMsgWithType(types.STYPE_ENTERFAILED, {
-                'reason': 'Passcode Incorrect'
+                'reason': 'Passcode Incorrect :' + passCode
             });
             return false;
         }
@@ -179,7 +183,7 @@ class GameRoom {
         this.sendToAllPlayer(types.STYPE_ENTERS,
             { 'name': player.name }
         );
-        for (var i in players) {
+        for (var i in this.players) {
             names.push(this.players[i].name);
         }
         player.sendMsgWithType(types.STYPE_ENTERSUCCESS,
@@ -195,31 +199,27 @@ class GameRoom {
         );
         this.lastNBString = undefined;
     }
-    beginAuto(){
-        if(this.beginNotRespond){
-            this.beginNotRespond.autoDraw();   
+    beginAuto() {
+        if (this.beginNotRespond) {
+            this.beginNotRespond.autoDraw();
         }
     }
-    nextAuto(){
-        if(this.nextNotRespond){
+    nextAuto() {
+        if (this.nextNotRespond) {
             this.nextNotRespond.autoPass();
         }
     }
     roundSendMsg(begin = null, nxt = null, cha = null, go = null) {
         var msg = {
-            'begin': begin.name,
-            'next': nxt.name,
-            'cha': cha.name,
-             'go': go.name
+            'begin': begin ? begin.name : null,
+            'next': nxt ? nxt.name : null,
+            'cha': cha ? cha.name : null,
+            'go': go ? go.name : null
         };
-        this.beginNotRespond=begin;
-        this.nextNotRespond=next;
-        if(begin){
-            setTimeout(this.beginAuto,this.interval);
-        }
-        if(this.next){
-            setTimeout(this.nextAuto,this.interval);
-        }
+        this.beginNotRespond = begin;
+        this.nextNotRespond = nxt;
+        if (begin) setTimeout(this.beginAuto, this.interval);
+        if (nxt) setTimeout(this.nextAuto, this.interval);
         this.sendToAllPlayer(types.STYPE_PLAYERROUND, msg);
     }
 
@@ -229,7 +229,9 @@ class GameRoom {
             var cardsForEach = cardOps.distributeCards(this.players.length);
             for (var i in cardsForEach) {
                 this.players[i].cards = cardsForEach[i];
+                this.players[i].sendMsgWithType('card',{'cards':cardsForEach[i]});
             }
+
             var startWith = Math.floor(Math.random() * this.players.length);
             this.roundSendMsg(this.players[startWith].name);
             this.roundNow[DRAW_BEGIN] = startWith;
