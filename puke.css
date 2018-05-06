@@ -1,0 +1,284 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.horizontal{
+    transform: rotateZ(90deg);
+}
+body{
+    --height:0px;
+    --pokerHeight:150px;
+    --pokerMargin:-75px;
+    --menuUpHeight:60px;
+    --menuDownHeight:60px;
+    --userOperWidth:250px;
+    --userOperButtonWidth:calc(var(--userOperWidth)*0.34);
+    overflow: hidden;
+}
+.menu_screen{
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    height: var(--height);
+}
+
+.menu{
+    position: absolute;
+    width: 30%;
+    left: 35%;
+    top: 25%;
+    background-color: rgb(89, 202, 95);
+}
+.menu_input{
+    position: relative;
+    width: 100%;
+    transition: height 0.2s;
+    overflow: hidden;
+    height: 0;
+    background-color: gray;
+}
+.menu_input_content{
+    display: none;
+    margin: 25px;
+    
+}
+.menu_up{
+    position: relative;
+    width: 100%;
+    height: var(--menuUpHeight);
+}
+.menu_down{
+    position: relative;
+    width: 100%;
+    height: var(--menuDownHeight);
+}
+.game_screen{
+
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: var(--height);
+}
+#notice_name{
+    font-size: 25px;
+}
+#input_name{
+    margin-top: 25px;
+    margin-left: 100px;
+    width: 60%;
+    height: 30px;
+    border: 0;
+    border-radius: 2px;
+    font-size: 24px;
+    outline-width: 5px;
+    outline-color: aqua;
+    /*outline-style: solid;
+    outline-width: 2px;
+    outline-color: aqua;*/
+}
+
+#input_room{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 60%;
+    height: 30px;
+    border: 0;
+    border-radius: 2px;
+    font-size: 22px;
+    outline-width: 5px;
+    outline-color: aqua;
+}
+#create_room_button{
+    position: relative;
+    display: inline-block;
+    margin-top: 10px;
+    overflow: hidden;
+    padding: 5px;
+    cursor: pointer;
+    background-color: gold;
+}
+#create_room_button div{
+    position: absolute;
+    transform: rotateZ(135deg);
+    top: 2px;
+    width: 80px;
+    height: 20px;
+    background-color: red;
+
+    border: 1px solid black;
+    left: -50px;
+    transition: left 0.2s;
+}
+#create_room_button:hover{
+
+}
+#create_room_button:hover div{
+    left: 120px;
+}
+.user_poker_area{
+    position: absolute;
+    width: 40%;
+    left: 25%;
+    height: 20%;
+    bottom: 5%;
+}
+.poker{
+    background-color: white;
+    border: 1px solid black;
+    width: calc(var(--pokerHeight)*0.65);
+    height: var(--pokerHeight);
+    border-radius: 4px;
+}
+.user_poker{
+    position: relative;
+    margin-left: var(--pokerMargin);
+    float: left;
+    transition: transform 0.3s;
+}
+.user_poker:hover{
+    /*outline-style: solid;
+    outline-width: 5px;
+    outline-color: red;*/
+    box-shadow: 0 0 2px 1px black;
+    transform: translateY(-50px)
+}
+.poker_selected{
+    transform: translateY(-50px);
+    box-shadow: 0 0 2px 1px blue;
+}
+.poker_lu{
+    display: block;
+    position: absolute;
+    font-size: 20px;
+    left: 5px;
+    top: 1px;
+}
+.poker_rd{
+    display: block;
+    position: absolute;
+    font-size: 20px;
+    right: 5px;
+    bottom: 1px;
+    transform: rotateZ(180deg);
+}
+div[class*='pok']:before {
+    position: absolute;
+    font-size: 20px;
+    left: 5px;
+    top: 15px;
+}
+       
+div[class*='pok']:after {
+    position: absolute;
+    font-size: 20px;
+    right: 5px;
+    bottom: 15px;
+    transform: rotateZ(180deg);
+}
+.pok_diamond{
+    color: #ff0000;
+}
+.pok_diamond::after, .pok_diamond::before{
+    content: "♦";
+    color: #ff0000;
+}
+.pok_heart{
+    color: #ff0000;
+}
+.pok_heart:before, .pok_heart:after {
+    content: "♥";
+    color: #ff0000;
+}
+
+.pok_clubs{
+    color: #000;
+}
+.pok_club:before, .pok_club:after {
+    content: "♣";
+    color: #000;
+}
+
+.pok_spade{
+    color: #000;
+}
+.pok_spade:before, .pok_spade:after {
+    content: "♠";
+    color: #000;
+}
+.pok_joker{
+    writing-mode: vertical-rl;
+}
+.pok_joker .poker_lu{
+    font-size: 15px;
+    top: 8px;
+    left: 2px;
+}
+.pok_joker .poker_rd{
+    font-size: 15px;
+    bottom: 8px;
+    right: 2px;
+}
+.pok_big{
+    color: #ff0000;
+}
+.pok_small{
+    color: #000;
+}
+
+.user_oper{
+    position: absolute;
+    display: none;
+    width: var(--userOperWidth);
+    left: 65%;
+    height: var(--userOperWidth);
+    bottom: 2%;;
+}
+.user_oper_button{
+    position: absolute;
+    border-radius: 100%;
+    width: var(--userOperButtonWidth);
+    height: var(--userOperButtonWidth);
+    border: 2px solid red;
+    cursor: pointer;
+}
+.bring_out_button{
+    left: calc(var(--userOperWidth)*0.33);
+    background-color: aqua;
+}
+.pass_button{
+    left: calc(var(--userOperWidth)*0.33);
+    bottom: 0;
+    background-color: aqua;
+}
+.cha_button{
+    left: 0;
+    top: calc(var(--userOperWidth)*0.33);
+    background-color: aqua;
+}
+.go_button{
+    right: 0;
+    top: calc(var(--userOperWidth)*0.33);
+    background-color: aqua;
+}
+.poker_out{
+    position: absolute;
+    transition: top 0.2s, left 0.2s;
+
+}
+
+.user_info{
+    position: absolute;
+    background-color: aqua;
+    width: 15%;
+    left: 2%;
+    height: 20%;
+    bottom: 5%;
+}
+
+#player_name{
+
+}
+.start_game_button{
+    display: none;
+}
