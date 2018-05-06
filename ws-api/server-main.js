@@ -29,7 +29,9 @@ config.wsServer.on('request', function (request) {
         }
     });
     connection.on('close', function (connection) {
-        config.getPlayerByConn(connection).playerQuit();
-        config.deleteConnection(connection);
+        if (config.getPlayerByConn(connection)) {
+            config.getPlayerByConn(connection).playerQuit();
+            config.deleteConnection(connection);
+        }
     });
 });

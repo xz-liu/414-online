@@ -194,9 +194,7 @@ class GameRoom {
     }
 
     endGame() {
-        this.sendToAllPlayer(
-            types.STYPE_GAMEENDS, ""
-        );
+        this.sendToAllPlayer(types.STYPE_GAMEENDS);
         this.lastNBString = undefined;
     }
     beginAuto() {
