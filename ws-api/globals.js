@@ -6,6 +6,7 @@ global.types ={
     DTYPE_CREATEROOM : 'create',//{'passcode':passcode}
     DTYPE_CHA : 'cha',//{'cards':[card1,card2]}
     DTYPE_GO : 'go',
+    DTYPE_RETURNHOME:'home',//return to homepage(leave current room)
     STYPE_CREATESUCCESS : 'create',//{'passcode':passCode}
     STYPE_ENTERSUCCESS : 'enterSucc',//{'names':[names...]}
     STYPE_ENTERFAILED : 'failed',//{'reason':reason}
