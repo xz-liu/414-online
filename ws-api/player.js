@@ -42,13 +42,13 @@ class Player {
     }
 
 
-    playerQuit(returnHome=false) {
+    playerQuit(returnHome = false) {
         if (this.room) {
-            this.room.sendToAllPlayer(types.STYPE_LEAVES,{'name':this.name});
+            this.room.sendToAllPlayer(types.STYPE_LEAVES, { 'name': this.name });
             this.room.endGame();
-            this.room=undefined;
-        }else{
-            if(returnHome) this.sendFailMessage('Not in a room');
+            this.room = undefined;
+        } else {
+            if (returnHome) this.sendFailMessage('Not in a room');
         }
     }
 
@@ -57,6 +57,7 @@ class Player {
     }
 
     handleMessage(data) {
+        if (!data.type) return;
         switch (data.type) {
             case types.DTYPE_CREATEROOM: {
                 if (this.room) {
@@ -67,15 +68,16 @@ class Player {
             }
                 break;
             case types.DTYPE_ENTERROOM:
+                if (!data.data) return;
                 if (data.data.passCode) {
                     var roomNow = room.getRoom(data.data.passCode);
                     if (this.room) {
                         this.sendFailMessage('Already in a room');
                     }
                     else {
-                        if(roomNow&& roomNow.addNewPlayer(this, data.data.passCode)) {
+                        if (roomNow && roomNow.addNewPlayer(this, data.data.passCode)) {
                             this.room = roomNow;
-                        }else this.sendFailMessage('Passcode Incorrect :'+data.data.passCode);
+                        } else this.sendFailMessage('Passcode Incorrect :' + data.data.passCode);
                     }
                 } else {
                     this.sendFailMessage('Passcode Not Set');
@@ -87,9 +89,25 @@ class Player {
                 }
                 break;
             case types.DTYPE_DRAWCARDS:
-            case types.DTYPE_CHA:
-            case types.DTYPE_GO:
+                if (!data.data) return;
                 if (data.data.cards) {
+                    this.playerSelect = null;
+                    this.drawCards(data.data.cards);
+                }
+                this.checkWin();
+                break;
+            case types.DTYPE_CHA:
+                if (!data.data) return;
+                if (data.data.cards) {
+                    this.playerSelect = DRAW_CHA;
+                    this.drawCards(data.data.cards);
+                }
+                this.checkWin();
+                break;
+            case types.DTYPE_GO:
+                if (!data.data) return;
+                if (data.data.cards) {
+                    this.playerSelect = DRAW_GO;
                     this.drawCards(data.data.cards);
                 }
                 this.checkWin();
@@ -97,7 +115,7 @@ class Player {
             case types.DTYPE_PASS:
                 if (this.room) {
                     this.room.passThisRound(this);
-                }break;
+                } break;
             case types.DTYPE_RETURNHOME:
                 this.playerQuit(true);
         }
@@ -164,16 +182,28 @@ class Player {
     }
 
     drawCards(cards) {
-        if (this.canDrawCards(cards)) {
-            if (this.room.playerDrawCards(this, cards, this.drawType)) {
-                for (var i in cards) {
-                    this.cards.splice(
-                        this.cards.indexOf(cards[i]), 1
-                    );
-                }
-                this.room.checkCGAndResetLast(this, cards);
-            }
+        var drawTypeNow;
+        if (this.playerSelect) {
+            if (this.drawType.includes(this.playerSelect))
+                drawTypeNow = this.playerSelect;
+        } else {
+            if (this.drawType.includes(DRAW_BEGIN))
+                drawTypeNow = DRAW_BEGIN;
+            if (this.drawType.includes(DRAW_NEXT))
+                drawTypeNow = DRAW_NEXT;
         }
+        if (drawTypeNow) {
+            if (this.canDrawCards(cards)) {
+                if (this.room.playerDrawCards(this, cards, drawTypeNow)) {
+                    for (var i in cards) {
+                        this.cards.splice(
+                            this.cards.indexOf(cards[i]), 1
+                        );
+                    }
+                    this.room.checkCGAndResetLast(this, cards);
+                } else this.sendFailMessage("Cards not NB enough or comb is invalid");
+            } this.sendFailMessage('Cannot Draw cards you do not have');
+        } else this.sendFailMessage('Not your round');
     }
 }
 

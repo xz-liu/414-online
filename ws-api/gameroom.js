@@ -6,10 +6,6 @@ var filePlayer = require('./player');
 var rules = require('./gamerules');
 var Player = filePlayer.Player;
 // const types=filePlayer.types;
-const DRAW_BEGIN = 'begin',
-    DRAW_NEXT = 'next',
-    DRAW_CHA = 'cha',
-    DRAW_GO = 'go';
 // console.log('check!'+types.STYPE_ENTERSUCCESS);
 class GameRoom {
     constructor(player) {
@@ -34,7 +30,7 @@ class GameRoom {
                 good = (cards.length === 2 && cards[0][0] === cards[0][1] && cards[0][0] === this.lastNBString[0]);
             }
             if (drawType === DRAW_GO) {
-                good = (cards.length === 1 && cards[0][0] === this.lastNBString[0]);
+                good = this.lastType == DRAW_GO && (cards.length === 1 && cards[0][0] === this.lastNBString[0]);
             }
             if (good && rules.combCmp(nbComb, this.lastNBString)) {
                 this.sendToAllPlayer(drawType,
@@ -159,10 +155,14 @@ class GameRoom {
         } else {
             this.roundNow[DRAW_NEXT] = nxtPlayer;
         }
-        if (this.roundNow[DRAW_BEGIN]) this.roundNow[DRAW_BEGIN].drawType = DRAW_BEGIN;
-        if (this.roundNow[DRAW_NEXT]) this.roundNow[DRAW_NEXT].drawType = DRAW_NEXT;
-        if (this.roundNow[DRAW_CHA]) this.roundNow[DRAW_CHA].drawType = DRAW_CHA;
-        if (this.roundNow[DRAW_GO]) this.roundNow[DRAW_GO].drawType = DRAW_GO;
+        for (var i in this.roundNow) {
+            if (this.roundNow[i])
+                this.roundNow[i].drawType = [];
+        }        
+        for (var i in this.roundNow) {
+            if (this.roundNow[i])
+                this.roundNow[i].drawType.push(i);
+        }
         this.roundSendAuto();
     }
     roundSendAuto() {
@@ -242,7 +242,7 @@ class GameRoom {
                     this.players[i].sendMsgWithType('card', { 'cards': cardsForEach[i] });
                 }
 
-                var startWith = Math.floor(Math.random() *1000)%this.players.length;
+                var startWith = Math.floor(Math.random() * 1000) % this.players.length;
                 this.lastNBString = undefined;
                 this.lastPlayer = undefined;
                 this.lastType = undefined;
