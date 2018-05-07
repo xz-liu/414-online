@@ -66,7 +66,6 @@ class GameRoom {
                 return true;
             }
         }
-        player.sendMsgWithType(types.STYPE_DRAWFAILED);
         return false;
     }
     playerDrawCards(player, cards, drawType) {
