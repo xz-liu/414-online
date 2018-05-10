@@ -27,11 +27,14 @@ class GameRoom {
         var good = true;
         if (this.lastNBString) {
             if (drawType === DRAW_CHA) {
-                good = (cards.length === 2 && cards[0][0] === cards[0][1] && cards[0][0] === this.lastNBString[0]);
+                good = (cards.length === 2 && cards[0][0] === cards[0][1]
+                     && cards[0][0] === this.lastNBString[0]);
             }
             if (drawType === DRAW_GO) {
-                good = this.lastType == DRAW_GO && (cards.length === 1 && cards[0][0] === this.lastNBString[0]);
+                good = this.lastType == DRAW_GO &&
+                 (cards.length === 1 && cards[0][0] === this.lastNBString[0]);
             }
+            // if(drawType === DRAW_BEGIN)drawType
             if (good && rules.combCmp(nbComb, this.lastNBString)) {
                 this.sendToAllPlayer(drawType,
                     { 'name': player.name, 'cards': cards }
@@ -47,7 +50,6 @@ class GameRoom {
                             this.roundNow[DRAW_NEXT].sendMsgWithType
                                 (types.STYPE_ROUNDENDS);
                         }
-
                         break;
                     case types.STYPE_PLAYERDRAW:
                         if (this.roundNow[DRAW_CHA]) {
@@ -157,7 +159,7 @@ class GameRoom {
         for (var i in this.roundNow) {
             if (this.roundNow[i])
                 this.roundNow[i].drawType = [];
-        }        
+        }
         for (var i in this.roundNow) {
             if (this.roundNow[i])
                 this.roundNow[i].drawType.push(i);
@@ -180,9 +182,7 @@ class GameRoom {
 
     addNewPlayer(player, passCode) {
         if (passCode !== this.passCode) {
-            player.sendMsgWithType(types.STYPE_ENTERFAILED, {
-                'reason': 'Passcode Incorrect :' + passCode
-            });
+            player.sendFailMessage(errros._PASSCODE_INCORRECT);
             return false;
         }
         var names = [];
@@ -251,8 +251,8 @@ class GameRoom {
                 this.roundSendMsg(this.players[startWith]);
                 return true;
             }
-            else player.sendFailMessage("Only room host can start game");
-        } else player.sendFailMessage("Room member not enough");
+            else player.sendFailMessage(erors._ONLY_HOST_CAN_START);
+        } else player.sendFailMessage(errros._ROOM_MEMBER_NOT_ENOUGH);
         return false;
     }
 }

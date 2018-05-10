@@ -1,4 +1,5 @@
 "use strict";
+require('./globals');
 var gameRules = require('./gamerules');
 var Player = require('./player').Player;
 var config = require('./config');
@@ -24,7 +25,8 @@ config.wsServer.on('request', function (request) {
                     config.addPlayer(msg.data, newPlayer,connIndex);
                     newPlayer.sendMessage({ 'type': 'success' });
                 } else {
-                    config.sendMessage(connection, { 'type': 'failed' });
+                    config.sendMessage(connection, { 'type': 'failed' ,'data':
+                    {'code':errors._NAME_ALREADY_EXISTS}});
                 }
             } else {
                 if (config.getPlayerByConn(connIndex)) {

@@ -48,12 +48,12 @@ class Player {
             this.room.endGame();
             this.room = undefined;
         } else {
-            if (returnHome) this.sendFailMessage('Not in a room');
+            if (returnHome) this.sendFailMessage(errors._NOT_IN_ROOM);
         }
     }
 
     sendFailMessage(reason) {
-        this.sendMsgWithType('failed', { 'reason': reason });
+        this.sendMsgWithType('failed', { 'code': reason });
     }
 
     handleMessage(data) {
@@ -61,7 +61,7 @@ class Player {
         switch (data.type) {
             case types.DTYPE_CREATEROOM: {
                 if (this.room) {
-                    this.sendFailMessage('Already in a room');
+                    this.sendFailMessage(errors._ALREADY_IN_ROOM);
                 } else {
                     this.room = new room.GameRoom(this);
                 }
@@ -71,16 +71,19 @@ class Player {
                 if (!data.data) return;
                 if (data.data.passCode) {
                     var roomNow = room.getRoom(data.data.passCode);
-                    if (this.room) {
-                        this.sendFailMessage('Already in a room');
-                    }
+                    if (!roomNow) this.sendFailMessage(errors._PASSCODE_INCORRECT);
                     else {
-                        if (roomNow && roomNow.addNewPlayer(this, data.data.passCode)) {
-                            this.room = roomNow;
-                        } else this.sendFailMessage('Passcode Incorrect :' + data.data.passCode);
+                        if (this.room) {
+                            this.sendFailMessage(errors._ALREADY_IN_ROOM);
+                        }
+                        else {
+                            if (roomNow && roomNow.addNewPlayer(this, data.data.passCode)) {
+                                this.room = roomNow;
+                            } else this.sendFailMessage(errors._PASSCODE_INCORRECT);
+                        }
                     }
                 } else {
-                    this.sendFailMessage('Passcode Not Set');
+                    this.sendFailMessage(errors._PASSCODE_INCORRECT);
                 }
                 break;
             case types.DTYPE_BEGIN:
@@ -201,9 +204,9 @@ class Player {
                         );
                     }
                     this.room.checkCGAndResetLast(this, cards);
-                } else this.sendFailMessage("Cards not NB enough or comb is invalid");
-            } this.sendFailMessage('Cannot Draw cards you do not have');
-        } else this.sendFailMessage('Not your round');
+                } else this.sendFailMessage(errors._CARD_COMB_INVALID);
+            } this.sendFailMessage(errors._CARD_NOT_POSSESSED_EXISTS);
+        } else this.sendFailMessage(errors._NOT_YOUR_ROUND);
     }
 }
 
