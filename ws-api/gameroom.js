@@ -78,6 +78,10 @@ class GameRoom {
                     this.sendToAllPlayer(types.STYPE_PLAYERDRAW,
                         { 'name': player.name, 'cards': cards }
                     );
+                    var combtype = rules.getNBType(nbComb);
+                    player.sendMsgWithType(types.STYPE_DRAWSUCCEED,
+                        { 'combtype': combtype }
+                    );
                     this.beginNotRespond = null;
                     return true;
                 case DRAW_CHA:
