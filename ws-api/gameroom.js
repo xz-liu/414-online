@@ -156,14 +156,6 @@ class GameRoom {
         } else {
             this.roundNow[DRAW_NEXT] = nxtPlayer;
         }
-        for (var i in this.roundNow) {
-            if (this.roundNow[i])
-                this.roundNow[i].drawType = [];
-        }
-        for (var i in this.roundNow) {
-            if (this.roundNow[i])
-                this.roundNow[i].drawType.push(i);
-        }
         this.roundSendAuto();
     }
     roundSendAuto() {
@@ -220,6 +212,16 @@ class GameRoom {
             'cha': cha ? cha.name : null,
             'go': go ? go.name : null
         };
+        
+        for (var i in this.roundNow) {
+            if (this.roundNow[i])
+                this.roundNow[i].drawType = [];
+        }
+        for (var i in this.roundNow) {
+            if (this.roundNow[i])
+                this.roundNow[i].drawType.push(i);
+        }
+        
         if (begin) {
             this.beginNotRespond = begin;
             setTimeout(this.beginAuto, this.interval);
@@ -247,7 +249,7 @@ class GameRoom {
                 this.lastType = undefined;
                 this.lastReal = undefined;
                 this.roundNow = [];
-                this.roundNow[DRAW_BEGIN] = startWith;
+                this.roundNow[DRAW_BEGIN] = this.players[startWith];
                 this.roundSendMsg(this.players[startWith]);
                 return true;
             }

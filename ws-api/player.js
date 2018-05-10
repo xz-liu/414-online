@@ -38,7 +38,7 @@ class Player {
         this.room = null;
         this.cards = [];
         this.connection = connection;
-        this.drawType = undefined;
+        this.drawType = [];
     }
 
 
