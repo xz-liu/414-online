@@ -143,7 +143,7 @@ class GameRoom {
     }
     getNxtNotWonPlayer(nowPlayer) {
         var nxtPlayer = nowPlayer;
-        while (!wins.includes(nxtPlayer)) {
+        while (!this.wins.includes(nxtPlayer)) {
             nxtPlayer = this.players[(nowPlayer + 1) % this.players.length];
         }
         return nxtPlayer;
@@ -221,7 +221,7 @@ class GameRoom {
             if (this.roundNow[i])
                 this.roundNow[i].drawType.push(i);
         }
-        
+
         if (begin) {
             this.beginNotRespond = begin;
             setTimeout(this.beginAuto, this.interval);
@@ -249,6 +249,7 @@ class GameRoom {
                 this.lastType = undefined;
                 this.lastReal = undefined;
                 this.roundNow = [];
+                this.wins=[];
                 this.roundNow[DRAW_BEGIN] = this.players[startWith];
                 this.roundSendMsg(this.players[startWith]);
                 return true;
