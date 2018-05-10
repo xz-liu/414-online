@@ -28,11 +28,11 @@ class GameRoom {
         if (this.lastNBString) {
             if (drawType === DRAW_CHA) {
                 good = (cards.length === 2 && cards[0][0] === cards[0][1]
-                     && cards[0][0] === this.lastNBString[0]);
+                    && cards[0][0] === this.lastNBString[0]);
             }
             if (drawType === DRAW_GO) {
                 good = this.lastType == DRAW_GO &&
-                 (cards.length === 1 && cards[0][0] === this.lastNBString[0]);
+                    (cards.length === 1 && cards[0][0] === this.lastNBString[0]);
             }
             // if(drawType === DRAW_BEGIN)drawType
             if (good && rules.combCmp(nbComb, this.lastNBString)) {
@@ -83,6 +83,10 @@ class GameRoom {
                         { 'combtype': combtype }
                     );
                     this.beginNotRespond = null;
+
+                    this.lastPlayer = player;
+                    this.lastReal = player;
+                    this.lastType = DRAW_BEGIN;
                     return true;
                 case DRAW_CHA:
                     return this.drawNext(nbTypes.VIRTUAL_CHA,
@@ -101,11 +105,13 @@ class GameRoom {
         return false;
     }
     sendToAllPlayer(type, msg) {
+        debug('actually sending!');
         for (var i in this.players) {
             this.players[i].sendMsgWithType(type, msg);
         }
     }
     checkCGAndResetLast(player, cards) {
+        console.log('check cards after draw');
         var nbS = cardOps.cardsToNBString(cards);
         var type = rules.getNBType(nbS);
         // var ret;
@@ -146,13 +152,17 @@ class GameRoom {
 
     }
     getNxtNotWonPlayer(nowPlayer) {
-        var nxtPlayer = nowPlayer;
-        while (!this.wins.includes(nxtPlayer)) {
+        var nxtPlayer =this.players[ nowPlayer];
+        do {
+            debug('loop');
             nxtPlayer = this.players[(nowPlayer + 1) % this.players.length];
-        }
+        }while (this.wins.includes(nxtPlayer));
+        debug("select "+nxtPlayer);
         return nxtPlayer;
     }
     nextPlayer() {
+        console.log('goto nxt player');
+        debug(this.lastReal.name);
         var nowPlayer = this.players.indexOf(this.lastReal);
         var nxtPlayer = this.getNxtNotWonPlayer(nowPlayer);
         if (nxtPlayer === this.lastPlayer) {
@@ -167,7 +177,7 @@ class GameRoom {
             next = this.roundNow[DRAW_NEXT],
             cha = this.roundNow[DRAW_CHA],
             go = this.roundNow[DRAW_GO];
-        this.roundSendMsg(begin, nxt, cha, go);
+        this.roundSendMsg(begin, next, cha, go);
     }
     passThisRound(player) {
         this.lastReal = player;
@@ -216,8 +226,9 @@ class GameRoom {
             'cha': cha ? cha.name : null,
             'go': go ? go.name : null
         };
-        
+
         for (var i in this.roundNow) {
+            debug('draw type: '+i+', val:' +this.roundNow[i]);
             if (this.roundNow[i])
                 this.roundNow[i].drawType = [];
         }
@@ -234,6 +245,7 @@ class GameRoom {
             this.nextNotRespond = nxt;
             setTimeout(this.nextAuto, this.interval);
         }
+        console.log('sending!');
         this.sendToAllPlayer(types.STYPE_PLAYERROUND, msg);
     }
 
@@ -253,7 +265,7 @@ class GameRoom {
                 this.lastType = undefined;
                 this.lastReal = undefined;
                 this.roundNow = [];
-                this.wins=[];
+                this.wins = [];
                 this.roundNow[DRAW_BEGIN] = this.players[startWith];
                 this.roundSendMsg(this.players[startWith]);
                 return true;

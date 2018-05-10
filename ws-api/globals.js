@@ -61,3 +61,7 @@ global.errors={
     _ONLY_HOST_CAN_START:8,
     _ROOM_MEMBER_NOT_ENOUGH:9,
 };
+
+global.debug=function(e){
+    console.log(e);
+}

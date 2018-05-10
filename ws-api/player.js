@@ -57,6 +57,7 @@ class Player {
     }
 
     handleMessage(data) {
+        debug('handling data');
         if (!data.type) return;
         switch (data.type) {
             case types.DTYPE_CREATEROOM: {
@@ -203,9 +204,13 @@ class Player {
                             this.cards.indexOf(cards[i]), 1
                         );
                     }
+                    console.log('cards after del');
+                    for (var i in this.cards) {
+                        console.log(this.cards[i]);
+                    }
                     this.room.checkCGAndResetLast(this, cards);
                 } else this.sendFailMessage(errors._CARD_COMB_INVALID);
-            } this.sendFailMessage(errors._CARD_NOT_POSSESSED_EXISTS);
+            }else this.sendFailMessage(errors._CARD_NOT_POSSESSED_EXISTS);
         } else this.sendFailMessage(errors._NOT_YOUR_ROUND);
     }
 }
