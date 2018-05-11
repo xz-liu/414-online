@@ -242,6 +242,12 @@ div[class*='pok']:after {
     border: 2px solid red;
     cursor: pointer;
 }
+.user_oper_button_disabled{
+    display: none;
+}
+.user_oper_button_enabled{
+    display: block;
+}
 .bring_out_button{
     left: calc(var(--userOperWidth)*0.33);
     background-color: aqua;
