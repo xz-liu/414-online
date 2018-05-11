@@ -4,7 +4,7 @@ var nbArray = '3456789XJQKA2SB';
 var cardNBIndex = [];
 (function () {
     for (var i in nbArray) {
-        cardNBIndex[nbArray[i]] = i + 1;
+        cardNBIndex[nbArray[i]] = parseInt(i) + 1;
     }
 })();
 
@@ -50,19 +50,19 @@ calNB[NBT_SINGLE] = function (cards) {
 
 calNB[NBT_PAIR] = function (cards) {
     if (checkSame(cards) === 2) {
-        return [NBT_SINGLE, cardNBIndex[cards[0]]];
+        return [NBT_PAIR, cardNBIndex[cards[0]]];
     } else return INVALID;
 };
 
 calNB[NBT_TRIAD] = function (cards) {
     if (checkSame(cards) === 3) {
-        return [NBT_SINGLE, cardNBIndex[cards[0]]];
+        return [NBT_TRIAD, cardNBIndex[cards[0]]];
     } else return INVALID;
 };
 
 calNB[NBT_QUAD] = function (cards) {
     if (checkSame(cards) === 4) {
-        return [NBT_SINGLE, cardNBIndex[cards[0]]];
+        return [NBT_QUAD, cardNBIndex[cards[0]]];
     } else return INVALID;
 };
 calNB[NBT_JOKER] = function (cards) {
@@ -97,9 +97,13 @@ calNB[NBT_TRIAD_W] = function (cards) {
                     if (char2 === cards[i])
                         cnt2++;
                     else return INVALID;
-                } else char2 = cards[i];
+                } else {
+                    char2 = cards[i];
+                    cnt2=1;
+                }
             }
         }
+        debug_raw("test TRAID_W :" + char1 + " " + cnt1 + " " + char2 + " " + cnt2);
         if (cnt1 === 3) {
             return [NBT_TRIAD_W, cardNBIndex[char1], cnt2];
         }
@@ -118,25 +122,27 @@ function getNxtChar(nowChar) {
     return nbArray[ind + 1];
 };
 
-calNB[NBT_CONT] = function (cards, hui) {
+calNB[NBT_CONT] = function (cards) {
+    cards = cards.split('').sort(
+        function (a, b) {
+            return Math.sign(cardNBIndex[a] - cardNBIndex[b])
+        }).join('');
     if (!cards.includes('2')) {
-        if (!(hui && cards.includes(hui))) {
-            if (cards.length >= 3) {
-                var begin = cards[0], beginCnt = 0, nowCnt = 0, nowChar = begin;
-                for (var i in cards) {
-                    if (cards[i] === begin) beginCnt++;
-                    if (cards[i] === nowChar) nowCnt++;
-                    else if (getNxtChar(nowChar) === cards[i]) {
-                        if (nowCnt != beginCnt) return INVALID;
-                        nowChar = cards[i];
-                        nowCnt = 1;
-                    } else return INVALID;
-                }
-                if (cards.length % beginCnt) return INVALID;
-                var repTimes = cards.length / beginCnt;
-                if (repTimes < 3) return INVALID;
-                return [NBT_CONT, cardNBIndex[begin], beginCnt, repTimes];
+        if (cards.length >= 3) {
+            var begin = cards[0], beginCnt = 0, nowCnt = 0, nowChar = begin;
+            for (var i in cards) {
+                if (cards[i] === begin) beginCnt++;
+                if (cards[i] === nowChar) nowCnt++;
+                else if (getNxtChar(nowChar) === cards[i]) {
+                    if (nowCnt != beginCnt) return INVALID;
+                    nowChar = cards[i];
+                    nowCnt = 1;
+                } else return INVALID;
             }
+            if (cards.length % beginCnt) return INVALID;
+            var repTimes = cards.length / beginCnt;
+            if (repTimes < 3) return INVALID;
+            return [NBT_CONT, cardNBIndex[begin], beginCnt, repTimes];
         }
     }
     return INVALID;
@@ -146,10 +152,18 @@ calNB[NBT_INVALID] = function (cards) {
     return INVALID;
 };
 
-function calCombNBIndex(cards, hui) {
+function calCombNBIndex(cards) {
+    debug_raw("TEST of cards:");
+    debug(cards);
     for (var i in calNB) {
-        var res = calNB[i](cards, hui);
-        if (res != INVALID) return res;
+        debug_raw(i + " check: ");
+        // debug_raw(]);
+        var res = (calNB[i])(cards);
+        debug_array(res);
+        if (res !== INVALID) {
+            debug('this worked!');
+            return res;
+        }
     }
     return INVALID;
 }
@@ -224,12 +238,20 @@ function combNBTypeCompare(nb1, nb2) {
 }
 
 function validComb(cards) {
-    return calCombNBIndex(cards) !== INVALID;
+    debug('check if card is invalid');
+    var r = calCombNBIndex(cards);
+    debug(r);
+    return r !== INVALID;
 }
 
-function combNBIndexCompare(cards1, cards2, hui) {
-    var nb1 = calCombNBIndex(cards1, hui);
-    var nb2 = calCombNBIndex(cards2, hui);
+function combNBIndexCompare(cards1, cards2) {
+    var nb1 = calCombNBIndex(cards1);
+    var nb2 = calCombNBIndex(cards2);
+    debug('comparing');
+    debug_array(cards1);
+    debug_array(nb1[0]);
+    debug_array(cards2);
+    debug_array(nb2[0]);
     var cmpType = combNBTypeCompare(nb1, nb2);
     if (cmpType !== NBC_EQUAL) return cmpType;
 

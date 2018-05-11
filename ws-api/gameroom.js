@@ -64,7 +64,7 @@ class GameRoom {
                 }
                 this.lastPlayer = player;
                 this.lastReal = player;
-                this.lastType = type;
+                this.lastType = drawType;
                 return true;
             }
         }
@@ -73,6 +73,7 @@ class GameRoom {
     playerDrawCards(player, cards, drawType) {
         var nbComb = cardOps.cardsToNBString(cards);
         if (rules.validComb(nbComb)) {
+            debug('player draw cards:'+nbComb);
             switch (drawType) {
                 case DRAW_BEGIN:
                     this.sendToAllPlayer(types.STYPE_PLAYERDRAW,
@@ -98,6 +99,7 @@ class GameRoom {
                     if (this.drawNext(nbComb,
                         types.STYPE_PLAYERDRAW, cards, player)) {
                         this.nextNotRespond = null;
+                        return true;
                     }
 
             }
@@ -105,13 +107,13 @@ class GameRoom {
         return false;
     }
     sendToAllPlayer(type, msg) {
-        debug('actually sending!');
+        // debug('actually sending!');
         for (var i in this.players) {
             this.players[i].sendMsgWithType(type, msg);
         }
     }
     checkCGAndResetLast(player, cards) {
-        console.log('check cards after draw');
+        debug('check cards after draw');
         var nbS = cardOps.cardsToNBString(cards);
         var type = rules.getNBType(nbS);
         // var ret;
@@ -152,16 +154,16 @@ class GameRoom {
 
     }
     getNxtNotWonPlayer(nowPlayer) {
-        var nxtPlayer =this.players[ nowPlayer];
+        var nxtPlayer = this.players[nowPlayer];
         do {
             debug('loop');
             nxtPlayer = this.players[(nowPlayer + 1) % this.players.length];
-        }while (this.wins.includes(nxtPlayer));
-        debug("select "+nxtPlayer);
+        } while (this.wins.includes(nxtPlayer));
+        debug("select " + nxtPlayer);
         return nxtPlayer;
     }
     nextPlayer() {
-        console.log('goto nxt player');
+        debug('goto nxt player');
         debug(this.lastReal.name);
         var nowPlayer = this.players.indexOf(this.lastReal);
         var nxtPlayer = this.getNxtNotWonPlayer(nowPlayer);
@@ -184,6 +186,7 @@ class GameRoom {
         this.sendToAllPlayer(types.STYPE_PLAYERPASS,
             { 'name': player.name }
         );
+        this.nextPlayer();
     }
 
     addNewPlayer(player, passCode) {
@@ -228,7 +231,7 @@ class GameRoom {
         };
 
         for (var i in this.roundNow) {
-            debug('draw type: '+i+', val:' +this.roundNow[i]);
+            debug('draw type: ' + i + ', val:' + this.roundNow[i]);
             if (this.roundNow[i])
                 this.roundNow[i].drawType = [];
         }
@@ -245,34 +248,36 @@ class GameRoom {
             this.nextNotRespond = nxt;
             setTimeout(this.nextAuto, this.interval);
         }
-        console.log('sending!');
+        // debug('sending!');
         this.sendToAllPlayer(types.STYPE_PLAYERROUND, msg);
     }
 
     beginGame(player) {
-        if (this.players.length >= 2) {
-            if (player.name === this.players[0].name) {
-                //game begins
-                var cardsForEach = cardOps.distributeCards(this.players.length);
-                for (var i in cardsForEach) {
-                    this.players[i].cards = cardsForEach[i];
-                    this.players[i].sendMsgWithType('card', { 'cards': cardsForEach[i] });
-                }
+        if (player) {
+            if (this.players.length >= 2) {
+                if (player.name === this.players[0].name) {
+                    //game begins
+                    var cardsForEach = cardOps.distributeCards(this.players.length);
+                    for (var i in cardsForEach) {
+                        this.players[i].cards = cardsForEach[i];
+                        this.players[i].sendMsgWithType('card', { 'cards': cardsForEach[i] });
+                    }
 
-                var startWith = Math.floor(Math.random() * 1000) % this.players.length;
-                this.lastNBString = undefined;
-                this.lastPlayer = undefined;
-                this.lastType = undefined;
-                this.lastReal = undefined;
-                this.roundNow = [];
-                this.wins = [];
-                this.roundNow[DRAW_BEGIN] = this.players[startWith];
-                this.roundSendMsg(this.players[startWith]);
-                return true;
-            }
-            else player.sendFailMessage(erors._ONLY_HOST_CAN_START);
-        } else player.sendFailMessage(errros._ROOM_MEMBER_NOT_ENOUGH);
-        return false;
+                    var startWith = Math.floor(Math.random() * 1000) % this.players.length;
+                    this.lastNBString = undefined;
+                    this.lastPlayer = undefined;
+                    this.lastType = undefined;
+                    this.lastReal = undefined;
+                    this.roundNow = [];
+                    this.wins = [];
+                    this.roundNow[DRAW_BEGIN] = this.players[startWith];
+                    this.roundSendMsg(this.players[startWith]);
+                    return true;
+                }
+                else player.sendFailMessage(erors._ONLY_HOST_CAN_START);
+            } else player.sendFailMessage(errros._ROOM_MEMBER_NOT_ENOUGH);
+            return false;
+        }
     }
 }
 module.exports = {

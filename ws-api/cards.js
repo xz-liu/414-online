@@ -25,12 +25,12 @@ function shuffleCards(a) {
 }
 
 function cardsSortComp(carda,cardb){
-    const nbString='3456789XASB';
+    const nbString='3456789XJQKA2SB';
     var indA=nbString.indexOf(carda[0]),
         indB=nbString.indexOf(cardb[0]);
-    if(indA==indB){
-        return carda[1]-cardb[1];
-    }else return indA-indB;
+    if(indA===indB){
+        return Math.sign(carda[1]-cardb[1]);
+    }else return Math.sign(indA-indB);
 }
 
 function distributeCards(playerCnt){
@@ -43,6 +43,8 @@ function distributeCards(playerCnt){
     var mod=cardsPerm.length%playerCnt;
     for( var i=0;i<mod;i++){
         ret[i].push(cardsPerm[cardsPerm.length-1-i]);
+    }
+    for(var i in ret){
         ret[i].sort(cardsSortComp);
     }
     return ret;

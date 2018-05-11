@@ -16,7 +16,7 @@ config.wsServer.on('request', function (request) {
     // type:"success"
     // type:"failed"
     connection.on('message', function (message) {
-        console.log(message);
+        debug(message+' send from conn#'+connIndex);
         if (message.type === 'utf8') {
             var msg = JSON.parse(message.utf8Data);
             if (msg.type === 'name') {

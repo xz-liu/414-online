@@ -57,7 +57,7 @@ class Player {
     }
 
     handleMessage(data) {
-        debug('handling data');
+        debug('handling data:'+ data);
         if (!data.type) return;
         switch (data.type) {
             case types.DTYPE_CREATEROOM: {
@@ -143,8 +143,8 @@ class Player {
     }
 
     sendMessage(msg) {
-        console.log("Msg :" + msg);
-        console.log('Send Message ' + JSON.stringify(msg));
+        // console.log("Msg :" + msg);
+        debug('Send Message ' + JSON.stringify(msg));
         this.connection.sendUTF(JSON.stringify(msg));
     }
     sendMsgWithType(type, data) {
@@ -152,8 +152,8 @@ class Player {
         // msgX['type']=type;
         // msgX['data']=data;
         // this.sendMessage(msgX);
-        console.log(type);
-        console.log(data);
+        // console.log(type);
+        // console.log(data);
         this.sendMessage({ 'type': type, 'data': data });
     }
     getCards(cards) {
@@ -204,10 +204,7 @@ class Player {
                             this.cards.indexOf(cards[i]), 1
                         );
                     }
-                    console.log('cards after del');
-                    for (var i in this.cards) {
-                        console.log(this.cards[i]);
-                    }
+                    debug(this.cards);
                     this.room.checkCGAndResetLast(this, cards);
                 } else this.sendFailMessage(errors._CARD_COMB_INVALID);
             }else this.sendFailMessage(errors._CARD_NOT_POSSESSED_EXISTS);
