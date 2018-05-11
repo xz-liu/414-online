@@ -12,14 +12,6 @@
         }
         return null;
     }
-    function enterRoom(pass){
-        socket.send(JSON.stringify({
-            type:"room",
-            data:{
-                passCode:pass
-            }
-        }));
-    }
 
     // create name
     document.getElementById("input_name").onkeydown = function(ev){
@@ -28,10 +20,7 @@
                 resetInput();
                 enterWaitInput();
                 pName = this.value;
-                socket.send(JSON.stringify({
-                    type:"name",
-                    data:this.value
-                }));
+                socket.send("name",this.value);
             }
         }
     }
@@ -43,7 +32,7 @@
                 resetInput();
                 enterWaitInput();
                 pCode = this.value;
-                enterRoom(this.value);
+                socket.send("room",{passCode:this.value});
             }
         }
     }
@@ -52,50 +41,54 @@
     document.getElementById("create_room_button").onclick = function(){
         resetInput();
         enterWaitInput();
-        socket.send(JSON.stringify({type:"create"}));
+        socket.send("create");
     }
     // host start game
     document.getElementById("start_game_button").onclick = function(){
+        console.log("begin button clicked!!!!!!!!!!");
         if(thisGame){
             if(thisGame.isRoomHost()){
-                socket.send(JSON.stringify({type:"begin"}))
+                socket.send("begin")
             }
         }
     }
+
+    // user oper
     document.getElementsByClassName("bring_out_button")[0].onclick = function(){
         if(thisGame){
-            var pokers = thisGame.bringOut();
-            socket.send(JSON.stringify({
-                type:"draw",
-                cards:pokers
-            }));
+            var pokers = thisGame.draw();
+            if(pokers){
+                socket.send("draw",{cards:pokers});
+            }
+            
         }
     }
     document.getElementsByClassName("cha_button")[0].onclick = function(){
         if(thisGame){
-            var pokers = thisGame.bringOut();
-            socket.send(JSON.stringify({
-                type:"cha",
-                cards:pokers
-            }));
+            var pokers = thisGame.cha();
+            if(pokers){
+                socket.send("cha",{cards:pokers});
+            }
+            
         }
     }
     document.getElementsByClassName("go_button")[0].onclick = function(){
         if(thisGame){
-            var pokers = thisGame.bringOut();
-            socket.send(JSON.stringify({
-                type:"go",
-                cards:pokers
-            }));
+            var pokers = thisGame.go();
+            if(pokers){
+                socket.send("go",{cards:pokers});
+            }
+            
         }
     }
     document.getElementsByClassName("pass_button")[0].onclick = function(){
         if(thisGame){
-            var pokers = thisGame.bringOut();
-            socket.send(JSON.stringify({
-                type:"pass",
-                cards:pokers
-            }));
+            /*var pokers = thisGame.pass();
+            if(pokers){
+                socket.send("pass");
+            }*/
+            thisGame.pass();
+            socket.send("pass");
         }
     }
 
@@ -159,12 +152,19 @@
             thisGame.dealPoker(json.cards);
         }
     }
-    function otherCha(){
+    function round(json){
+        if(thisGame){
+            thisGame.round(json.begin, json.next, json.cha, json.go);
+        }
+    }
+    function endRound(json){
+    }
+    function otherCha(json){
         if(thisGame){
             thisGame.otherCha(json.name, json.cards);
         }
     }
-    function otherGo(){
+    function otherGo(json){
         if(thisGame){
             thisGame.otherGo(json.name, json.card);
         }
@@ -176,7 +176,7 @@
     }
     function otherDraw(json){
         if(thisGame){
-            thisGame.otherDraw(json.name, cards);
+            thisGame.otherDraw(json.name, json.cards);
         }
     }
     function otherPass(json){
@@ -210,9 +210,12 @@
     
     // game
     socket.set("card",dealPoker);
-    socket.set("drawSuccess",drawSuccess);
+    socket.set("drawSucceed",drawSuccess);
+    socket.set("draw",otherDraw);
     socket.set("cha",otherCha);
     socket.set("go",otherGo);
+    socket.set("round",round);
+    socket.set("endround",endRound);
 
     
 })()

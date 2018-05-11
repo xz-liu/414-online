@@ -13,8 +13,7 @@ var doc = document,
              case '2':return "pok_club";
              case '3':return "pok_heart";
              case '4':return "pok_spade";
-             case 'B':return "pok_big";
-             case 'S':return "pok_small";
+             case 'J':return "pok_joker";
              default:return "wrong";
          }
      }
@@ -23,15 +22,21 @@ var doc = document,
          leftUp = document.createElement("span"),
          rightDown = document.createElement("span");
  
-         if(val !== 'J'){
-             leftUp.innerHTML = val;
-             rightDown.innerHTML = val;
-         }else{
-             leftUp.innerHTML = "JOKER";
-             rightDown.innerHTML = "JOKER";
-             dom.classList.add("pok_joker");
+         switch (val){
+             case "B":
+                dom.classList.add("pok_big");
+                val = "JOKER";
+                break;
+             case "S":
+                dom.classList.add("pok_small");
+                val = "JOKER";
+                break;
+             case "X":
+                val = "10";
+                break;
          }
-         val = (val !== 'J')?val:"JOKER";
+         leftUp.innerHTML = val;
+         rightDown.innerHTML = val;
  
          dom.classList.add(type);
          dom.classList.add("user_poker");
