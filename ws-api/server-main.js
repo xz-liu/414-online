@@ -5,14 +5,7 @@ var Player = require('./player').Player;
 var config = require('./config');
 // var realConns=[];
 global.connNxt = 0;
-function escapeHtml(text) {
-    return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
+
 config.wsServer.on('request', function (request) {
     var connection;
     connection = request.accept(null, request.origin);
@@ -34,7 +27,7 @@ config.wsServer.on('request', function (request) {
                     if (!config.playerExists(playerName)) {
                         var newPlayer = new Player(playerName, connection);
                         config.addPlayer(playerName, newPlayer, connIndex);
-                        newPlayer.sendMessage({ 'type': 'success' });
+                        newPlayer.sendMessage({ 'type': 'success', 'data': playerName });
                     } else {
                         config.sendMessage(connection, {
                             'type': 'failed', 'data':

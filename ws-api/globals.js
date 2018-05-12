@@ -44,30 +44,46 @@ global.nbTypes = {
     VIRTUAL_GO: ['go']
 };
 
+global.msgBox = {
+    S_NEWMSG: 'msgNew',//[name,date,msg]
+    S_HISTORY: 'msgHistory',//[[name1,date1,msg1],[name2,date2,msg2]....]
+    S_SENDFAIL: 'msgSendFailed',//no data
+    D_SEND: 'msgSendNew',//msg
+}
 
 global.DRAW_BEGIN = 'begin';
 global.DRAW_NEXT = 'next';
 global.DRAW_CHA = 'cha';
 global.DRAW_GO = 'go';
 
-global.errors={
-    _NAME_ALREADY_EXISTS:1,
-    _NOT_IN_ROOM:2,
-    _ALREADY_IN_ROOM:3,
-    _PASSCODE_INCORRECT:4,
-    _CARD_COMB_INVALID:5,
-    _CARD_NOT_POSSESSED_EXISTS:6,
-    _NOT_YOUR_ROUND:7,
-    _ONLY_HOST_CAN_START:8,
-    _ROOM_MEMBER_NOT_ENOUGH:9,
+global.errors = {
+    _NAME_ALREADY_EXISTS: 1,
+    _NOT_IN_ROOM: 2,
+    _ALREADY_IN_ROOM: 3,
+    _PASSCODE_INCORRECT: 4,
+    _CARD_COMB_INVALID: 5,
+    _CARD_NOT_POSSESSED_EXISTS: 6,
+    _NOT_YOUR_ROUND: 7,
+    _ONLY_HOST_CAN_START: 8,
+    _ROOM_MEMBER_NOT_ENOUGH: 9,
+    _ROOM_PLAYING:10,
 };
 
-global.debug=function(e){
+global.debug = function (e) {
     console.log(JSON.stringify(e));
 }
-global.debug_raw=function(e){
+global.debug_raw = function (e) {
     console.log(e);
 }
-global.debug_array=function(e){
+global.debug_array = function (e) {
     debug(e);
+}
+
+global.escapeHtml = function (text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }

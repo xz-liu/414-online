@@ -17,8 +17,8 @@ class Player {
 
     playerQuit(returnHome = false) {
         if (this.room) {
-            this.room.sendToAllPlayer(types.STYPE_LEAVES, { 'name': this.name });
-            this.room.endGame();
+            sendMsgBox('I QUIT!!!');
+            this.room.playerLeaves(this);
             this.room = undefined;
         } else {
             if (returnHome) this.sendFailMessage(errors._NOT_IN_ROOM);
@@ -95,9 +95,18 @@ class Player {
                 } break;
             case types.DTYPE_RETURNHOME:
                 this.playerQuit(true);
+                break;
+            case msgBox.D_SEND:
+                if(data)this.sendMsgBox(data);
+                break;
         }
     }
 
+    sendMsgBox(data){
+        if(this.room){
+            this.room.msgPlayerSend(this,data);
+        }
+    }
     autoPass() {
         this.room.passThisRound(this);
     }
