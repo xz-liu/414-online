@@ -125,7 +125,7 @@ function getNxtChar(nowChar) {
 calNB[NBT_CONT] = function (cards) {
     cards = cards.split('').sort(
         function (a, b) {
-            return Math.sign(cardNBIndex[a] - cardNBIndex[b])
+            return Math.sign(cardNBIndex[a] - cardNBIndex[b]);
         }).join('');
     if (!cards.includes('2')) {
         if (cards.length >= 3) {

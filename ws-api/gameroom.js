@@ -274,7 +274,7 @@ class GameRoom {
                     this.roundSendMsg(this.players[startWith]);
                     return true;
                 }
-                else player.sendFailMessage(erors._ONLY_HOST_CAN_START);
+                else player.sendFailMessage(errors._ONLY_HOST_CAN_START);
             } else player.sendFailMessage(errros._ROOM_MEMBER_NOT_ENOUGH);
             return false;
         }
