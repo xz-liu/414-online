@@ -162,7 +162,7 @@ body{
 */
 .user_poker_area{
     position: absolute;
-    width: 40%;
+    width: 45%;
     left: 25%;
     height: 20%;
     bottom: 5%;
@@ -274,7 +274,7 @@ div[class*='pok']:after {
     position: absolute;
     display: none;
     width: var(--userOperWidth);
-    left: 65%;
+    left: 70%;
     height: var(--userOperWidth);
     bottom: 2%;;
 }
