@@ -1,6 +1,14 @@
 (function(){
-    var socket = new ClientSocket();
-    var socket,
+    //test();
+
+    var socket = new ClientSocket({
+        
+        open:enterNameInput,
+        error:enterErrorInput
+        
+        /*open:test,
+        error:test*/
+    }),
         pCode,
         pName,
         thisGame;
@@ -24,6 +32,16 @@
             }
         }
     }
+    document.getElementById("input_name_button").onclick = function(){
+        var input = document.getElementById("input_name");
+        if(input.value.length !== 0){
+            resetInput();
+            enterWaitInput();
+            pName = input.value;
+            socket.send("name",input.value);
+        }
+    }
+
 
     // enter room
     document.getElementById("input_room").onkeydown = function(ev){
@@ -36,6 +54,15 @@
             }
         }
     }
+    document.getElementById("input_room_button").onclick = function(){
+        var input = document.getElementById("input_room");
+        if(input.value.length !== 0){
+            resetInput();
+            enterWaitInput();
+            pCode = input.value;
+            socket.send("room",{passCode:input.value});
+        }
+    }
 
     // create room
     document.getElementById("create_room_button").onclick = function(){
@@ -43,6 +70,7 @@
         enterWaitInput();
         socket.send("create");
     }
+    
     // host start game
     document.getElementById("start_game_button").onclick = function(){
         console.log("begin button clicked!!!!!!!!!!");
@@ -51,6 +79,14 @@
                 socket.send("begin")
             }
         }
+    }
+    // invite
+    document.getElementById("room_passcode").onclick = function(){
+        document.getElementById("clip").focus();
+        document.getElementById("clip").select();
+        /*var span = document.getElementById("invite_passcode");
+        span.focus();*/
+        document.execCommand("copy",false,null);
     }
 
     // user oper
@@ -136,12 +172,19 @@
     }
     function otherEnter(json){
         console.log(json.name + " enter!!");
+        if(thisGame){
+            thisGame.otherEnter(json.name);
+        }
     }
     function otherLeave(json){
         console.log(json.name + " leave!!");
+        if(thisGame){
+            thisGame.otherLeave(json.name);
+        }
     }
     function enterSuccess(json){
         thisGame = new Game(socket, pCode, pName, false);
+        thisGame.enterRoom(json.names);
     }
 
 
@@ -184,6 +227,24 @@
             thisGame.otherPass(json.name);
         }
     }
+    function lose(){
+
+    }
+    function gameEnds(){
+
+    }
+
+
+    // chat
+    function showMsgHistory(json){
+
+    }
+    function showNewMsg(json){
+
+    }
+    function msgSendFail(json){
+
+    }
 
 
 
@@ -192,10 +253,7 @@
         document.getElementById("game_screen").style.display = "block";
     }
 
-    (function(){
-        enterNameInput();
-        //test();
-    })()
+    
     
     
     // name
@@ -217,6 +275,12 @@
     socket.set("go",otherGo);
     socket.set("round",round);
     socket.set("endround",endRound);
+    socket.set("lose",lose);
+    socket.set("gameEnds",gameEnds);
 
+    // chat
+    socket.set("msgNew",showNewMsg);
+    socket.set("msgHistory",showMsgHistory);
+    socket.set("msgSendFailed",msgSendFail);
     
 })()

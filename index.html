@@ -3,7 +3,9 @@
     <head>
         <meta charset="utf-8">
         <title>puke</title>
-        <link href="puke.css" rel="stylesheet">
+        <link href="css/menu.css" rel="stylesheet">
+        <link href="css/game.css" rel="stylesheet">
+        <link href="css/poker.css" rel="stylesheet">
     </head>
     <body>
         <div id="game_screen" class="game_screen">
@@ -14,9 +16,11 @@
                 <div id="pass_button" class="pass_button user_oper_button">过</div>
                 <div id="cha_button" class="cha_button user_oper_button">CHA</div>
             </div>
+            <div id="player_area"></div>
             <div class="user_info">
-                <p id="player_name">asdasd</p>
-                <p id="room_passcode">asdasdsad</p>
+                <input id="clip" style="display:none">
+                <p id="player_name">userName</p>
+                <p id="room_passcode">邀请码 : <span id="invite_passcode">111111</span></p>                
                 <div id="start_game_button" class="start_game_button">START</div>
             </div>
         </div>
@@ -28,7 +32,7 @@
                     <div id="menu_name" class="menu_input_content">
                         <div class="input_container">
                             <input id="input_name" placeholder="输入你的昵称" class="input">
-                            <div class="input_button">ENTER</div>
+                            <div id="input_name_button" class="input_button">ENTER</div>
                         </div>
                     </div>
                     <div id="menu_wait"  class="menu_input_content">
@@ -41,7 +45,7 @@
                         <p>你可以加入一个房间</p>
                         <div class="input_container">
                             <input id="input_room" placeholder="房间号" class="input">
-                            <div class="input_button">ENTER</div>
+                            <div id="input_room_button" class="input_button">ENTER</div>
                         </div>
                         <p>或者创建一个</p>
                         <div id="create_room_button">
