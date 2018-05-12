@@ -69,10 +69,5 @@ global.debug_raw=function(e){
     console.log(e);
 }
 global.debug_array=function(e){
-    // var x='[';
-    // for(var i in e){
-    //     x+='"'+i+'"=>"'+e[i]+'",';
-    // }
-    // x+=']';
     debug(e);
 }

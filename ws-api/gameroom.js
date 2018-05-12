@@ -26,16 +26,20 @@ class GameRoom {
     drawNext(nbComb, drawType, cards, player) {
         var good = true;
         if (this.lastNBString) {
+            var virtualLast=this.lastNBString;
             if (drawType === DRAW_CHA) {
-                good = (cards.length === 2 && cards[0][0] === cards[0][1]
+                good = (cards.length === 2 && cards[0][0] === cards[1][0]
                     && cards[0][0] === this.lastNBString[0]);
             }
             if (drawType === DRAW_GO) {
-                good = this.lastType == DRAW_GO &&
+                good = this.lastType == DRAW_CHA &&
                     (cards.length === 1 && cards[0][0] === this.lastNBString[0]);
+                if(good)virtualLast=nbTypes.VIRTUAL_CHA;
             }
+            debug_raw('draw next!!!'+drawType);
+            debug_raw('last_NBSTRING:'+this.lastNBString+" "+good);
             // if(drawType === DRAW_BEGIN)drawType
-            if (good && rules.combCmp(nbComb, this.lastNBString)) {
+            if (good && rules.combCmp(nbComb, virtualLast)) {
                 this.sendToAllPlayer(drawType,
                     { 'name': player.name, 'cards': cards }
                 );
@@ -73,7 +77,9 @@ class GameRoom {
     playerDrawCards(player, cards, drawType) {
         var nbComb = cardOps.cardsToNBString(cards);
         if (rules.validComb(nbComb)) {
-            debug('player draw cards:' + nbComb);
+            debug_raw('==player draw cards:'+player.name);
+            debug(cards);
+            debug_raw(drawType);
             switch (drawType) {
                 case DRAW_BEGIN:
                     this.sendToAllPlayer(types.STYPE_PLAYERDRAW,
@@ -120,14 +126,14 @@ class GameRoom {
         this.roundNow = [];
         if (drawType === DRAW_CHA) {//go
             for (var i in this.players) {
-                if (this.players[i].haveGo(cards)) {
+                if (this.players[i].haveGo(cards[0])) {
                     this.roundNow[nbTypes.NBT_GO] = this.players[i];
                 }
             }
         } else if (type === nbTypes.NBT_SINGLE &&
             (drawType === DRAW_BEGIN || drawType === DRAW_NEXT)) {//cha check
             for (var i in this.players) {
-                if (this.players[i].haveCha(cards)) {
+                if (this.players[i].haveCha(cards[0])) {
                     this.roundNow[nbTypes.NBT_CHA] = this.players[i];
                 }
             }

@@ -99,7 +99,7 @@ calNB[NBT_TRIAD_W] = function (cards) {
                     else return INVALID;
                 } else {
                     char2 = cards[i];
-                    cnt2=1;
+                    cnt2 = 1;
                 }
             }
         }
@@ -155,6 +155,13 @@ calNB[NBT_INVALID] = function (cards) {
 function calCombNBIndex(cards) {
     debug_raw("TEST of cards:");
     debug(cards);
+    switch (cards) {
+        case nbTypes.VIRTUAL_CHA:
+        case nbTypes.VIRTUAL_GO:
+        case nbTypes.VIRTUAL_HUI:
+            return cards;
+        default:
+    }
     for (var i in calNB) {
         debug_raw(i + " check: ");
         // debug_raw(]);
@@ -203,6 +210,7 @@ function combNBTypeCompare(nb1, nb2) {
                 case NBT_SINGLE:
                 case NBT_CHA:
                 case NBT_HUI:
+                case NBT_GO:
                 case NBT_TRIAD_W:
                     return NBC_ABOVE;
                 case NBT_CONT:
@@ -218,7 +226,6 @@ function combNBTypeCompare(nb1, nb2) {
                 case NBT_SINGLE:
                 case NBT_CHA:
                 case NBT_HUI:
-                case NBT_GO:
                     return NBC_ABOVE;
                 case NBT_CONT:
                     if (nb2[NBI_CONT_TYPE] < 3)
