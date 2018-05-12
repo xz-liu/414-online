@@ -66,6 +66,7 @@ global.errors = {
     _NOT_YOUR_ROUND: 7,
     _ONLY_HOST_CAN_START: 8,
     _ROOM_MEMBER_NOT_ENOUGH: 9,
+    _ROOM_PLAYING:10,
 };
 
 global.debug = function (e) {

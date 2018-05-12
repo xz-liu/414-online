@@ -18,8 +18,7 @@ class Player {
     playerQuit(returnHome = false) {
         if (this.room) {
             sendMsgBox('I QUIT!!!');
-            this.room.sendToAllPlayer(types.STYPE_LEAVES, { 'name': this.name });
-            this.room.endGame();
+            this.room.playerLeaves(this);
             this.room = undefined;
         } else {
             if (returnHome) this.sendFailMessage(errors._NOT_IN_ROOM);
