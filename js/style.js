@@ -46,6 +46,8 @@
         width = window.innerWidth,//1536
         height = window.innerHeight;//759
         cssVars.setProperty("--height",window.innerHeight + "px");
+        cssVars.setProperty("--menuWidth",Math.floor(686*width/1920) + "px");
+        cssVars.setProperty("--menuHeight",Math.floor(400*height/1080) + "px");
         cssVars.setProperty("--pokerHeight",Math.floor(150*width/1536) + "px");
         cssVars.setProperty("--pokerMargin",Math.floor(-75*height/759) + "px");
     }

@@ -15,18 +15,21 @@
                 <div id="cha_button" class="cha_button user_oper_button">CHA</div>
             </div>
             <div class="user_info">
-                <p id="player_name"></p>
-                <p id="room_passcode"></p>
+                <p id="player_name">asdasd</p>
+                <p id="room_passcode">asdasdsad</p>
                 <div id="start_game_button" class="start_game_button">START</div>
             </div>
         </div>
         <div id="menu_screen" class="menu_screen">
+            <div class="game_title">414-online</div>
             <div id="menu" class="menu">
                 <div class="menu_up"></div>
                 <div id="menu_input" class="menu_input">
                     <div id="menu_name" class="menu_input_content">
-                        <p id="notice_name">创建角色，请输入角色名</p>
-                        <input id="input_name" class="input_name">
+                        <div class="input_container">
+                            <input id="input_name" placeholder="输入你的昵称" class="input">
+                            <div class="input_button">ENTER</div>
+                        </div>
                     </div>
                     <div id="menu_wait"  class="menu_input_content">
                         <p>loading................</p>
@@ -36,13 +39,14 @@
                     </div>
                     <div id="menu_room" class="menu_input_content">
                         <p>你可以加入一个房间</p>
-                        <input id="input_room">
+                        <div class="input_container">
+                            <input id="input_room" placeholder="房间号" class="input">
+                            <div class="input_button">ENTER</div>
+                        </div>
                         <hr>
                         <p>或者创建一个</p>
                         <div id="create_room_button">
                             <span>_CREATE ROOM_</span>
-                            <div></div>
-                            
                         </div>
                     </div>
                 </div>

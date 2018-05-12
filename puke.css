@@ -10,48 +10,73 @@ body{
     --height:0px;
     --pokerHeight:150px;
     --pokerMargin:-75px;
-    --menuUpHeight:60px;
-    --menuDownHeight:60px;
+    --menuWidth:549px;
+    --menuHeight:549px;
+    --menuUpHeight:90px;
+    --menuDownHeight:90px;
     --userOperWidth:250px;
     --userOperButtonWidth:calc(var(--userOperWidth)*0.34);
-    overflow: hidden;
 }
 .menu_screen{
     position: absolute;
-    background-color: white;
+    background-image: url(4.jpg);
     width: 100%;
     height: var(--height);
 }
-
+.game_title{
+    position: absolute;
+    top: 22%;
+    left: 35%;
+    font-size: 90px;
+    color: white;
+    text-shadow: 2px 2px 10px black;
+}
 .menu{
     position: absolute;
-    width: 30%;
-    left: 35%;
-    top: 25%;
-    background-color: rgb(89, 202, 95);
+    width: var(--menuWidth);
+    
+    left: 32%;
+    top: 37%;
+    border-radius: 10px;
+
+    box-shadow: 5px 5px 20px 5px rgba(0,0,0,0.6);
 }
 .menu_input{
     position: relative;
-    width: 100%;
+    width: calc(100% + 1px);
+    left: -1px;
     transition: height 0.2s;
     overflow: hidden;
     height: 0;
-    background-color: gray;
+    background-color: rgba(0,0,0,0.3);
+    backdrop-filter: blur(5px);
+    
 }
 .menu_input_content{
     display: none;
     margin: 25px;
+    font-size: 25px;
+    color: white;
     
 }
 .menu_up{
     position: relative;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    
     width: 100%;
-    height: var(--menuUpHeight);
+    height: calc(var(--menuHeight)*0.225);
+    
+
 }
 .menu_down{
     position: relative;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    
     width: 100%;
-    height: var(--menuDownHeight);
+    height: calc(var(--menuHeight)*0.225);
+
 }
 .game_screen{
 
@@ -59,35 +84,42 @@ body{
     position: absolute;
     width: 100%;
     height: var(--height);
+    background-image: url(5.jpg);
 }
 #notice_name{
-    font-size: 25px;
+    
+    color: white;
+}
+.input_container{
+    position: relative;
+    border-radius: 2px;
+    height: 30px;
+    overflow: hidden;
+    background-color: #ff0000;
+}
+.input{
+    position: absolute;
+    font-size: 24px;
+    display: block;
+    height: 100%;
+    width: 70%;
+    border: 0;
+    outline: 0;
+}
+.input_button{
+    position: absolute;
+    height: 100%;
+    width: 30%;
+    right: 0;
+    background-color: aquamarine;
+    text-align: center;
 }
 #input_name{
-    margin-top: 25px;
-    margin-left: 100px;
-    width: 60%;
-    height: 30px;
-    border: 0;
-    border-radius: 2px;
-    font-size: 24px;
-    outline-width: 5px;
-    outline-color: aqua;
-    /*outline-style: solid;
-    outline-width: 2px;
-    outline-color: aqua;*/
+
 }
 
 #input_room{
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 60%;
-    height: 30px;
-    border: 0;
-    border-radius: 2px;
-    font-size: 22px;
-    outline-width: 5px;
-    outline-color: aqua;
+
 }
 #create_room_button{
     position: relative;
@@ -98,6 +130,7 @@ body{
     cursor: pointer;
     background-color: gold;
 }
+/*
 #create_room_button div{
     position: absolute;
     transform: rotateZ(135deg);
@@ -110,12 +143,15 @@ body{
     left: -50px;
     transition: left 0.2s;
 }
+*/
 #create_room_button:hover{
 
 }
+/*
 #create_room_button:hover div{
     left: 120px;
 }
+*/
 .user_poker_area{
     position: absolute;
     width: 40%;

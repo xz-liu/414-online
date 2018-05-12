@@ -194,6 +194,7 @@
 
     (function(){
         enterNameInput();
+        //test();
     })()
     
     
