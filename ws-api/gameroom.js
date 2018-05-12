@@ -22,11 +22,30 @@ class GameRoom {
             'passcode': passCode
         });
         config.allRooms[passCode] = this;
+        this.msgBoxHistory = [];
+    }
+    playerInRoomCheck(player) {
+        return player && this.players.includes(player);
+    }
+    msgPlayerSend(player, msg) {
+        if (this.playerInRoomCheck(player)) {
+            msg = escapeHtml(msg);
+            let newMsg=[player.name,new Date(), msg];
+            this.msgBoxHistory.push(newMsg);
+            this.sendToAllPlayer(msgBox.S_NEWMSG,newMsg);
+        }else{
+            if(player)player.sendMsgWithType(msgBox.S_SENDFAIL);
+        }
+    }
+    msgSendHistory(player){
+        if(this.playerInRoomCheck(player)){
+            player.sendMsgWithType(msgBox.S_HISTORY,this.msgBoxHistory);
+        }
     }
     drawNext(nbComb, drawType, cards, player) {
         var good = true;
         if (this.lastNBString) {
-            var virtualLast=this.lastNBString;
+            var virtualLast = this.lastNBString;
             if (drawType === DRAW_CHA) {
                 good = (cards.length === 2 && cards[0][0] === cards[1][0]
                     && cards[0][0] === this.lastNBString[0]);
@@ -34,10 +53,10 @@ class GameRoom {
             if (drawType === DRAW_GO) {
                 good = this.lastType == DRAW_CHA &&
                     (cards.length === 1 && cards[0][0] === this.lastNBString[0]);
-                if(good)virtualLast=nbTypes.VIRTUAL_CHA;
+                if (good) virtualLast = nbTypes.VIRTUAL_CHA;
             }
-            debug_raw('draw next!!!'+drawType);
-            debug_raw('last_NBSTRING:'+this.lastNBString+" "+good);
+            debug_raw('draw next!!!' + drawType);
+            debug_raw('last_NBSTRING:' + this.lastNBString + " " + good);
             // if(drawType === DRAW_BEGIN)drawType
             if (good && rules.combCmp(nbComb, virtualLast)) {
                 this.sendToAllPlayer(drawType,
@@ -77,7 +96,7 @@ class GameRoom {
     playerDrawCards(player, cards, drawType) {
         var nbComb = cardOps.cardsToNBString(cards);
         if (rules.validComb(nbComb)) {
-            debug_raw('==player draw cards:'+player.name);
+            debug_raw('==player draw cards:' + player.name);
             debug(cards);
             debug_raw(drawType);
             switch (drawType) {
@@ -153,6 +172,7 @@ class GameRoom {
             this.sendToAllPlayer(types.STYPE_WINS, {
                 'name': player.name
             });
+            this.msgPlayerSend(player,'Ohhhhhhhhhh! I Won!!!');
             if (this.lastPlayer)
                 this.lastPlayer = this.getNxtNotWonPlayer(this.lastPlayer);
             if (this.lastReal)
@@ -214,6 +234,8 @@ class GameRoom {
             { 'names': names }
         );
         this.players.push(player);
+        this.msgSendHistory(player);
+        player.sendMsgBox('Hello Everyone!');
         return true;
     }
 
