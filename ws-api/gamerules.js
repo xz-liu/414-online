@@ -21,8 +21,8 @@ const NBT_SINGLE = 'single',//单
     NBT_CHA = 'cha',
     NBT_GO = 'go';
 const NBC_LESS = 0,
-    NBC_EQUAL = 1,
-    NBC_ABOVE = 2;
+    NBC_EQUAL = 2,
+    NBC_ABOVE = 1;
 const NBI_TYPE = 0,
     NBI_NBVAL = 1,
     NBI_CONT_TYPE = 2,
@@ -203,6 +203,7 @@ function combNBTypeCompare(nb1, nb2) {
                 case NBT_SINGLE:
                 case NBT_CHA:
                 case NBT_HUI:
+                case NBT_TRIAD_W:
                     return NBC_ABOVE;
                 case NBT_CONT:
                     if (nb2[NBI_CONT_TYPE] < 4)

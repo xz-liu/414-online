@@ -178,7 +178,7 @@ class Player {
                         );
                     }
                     debug(this.cards);
-                    this.room.checkCGAndResetLast(this, cards);
+                    this.room.resetLast(this, cards,drawTypeNow);
                 } else this.sendFailMessage(errors._CARD_COMB_INVALID);
             }else this.sendFailMessage(errors._CARD_NOT_POSSESSED_EXISTS);
         } else this.sendFailMessage(errors._NOT_YOUR_ROUND);

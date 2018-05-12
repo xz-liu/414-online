@@ -73,7 +73,7 @@ class GameRoom {
     playerDrawCards(player, cards, drawType) {
         var nbComb = cardOps.cardsToNBString(cards);
         if (rules.validComb(nbComb)) {
-            debug('player draw cards:'+nbComb);
+            debug('player draw cards:' + nbComb);
             switch (drawType) {
                 case DRAW_BEGIN:
                     this.sendToAllPlayer(types.STYPE_PLAYERDRAW,
@@ -112,19 +112,20 @@ class GameRoom {
             this.players[i].sendMsgWithType(type, msg);
         }
     }
-    checkCGAndResetLast(player, cards) {
+    resetLast(player, cards, drawType) {
         debug('check cards after draw');
         var nbS = cardOps.cardsToNBString(cards);
         var type = rules.getNBType(nbS);
         // var ret;
         this.roundNow = [];
-        if (type === nbTypes.NBT_CHA) {//go
+        if (drawType === DRAW_CHA) {//go
             for (var i in this.players) {
                 if (this.players[i].haveGo(cards)) {
                     this.roundNow[nbTypes.NBT_GO] = this.players[i];
                 }
             }
-        } else if (type === nbTypes.NBT_SINGLE) {//cha check
+        } else if (type === nbTypes.NBT_SINGLE &&
+            (drawType === DRAW_BEGIN || drawType === DRAW_NEXT)) {//cha check
             for (var i in this.players) {
                 if (this.players[i].haveCha(cards)) {
                     this.roundNow[nbTypes.NBT_CHA] = this.players[i];
@@ -153,11 +154,12 @@ class GameRoom {
         }
 
     }
-    getNxtNotWonPlayer(nowPlayer) {
-        var nxtPlayer = this.players[nowPlayer];
+    getNxtNotWonPlayer(nxtPlayer) {
+        var playerIndex = this.players.indexOf(nxtPlayer);
+        // var nxtPlayer = this.players[nowPlayer];
         do {
             debug('loop');
-            nxtPlayer = this.players[(nowPlayer + 1) % this.players.length];
+            nxtPlayer = this.players[(playerIndex + 1) % this.players.length];
         } while (this.wins.includes(nxtPlayer));
         debug("select " + nxtPlayer);
         return nxtPlayer;
@@ -165,8 +167,9 @@ class GameRoom {
     nextPlayer() {
         debug('goto nxt player');
         debug(this.lastReal.name);
-        var nowPlayer = this.players.indexOf(this.lastReal);
-        var nxtPlayer = this.getNxtNotWonPlayer(nowPlayer);
+        this.roundNow[DRAW_BEGIN] =
+            this.roundNow[DRAW_NEXT] = null;
+        var nxtPlayer = this.getNxtNotWonPlayer(this.lastReal);
         if (nxtPlayer === this.lastPlayer) {
             this.roundNow[DRAW_BEGIN] = nxtPlayer;
         } else {
