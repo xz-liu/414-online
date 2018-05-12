@@ -112,7 +112,7 @@ var doc = document,
              rectArr[i] = poker.getBoundingClientRect();
          }
          for(i = 0; i < len; i++){
-             poker = pokerSelected[0];
+             poker = pokerSelected[i];
              pokerDoms[i] = poker;
              rect = rectArr[i];
              userPokerArea.removeChild(poker);

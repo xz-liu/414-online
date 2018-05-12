@@ -102,10 +102,16 @@ body{
     font-size: 24px;
     display: block;
     height: 100%;
-    width: 70%;
+    width: 68%;
     border: 0;
     outline: 0;
+    padding-left: 2%;
 }
+/*
+.input::-webkit-input-placeholder{
+    
+}
+*/
 .input_button{
     position: absolute;
     height: 100%;
@@ -114,6 +120,7 @@ body{
     background-color: aquamarine;
     text-align: center;
 }
+
 #input_name{
 
 }
@@ -128,6 +135,7 @@ body{
     overflow: hidden;
     padding: 5px;
     cursor: pointer;
+    font-size: 20px;
     background-color: gold;
 }
 /*
