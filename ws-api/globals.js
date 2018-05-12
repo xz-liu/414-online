@@ -22,9 +22,9 @@ global.types = {
     STYPE_PLAYERCHA: 'cha',//{'name':name,'cards':[cards...]} to all players
     STYPE_PLAYERGO: 'go',//{'name':name,'card':card} to all players
     STYPE_GETCARD: 'card',//{'cards':[cards...]} 
-    STYPE_LOSE: 'lose',
-    STYPE_GAMEENDS: 'gameEnds',
-    STYPE_MYROUND: 'myRound'
+    STYPE_LOSE: 'lose',//no data
+    STYPE_GAMEENDS: 'gameEnds',//no data
+    STYPE_PLAYERALMOSTWIN: 'almostWin'//{'name':name,'cardsCnt':cnt}
 };
 global.nbTypes = {
     NBT_SINGLE: 'single',

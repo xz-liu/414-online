@@ -94,6 +94,7 @@ class GameRoom {
         }
         return false;
     }
+
     playerDrawCards(player, cards, drawType) {
         var nbComb = cardOps.cardsToNBString(cards);
         if (rules.validComb(nbComb)) {
@@ -161,6 +162,13 @@ class GameRoom {
         this.lastNBString = nbS;
         this.nextPlayer();
         // return ret;
+    }
+    playerAlmostWin(player,cnt){
+        if(this.playerInRoomCheck(player)){
+            this.sendToAllPlayer(types.STYPE_PLAYERALMOSTWIN,
+                {'name':player.name,'cardsCnt':cnt}
+            );
+        }
     }
     playerWins(player) {
         if (!this.wins.includes(player)) {

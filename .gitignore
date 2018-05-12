@@ -1,4 +1,5 @@
 /ws-api/node_modules/*
 .idea/*
 /ws-api/tests/*
+failedAttempts/*
 

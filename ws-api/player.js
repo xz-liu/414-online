@@ -121,6 +121,8 @@ class Player {
     checkWin() {
         if (this.cards.length === 0) {
             this.room.playerWins(this);
+        }else if(this.cards.length<=3){
+            this.room.playerAlmostWin(this,this.cards.length);
         }
     }
 
