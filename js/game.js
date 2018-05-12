@@ -1,8 +1,34 @@
+
+function OtherPlayer(name){
+    this.name = name;
+    this.dom = this.createPlayerDom();
+    //this.area = null;
+    this.area = document.getElementById("player_area");
+    this.area.appendChild(this.dom);
+}
+OtherPlayer.prototype = {
+    createPlayerDom : function(){
+        var dom = document.createElement("div"),
+        nameSpan = document.createElement("span");
+
+        dom.classList.add("other_player");
+
+        nameSpan.innerHTML = this.name;
+        dom.appendChild(nameSpan);
+
+        return dom;
+    },
+    leave : function(){
+        this.area.removeChild(this.dom);
+    }
+};
+
 function Game(socket, passcode, playerName, isHost){
     this.socket = socket;
     this.playerName = playerName;
     this.passcode = passcode;
     this.isHost = isHost;
+    this.isOpen = false;
     this.playerList = [];
 
     this.handPoker = null;
@@ -35,13 +61,47 @@ Game.prototype = {
     open : function(){
         document.getElementById("user_oper").style.display = "block";
         document.getElementById("start_game_button").style.display = "none";
+        this.isOpen = true;
     },
     close : function(){
         document.getElementById("user_oper").style.display = "none";
+        this.isOpen = false;
+    },
+    enterRoom : function(names){
+        for(var i = 0; i < names.length; i++){
+            this.playerList[i] = new OtherPlayer(names[i]);
+        }
+        this.playerAreaAdjust();
+    },
+    otherEnter : function(name){
+        this.playerList[this.playerList.length] = new OtherPlayer(name);
+        this.playerAreaAdjust();
+    },
+    otherLeave : function(name){
+
+        // 删除 playerList 中 name
+        for(var i = 0; i < this.playerList.length; i++){
+            if(name === this.playerList[i].name){
+                this.playerList[i].leave();
+                this.playerList.splice(i, 1);
+                break;
+            }
+        }
+
+        this.playerAreaAdjust();
+    },
+    playerAreaAdjust : function(){
+        var playerArea = document.getElementById("player_area"),
+        len = this.playerList.length,
+        i = 0,
+        player;
+
+        document.body.style.setProperty("--playerMargin", window.innerWidth/(len + 1) + "px");
     },
     initGameScreen : function(){
         document.getElementById("player_name").innerHTML = this.playerName;
-        document.getElementById("room_passcode").innerHTML = "邀请码: " + this.passcode;
+        document.getElementById("invite_passcode").innerHTML = this.passcode;
+        document.getElementById("clip").value = this.passcode;
         if(this.isHost){
             document.getElementsByClassName("start_game_button")[0].style.display = "block";
         }else{
@@ -188,13 +248,29 @@ Game.prototype = {
             this.chaButton.classList.add("user_oper_button_disabled");
         }
     
+    },
+    cleanDrawArea : function(){
+        var gameScreen = document.getElementById("game_screen"),
+        pokerOut = gameScreen.getElementsByClassName("poker_out");
+        for(var i = 0; i < pokerOut.length; i++){
+            gameScreen.removeChild(pokerOut[0]);
+        }
+    },
+    otherCha : function(name, cards){
+        console.log(name + ": CHA!");
+        console.log(cards);
+    },
+    otherBringOut : function(){
+
+    },
+    drawSuccess : function(combtype){
+        console.log("comb!!: " + combtype);
+        console.log(this.pokerSelected);
+        this.cleanDrawArea();
+        test_bringOut(this.pokerSelectedDom);
+        this.pokerSelectedDom = null;
     }
 };
-
-Game.prototype.otherCha = function(name, cards){
-    console.log(name + ": CHA!");
-    console.log(cards);
-}
 Game.prototype.otherGo = function(name, card){
     console.log(name + ": GO!");
     console.log(card);
@@ -205,9 +281,4 @@ Game.prototype.otherDraw = function(name, cards){
 }
 Game.prototype.otherPass = function(name){
     console.log(name + ": PASS!");
-}
-Game.prototype.drawSuccess = function(combtype){
-    console.log("comb!!: " + combtype);
-    console.log(this.pokerSelected);
-    test_bringOut(this.pokerSelectedDom);
 }

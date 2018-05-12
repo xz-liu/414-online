@@ -1,0 +1,108 @@
+.poker{
+    background-color: white;
+    border: 1px solid black;
+    width: calc(var(--pokerHeight)*0.65);
+    height: var(--pokerHeight);
+    border-radius: 4px;
+}
+.user_poker{
+    position: relative;
+    margin-left: var(--pokerMargin);
+    float: left;
+    transition: transform 0.3s;
+}
+.user_poker:hover{
+    /*outline-style: solid;
+    outline-width: 5px;
+    outline-color: red;*/
+    box-shadow: 0 0 2px 1px black;
+    transform: translateY(-50px)
+}
+.poker_selected{
+    transform: translateY(-50px);
+    box-shadow: 0 0 2px 1px blue;
+}
+.poker_lu{
+    display: block;
+    position: absolute;
+    font-size: 20px;
+    left: 5px;
+    top: 1px;
+}
+.poker_rd{
+    display: block;
+    position: absolute;
+    font-size: 20px;
+    right: 5px;
+    bottom: 1px;
+    transform: rotateZ(180deg);
+}
+div[class*='pok']:before {
+    position: absolute;
+    font-size: 20px;
+    left: 5px;
+    top: 15px;
+}
+       
+div[class*='pok']:after {
+    position: absolute;
+    font-size: 20px;
+    right: 5px;
+    bottom: 15px;
+    transform: rotateZ(180deg);
+}
+.pok_diamond{
+    color: #ff0000;
+}
+.pok_diamond::after, .pok_diamond::before{
+    content: "♦";
+    color: #ff0000;
+}
+.pok_heart{
+    color: #ff0000;
+}
+.pok_heart:before, .pok_heart:after {
+    content: "♥";
+    color: #ff0000;
+}
+
+.pok_clubs{
+    color: #000;
+}
+.pok_club:before, .pok_club:after {
+    content: "♣";
+    color: #000;
+}
+
+.pok_spade{
+    color: #000;
+}
+.pok_spade:before, .pok_spade:after {
+    content: "♠";
+    color: #000;
+}
+.pok_joker{
+    writing-mode: vertical-rl;
+}
+.pok_joker .poker_lu{
+    font-size: 15px;
+    top: 8px;
+    left: 2px;
+}
+.pok_joker .poker_rd{
+    font-size: 15px;
+    bottom: 8px;
+    right: 2px;
+}
+.pok_big{
+    color: #ff0000;
+}
+.pok_small{
+    color: #000;
+}
+
+.poker_out{
+    position: absolute;
+    transition: top 0.2s, left 0.2s;
+
+}

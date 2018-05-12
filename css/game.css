@@ -1,0 +1,101 @@
+.game_screen{
+
+    display: none;
+    position: absolute;
+    width: var(--width);
+    height: var(--height);
+    background-image: url(../5.jpg);
+}
+
+
+.user_poker_area{
+    position: absolute;
+    width: 45%;
+    left: 25%;
+    height: 20%;
+    bottom: 5%;
+}
+
+.user_oper{
+    position: absolute;
+    display: none;
+    width: var(--userOperWidth);
+    left: 70%;
+    height: var(--userOperWidth);
+    bottom: 2%;;
+}
+.user_oper_button{
+    position: absolute;
+    border-radius: 100%;
+    width: var(--userOperButtonWidth);
+    height: var(--userOperButtonWidth);
+    border: 2px solid red;
+    cursor: pointer;
+}
+.user_oper_button_disabled{
+    display: none;
+}
+.user_oper_button_enabled{
+    display: block;
+}
+.bring_out_button{
+    left: calc(var(--userOperWidth)*0.33);
+    background-color: aqua;
+}
+.pass_button{
+    left: calc(var(--userOperWidth)*0.33);
+    bottom: 0;
+    background-color: aqua;
+}
+.cha_button{
+    left: 0;
+    top: calc(var(--userOperWidth)*0.33);
+    background-color: aqua;
+}
+.go_button{
+    right: 0;
+    top: calc(var(--userOperWidth)*0.33);
+    background-color: aqua;
+}
+
+
+.user_info{
+    position: absolute;
+    
+    width: 15%;
+    left: 0;
+    height: 30%;
+    bottom: 0;
+
+    background-color: rgba(0,0,0,0.3);
+}
+.user_info > *{
+}
+#room_passcode{
+    margin-top: 5px;
+    padding: 10px 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+#room_passcode:hover{
+    background-color: white;
+}
+#player_name{
+    background-color:white;
+    padding: 10px 10px;
+}
+.start_game_button{
+    display: none;
+}
+
+
+#player_area{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 15%;
+    background-color: antiquewhite;
+}
+.other_player{
+    margin-left: var(--playerMargin);
+}
