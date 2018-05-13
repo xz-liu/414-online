@@ -323,7 +323,7 @@ class GameRoom {
                         return true;
                     }
                     else player.sendFailMessage(errors._ONLY_HOST_CAN_START);
-                } else player.sendFailMessage(errros._ROOM_MEMBER_NOT_ENOUGH);
+                } else player.sendFailMessage(errors._ROOM_MEMBER_NOT_ENOUGH);
             } else player.sendFailMessage(errors._ROOM_PLAYING);
         }
         return false;

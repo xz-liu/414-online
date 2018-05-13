@@ -129,7 +129,7 @@ var doc = document,
                  pokerDoms[i].style.top = 250 + "px";
                  pokerDoms[i].style.left = 450 + i*30+ "px";
              }
-         },500);
+         },300);
      }
      userPokerArea.addEventListener("click", function(ev){
          if(ev.target){

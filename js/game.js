@@ -1,25 +1,52 @@
 
-function OtherPlayer(name){
+function OtherPlayer(name, classType){
     this.name = name;
-    this.dom = this.createPlayerDom();
+    this.dom = this.createPlayerDom(classType);
     //this.area = null;
     this.area = document.getElementById("player_area");
-    this.area.appendChild(this.dom);
+    //this.area.appendChild(this.dom);
+    this.enterArea();
+    //this.cardCntSpan = null;
 }
 OtherPlayer.prototype = {
-    createPlayerDom : function(){
+    createPlayerDom : function(classType){
         var dom = document.createElement("div"),
-        nameSpan = document.createElement("span");
+        nameSpan = document.createElement("p"),
+        cardCntSpan = document.createElement("p");
 
         dom.classList.add("other_player");
+        dom.classList.add(classType);
 
         nameSpan.innerHTML = this.name;
         dom.appendChild(nameSpan);
+
+        cardCntSpan.innerHTML = "TEST";
+        dom.appendChild(cardCntSpan);
+        this.cardCntSpan = cardCntSpan;
 
         return dom;
     },
     leave : function(){
         this.area.removeChild(this.dom);
+    },
+    removeDom : function(){
+        this.area.removeChild(this.dom);
+    },
+    enterArea : function(){
+        var frontPlayers = this.area.getElementsByClassName("frontPlayer"),
+        backPlayers = this.area.getElementsByClassName("backPlayer");
+        if(frontPlayers.length !== 0){// 插在
+            this.area.insertBefore(this.dom, frontPlayers[frontPlayers.length - 1]);
+            this.area.insertBefore(frontPlayers[frontPlayers.length - 1], this.dom);
+        }else if(backPlayers.length !== 0){
+            this.area.insertBefore(this.dom, backPlayers[0]);
+        }else{
+            this.area.appendChild(this.dom);
+        }
+    },
+    almostWin : function(cardsCnt){
+        this.cardCntSpan.innerHTML = "剩余" + cardsCnt + "张牌";
+        this.cardCntSpan.style.display = "block";
     }
 };
 
@@ -29,7 +56,14 @@ function Game(socket, passcode, playerName, isHost){
     this.passcode = passcode;
     this.isHost = isHost;
     this.isOpen = false;
+
+    // 房间里玩家列表，与服务器顺序相同
     this.playerList = [];
+    if(isHost){
+        this.playerList[0] = {
+            name : playerName
+        }
+    }
 
     this.handPoker = null;
 
@@ -69,34 +103,61 @@ Game.prototype = {
     },
     enterRoom : function(names){
         for(var i = 0; i < names.length; i++){
-            this.playerList[i] = new OtherPlayer(names[i]);
+            this.playerList[i] = new OtherPlayer(names[i],"frontPlayer");
+            this.playerList[i].enterArea();
+        }
+        this.playerList[i] = {
+            name : this.playerName
         }
         this.playerAreaAdjust();
     },
     otherEnter : function(name){
-        this.playerList[this.playerList.length] = new OtherPlayer(name);
+        var newPlayer = new OtherPlayer(name, "backPlayer");
+        this.playerList[this.playerList.length] = newPlayer;
+        newPlayer.enterArea();
         this.playerAreaAdjust();
     },
     otherLeave : function(name){
 
+        // 若离开的人是房主，则按照顺序下一个人变成房主
         // 删除 playerList 中 name
         for(var i = 0; i < this.playerList.length; i++){
-            if(name === this.playerList[i].name){
+            if(name === this.playerList[i].name && this.playerList[i].name !== this.playerName){
                 this.playerList[i].leave();
+                if(i === 0 && this.playerList[1].name === this.playerName){
+                    this.becomeHost();
+                }
                 this.playerList.splice(i, 1);
+                
                 break;
             }
         }
 
         this.playerAreaAdjust();
     },
+    becomeHost : function(){
+        this.isHost = true;
+        if(!this.isOpen){
+            document.getElementsByClassName("start_game_button")[0].style.display = "block";
+        }
+    },
     playerAreaAdjust : function(){
         var playerArea = document.getElementById("player_area"),
-        len = this.playerList.length,
+        len = this.playerList.length - 1,
         i = 0,
-        player;
+        player,
+        margin,
+        width;
 
-        document.body.style.setProperty("--playerMargin", window.innerWidth/(len + 1) + "px");
+        if(len < 6){
+            margin = window.innerWidth*(8 - len)/8/(len + 1);
+            width = window.innerWidth/8;
+        }else{
+            margin = window.innerWidth/20;
+            width = (window.innerWidth - margin*(len + 1))/len;
+        }
+        document.body.style.setProperty("--playerMargin", margin + "px");
+        document.body.style.setProperty("--playerWidth", width + "px");
     },
     initGameScreen : function(){
         document.getElementById("player_name").innerHTML = this.playerName;
@@ -251,17 +312,44 @@ Game.prototype = {
     },
     cleanDrawArea : function(){
         var gameScreen = document.getElementById("game_screen"),
-        pokerOut = gameScreen.getElementsByClassName("poker_out");
-        for(var i = 0; i < pokerOut.length; i++){
+        pokerOut = gameScreen.getElementsByClassName("poker_out"),
+        len = pokerOut.length;
+        for(var i = 0; i < len; i++){
             gameScreen.removeChild(pokerOut[0]);
         }
     },
     otherCha : function(name, cards){
         console.log(name + ": CHA!");
         console.log(cards);
+        if(name !== this.playerName){
+            this.otherBringOut(cards);
+        }
+        
     },
-    otherBringOut : function(){
+    otherBringOut : function(cards){
+        var curClass = "",
+        i = 0,
+        gameScreen = document.getElementById("game_screen"),
+        newPokerDom;
 
+        this.cleanDrawArea();
+
+        
+
+        for(; i < cards.length; i++){
+            curClass = getPokerClass((cards[i])[1]);
+            if(curClass !== "wrong"){
+                newPokerDom = createPokerDom(curClass,(cards[i])[0]);
+                gameScreen.appendChild(newPokerDom);
+                newPokerDom.classList.remove("user_poker");
+                newPokerDom.classList.add("poker_out");
+
+                newPokerDom.style.top = 250 + "px";
+                newPokerDom.style.left = 450 + i*30+ "px";
+            }else{
+ 
+            }
+        }
     },
     drawSuccess : function(combtype){
         console.log("comb!!: " + combtype);
@@ -269,16 +357,45 @@ Game.prototype = {
         this.cleanDrawArea();
         test_bringOut(this.pokerSelectedDom);
         this.pokerSelectedDom = null;
+    },
+    someoneAlmostWin : function(name, cardsCnt){
+        if(name !== this.playerName){
+            for(var i = 0; i < this.playerList.length; i++){
+                if(name === this.playerList[i].name){
+                    this.playerList[i].almostWin(cardsCnt);
+                    break;
+                }
+            }
+        }
+    },
+    someoneWin : function(name){
+        if(name === this.playerName){
+            alert("you defeat");
+        }else{
+            alert(name + "win");
+        }
+    },
+    lose : function(){
+        alert("you lose");
     }
 };
 Game.prototype.otherGo = function(name, card){
     console.log(name + ": GO!");
     console.log(card);
+    if(name !== this.playerName){
+        this.otherBringOut([card]);
+    }
 }
 Game.prototype.otherDraw = function(name, cards){
     console.log(name + ": DRAW!");
     console.log(cards);
+    if(name !== this.playerName){
+        this.otherBringOut(cards);
+    }
 }
 Game.prototype.otherPass = function(name){
-    console.log(name + ": PASS!");
+    /*if(name !== this.playerName){
+        this.otherBringOut(cards);
+    }*/
+    
 }

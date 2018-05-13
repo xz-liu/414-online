@@ -1,6 +1,5 @@
-(function(){
+//(function(){
     //test();
-
     var socket = new ClientSocket({
         
         open:enterNameInput,
@@ -20,6 +19,178 @@
         }
         return null;
     }
+
+    // fail
+    function fail(json){
+        console.log("FAILL!!!!!!");
+        //console.log(json)
+        if(json){
+            if(json.reason){
+                switch (json.reason){
+                    case "enterRoomFail":enterRoomFail();break;
+                    default:break;
+                }
+            }
+        }else{ // no data , set name fail
+            setNameFail();
+        }
+    }
+    // menu
+    function setNameSuccess(){
+        resetInput();
+        enterRoomInput();
+    }
+    function setNameFail(){
+        resetInput();
+        enterErrorInput();
+        setTimeout(function(){
+            resetInput();
+            enterNameInput();
+        },1000);
+    }
+    function enterRoomFail(){
+        resetInput();
+        enterErrorInput();
+        setTimeout(function(){
+            resetInput();
+            enterRoomInput();
+        },1000);
+    }
+
+    // room
+    function createRoomSuccess(json){
+        var passCode = json.passcode;
+        thisGame = new Game(socket, passCode, pName, true);
+    }
+    function otherEnter(json){
+        console.log(json.name + " enter!!");
+        if(thisGame){
+            thisGame.otherEnter(json.name);
+        }
+    }
+    function otherLeave(json){
+        console.log(json.name + " leave!!");
+        if(thisGame){
+            thisGame.otherLeave(json.name);
+        }
+    }
+    function enterSuccess(json){
+        thisGame = new Game(socket, pCode, pName, false);
+        thisGame.enterRoom(json.names);
+    }
+
+
+    // game
+    function dealPoker(json){
+        if(thisGame){
+            thisGame.open();
+            thisGame.dealPoker(json.cards);
+        }
+    }
+    function round(json){
+        if(thisGame){
+            thisGame.round(json.begin, json.next, json.cha, json.go);
+        }
+    }
+    function endRound(json){
+    }
+    function otherCha(json){
+        if(thisGame){
+            thisGame.otherCha(json.name, json.cards);
+        }
+    }
+    function otherGo(json){
+        if(thisGame){
+            thisGame.otherGo(json.name, json.card);
+        }
+    }
+    function drawSuccess(json){
+        if(thisGame){
+            thisGame.drawSuccess(json.combtype);
+        }
+    }
+    function otherDraw(json){
+        if(thisGame){
+            thisGame.otherDraw(json.name, json.cards);
+        }
+    }
+    function otherPass(json){
+        if(thisGame){
+            thisGame.otherPass(json.name);
+        }
+    }
+    function soWins(json){
+        if(thisGame){
+            thisGame.someoneWin(json.name);
+        }
+    }
+    function lose(){
+        if(thisGame){
+            thisGame.lose();
+        }
+    }
+    function gameEnds(){
+        if(thisGame){
+            thisGame.gameEnds();
+        }
+    }
+    function soAlmostWin(json){
+        if(thisGame){
+            thisGame.someoneAlmostWin(json.name, json.cardsCnt);
+        }
+    }
+
+
+    // chat
+    function showMsgHistory(json){
+        showHistory(json);
+    }
+    function showNewMsg(json){
+        addMsg(json.name, json.msg, json.date);
+    }
+    function msgSendFail(json){
+
+    }
+
+
+
+    function test(){
+        document.getElementById("menu_screen").style.display = "none";
+        document.getElementById("game_screen").style.display = "block";
+    }
+
+    
+    
+    
+    // name
+    socket.set("success",setNameSuccess);
+    socket.set("failed",fail);
+
+    // room
+    socket.set("create",createRoomSuccess);
+    socket.set("enters",otherEnter);
+    socket.set("leaves",otherLeave);
+    socket.set("enterSucc",enterSuccess);
+    socket.set("enetrFail",fail);
+    
+    // game
+    socket.set("card",dealPoker);
+    socket.set("drawSucceed",drawSuccess);
+    socket.set("draw",otherDraw);
+    socket.set("cha",otherCha);
+    socket.set("go",otherGo);
+    socket.set("pass",otherPass);
+    socket.set("round",round);
+    socket.set("endround",endRound);
+    socket.set("wins",soWins);
+    socket.set("lose",lose);
+    socket.set("gameEnds",gameEnds);
+    socket.set("almostWin",soAlmostWin);
+
+    // chat
+    socket.set("msgNew",showNewMsg);
+    socket.set("msgHistory",showMsgHistory);
+    socket.set("msgSendFailed",msgSendFail);
 
     // create name
     document.getElementById("input_name").onkeydown = function(ev){
@@ -128,159 +299,19 @@
         }
     }
 
-    // fail
-    function fail(json){
-        console.log("FAILL!!!!!!");
-        //console.log(json)
-        if(json){
-            if(json.reason){
-                switch (json.reason){
-                    case "enterRoomFail":enterRoomFail();break;
-                    default:break;
-                }
+    // chat
+    document.getElementById("chat_input_button").onclick = function(){
+        var msgInput = document.getElementById("chat_input");
+        if(msgInput.value.length !== 0){
+            socket.send("msgSendNew",msgInput.value);
+        }
+    }
+    document.getElementById("chat_input").onkeydown = function(e){
+        if(e.keyCode === 13){
+            if(this.value.length !== 0){
+                socket.send("msgSendNew",this.value);
             }
-        }else{ // no data , set name fail
-            setNameFail();
         }
     }
-    // menu
-    function setNameSuccess(){
-        resetInput();
-        enterRoomInput();
-    }
-    function setNameFail(){
-        resetInput();
-        enterErrorInput();
-        setTimeout(function(){
-            resetInput();
-            enterNameInput();
-        },1000);
-    }
-    function enterRoomFail(){
-        resetInput();
-        enterErrorInput();
-        setTimeout(function(){
-            resetInput();
-            enterRoomInput();
-        },1000);
-    }
-
-    // room
-    function createRoomSuccess(json){
-        var passCode = json.passcode;
-        thisGame = new Game(socket, passCode, pName, true);
-    }
-    function otherEnter(json){
-        console.log(json.name + " enter!!");
-        if(thisGame){
-            thisGame.otherEnter(json.name);
-        }
-    }
-    function otherLeave(json){
-        console.log(json.name + " leave!!");
-        if(thisGame){
-            thisGame.otherLeave(json.name);
-        }
-    }
-    function enterSuccess(json){
-        thisGame = new Game(socket, pCode, pName, false);
-        thisGame.enterRoom(json.names);
-    }
-
-
-    // game
-    function dealPoker(json){
-        if(thisGame){
-            thisGame.open();
-            thisGame.dealPoker(json.cards);
-        }
-    }
-    function round(json){
-        if(thisGame){
-            thisGame.round(json.begin, json.next, json.cha, json.go);
-        }
-    }
-    function endRound(json){
-    }
-    function otherCha(json){
-        if(thisGame){
-            thisGame.otherCha(json.name, json.cards);
-        }
-    }
-    function otherGo(json){
-        if(thisGame){
-            thisGame.otherGo(json.name, json.card);
-        }
-    }
-    function drawSuccess(json){
-        if(thisGame){
-            thisGame.drawSuccess(json.combtype);
-        }
-    }
-    function otherDraw(json){
-        if(thisGame){
-            thisGame.otherDraw(json.name, json.cards);
-        }
-    }
-    function otherPass(json){
-        if(thisGame){
-            thisGame.otherPass(json.name);
-        }
-    }
-    function lose(){
-
-    }
-    function gameEnds(){
-
-    }
-
-
-    // chat
-    function showMsgHistory(json){
-
-    }
-    function showNewMsg(json){
-
-    }
-    function msgSendFail(json){
-
-    }
-
-
-
-    function test(){
-        document.getElementById("menu_screen").style.display = "none";
-        document.getElementById("game_screen").style.display = "block";
-    }
-
     
-    
-    
-    // name
-    socket.set("success",setNameSuccess);
-    socket.set("failed",fail);
-
-    // room
-    socket.set("create",createRoomSuccess);
-    socket.set("enters",otherEnter);
-    socket.set("leaves",otherLeave);
-    socket.set("enterSucc",enterSuccess);
-    socket.set("enetrFail",fail);
-    
-    // game
-    socket.set("card",dealPoker);
-    socket.set("drawSucceed",drawSuccess);
-    socket.set("draw",otherDraw);
-    socket.set("cha",otherCha);
-    socket.set("go",otherGo);
-    socket.set("round",round);
-    socket.set("endround",endRound);
-    socket.set("lose",lose);
-    socket.set("gameEnds",gameEnds);
-
-    // chat
-    socket.set("msgNew",showNewMsg);
-    socket.set("msgHistory",showMsgHistory);
-    socket.set("msgSendFailed",msgSendFail);
-    
-})()
+//})()

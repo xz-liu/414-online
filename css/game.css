@@ -18,19 +18,22 @@
 
 .user_oper{
     position: absolute;
-    display: none;
-    width: var(--userOperWidth);
-    left: 70%;
-    height: var(--userOperWidth);
-    bottom: 2%;;
+    /*display: none;*/
+    width: 60%;
+    left: 20%;
+    top: 55%;
 }
 .user_oper_button{
-    position: absolute;
-    border-radius: 100%;
-    width: var(--userOperButtonWidth);
-    height: var(--userOperButtonWidth);
-    border: 2px solid red;
+    position: relative;
+    display: inline;
+    margin-left: var(--operButtonMargin);
+    border-radius: 5px;
+    padding: calc(var(--operButtonPadd) * 0.4) var(--operButtonPadd);
     cursor: pointer;
+    text-align: center;
+
+    background-color: rgba(255,255,255,0.6);
+    box-shadow: 2px 2px 10px 0 rgba(0,0,0,0.3);
 }
 .user_oper_button_disabled{
     display: none;
@@ -39,23 +42,16 @@
     display: block;
 }
 .bring_out_button{
-    left: calc(var(--userOperWidth)*0.33);
-    background-color: aqua;
+    
 }
 .pass_button{
-    left: calc(var(--userOperWidth)*0.33);
-    bottom: 0;
-    background-color: aqua;
+    
 }
 .cha_button{
-    left: 0;
-    top: calc(var(--userOperWidth)*0.33);
-    background-color: aqua;
+    
 }
 .go_button{
-    right: 0;
-    top: calc(var(--userOperWidth)*0.33);
-    background-color: aqua;
+    
 }
 
 
@@ -64,7 +60,7 @@
     
     width: 15%;
     left: 0;
-    height: 30%;
+    height: 40%;
     bottom: 0;
 
     background-color: rgba(0,0,0,0.3);
@@ -86,16 +82,95 @@
 }
 .start_game_button{
     display: none;
+    margin: 10px;
+    padding: 20px 0;
+    text-align: center;
+    border-radius: 5px;
+    border: 2px solid white;
+    background-color: hsl(0, 0%, 50%);
+    color: white;
+    cursor: pointer;
+
+    transition: background-color 0.1s;
+}
+.start_game_button:hover{
+    background: linear-gradient(to bottom, hsl(0, 0%, 80%), hsl(0, 0%, 40%));
+}
+
+.exit_game_button{
+    margin: 35px 10px;
+    padding: 20px 0;
+    text-align: center;
+    border-radius: 5px;
+    border: 2px solid white;
+    background-color: hsl(0, 0%, 50%);
+    color: white;
+    cursor: pointer;
+}
+.exit_game_button:hover{
+    background: linear-gradient(to bottom, hsl(0, 0%, 80%), hsl(0, 0%, 40%));
 }
 
 
 #player_area{
     position: absolute;
     left: 0;
+    top: 2%;
     width: 100%;
     height: 15%;
-    background-color: antiquewhite;
 }
 .other_player{
+    display: inline-block;
+    height: 100%;
+    background-color: aqua;
     margin-left: var(--playerMargin);
+    width: var(--playerWidth);
+}
+
+
+
+.chat_room{
+    position: absolute;
+    
+    width: 25%;
+    right: 0;
+    height: 50%;
+    bottom: 0;
+
+    background-color: rgba(0,0,0,0.3);
+}
+.chat_history{
+    height: calc(88% - 10px);
+    background-color: gray;
+    padding: 5px;;
+}
+#chat_list{
+    background-color: aquamarine;
+}
+.chat_input_container{
+    position: relative;
+    height: 12%;
+    
+}
+#chat_input{
+    position: absolute;
+    padding-left: 5px;
+    
+    height: 100%;
+    width: 70%;
+    outline: 0;
+    border: 0;
+    font-size: 25px;
+}
+#chat_input_button{
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 28%;
+    cursor: pointer;
+    font-size: 25px;
+    transition: background-color 0.1s;
+}
+#chat_input_button:hover{
+    background-color: azure;
 }

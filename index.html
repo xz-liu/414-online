@@ -22,6 +22,18 @@
                 <p id="player_name">userName</p>
                 <p id="room_passcode">邀请码 : <span id="invite_passcode">111111</span></p>                
                 <div id="start_game_button" class="start_game_button">START</div>
+                <div id="exit_game_button" class="exit_game_button">EXIT</div>
+            </div>
+            <div class="chat_room">
+                <div class="chat_history">
+                    <ul id="chat_list">
+                        <li>admin:fuck you</li>
+                    </ul>
+                </div>
+                <div class="chat_input_container">
+                    <input id="chat_input">
+                    <div id="chat_input_button">send</div>
+                </div>
             </div>
         </div>
         <div id="menu_screen" class="menu_screen">
@@ -49,7 +61,7 @@
                         </div>
                         <p>或者创建一个</p>
                         <div id="create_room_button">
-                            <span>_CREATE ROOM_</span>
+                            <span>CREATE ROOM</span>
                         </div>
                     </div>
                 </div>
@@ -57,6 +69,7 @@
             </div>
         </div>
     </body>
+    <script src="js/chat.js"></script>
     <script src="js/puke.js"></script>
     <script src="Client.js"></script>
     <script src="js/menu.js"></script>

@@ -16,14 +16,19 @@ body{
     --menuUpHeight:90px;
     --menuDownHeight:90px;
     --userOperWidth:250px;
+    --operButtonMargin : 5%;
+    --operButtonPadd : 5%;
     --userOperButtonWidth:calc(var(--userOperWidth)*0.34);
 
     --playerMargin:0px;
+    --playerWidth:0px;
 
     width: var(--width);
     height: var(--height);
 }
-
+ul{
+    list-style-type: none;
+}
 
 .menu_screen{
     position: absolute;

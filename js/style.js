@@ -47,6 +47,8 @@
         height = window.innerHeight;//759
         cssVars.setProperty("--width",width + "px");
         cssVars.setProperty("--height",height + "px");
+        // cssVars.setProperty("--userOperWidth",Math.floor(686*width/1920) + "px");
+        // cssVars.setProperty("--userOperHeight",Math.floor(686*width/1920) + "px");
         cssVars.setProperty("--menuWidth",Math.floor(686*width/1920) + "px");
         cssVars.setProperty("--menuHeight",Math.floor(400*height/1080) + "px");
         cssVars.setProperty("--pokerHeight",Math.floor(150*width/1536) + "px");
