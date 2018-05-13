@@ -31,7 +31,8 @@ class GameRoom {
     msgPlayerSend(player, msg) {
         if (this.playerInRoomCheck(player)) {
             msg = escapeHtml(msg);
-            let newMsg = [player.name, new Date(), msg];
+            let dateNow = new Date();
+            let newMsg = [player.name, dateNow.getHours() + ":" + dateNow.getMinutes(), msg];
             this.msgBoxHistory.push(newMsg);
             this.sendToAllPlayer(msgBox.S_NEWMSG, newMsg);
         } else {
