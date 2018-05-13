@@ -101,7 +101,7 @@ class Player {
                 this.playerQuit(true);
                 break;
             case msgBox.D_SEND:
-                if (data) this.sendMsgBox(data);
+                if (data.data) this.sendMsgBox(data.data);
                 break;
         }
     }
