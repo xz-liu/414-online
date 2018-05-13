@@ -9,6 +9,9 @@ function showHistory(msgArr){
     }
 }
 function addMsg(name, msg, date){
+    if(pName === name){
+        document.getElementById("chat_input").value = "";
+    }
     var msgDom = document.createElement("li");
     msgDom.innerHTML = name + " : " + msg + "----" + date;
     chatList.appendChild(msgDom);

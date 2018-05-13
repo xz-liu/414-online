@@ -146,7 +146,7 @@
         showHistory(json);
     }
     function showNewMsg(json){
-        addMsg(json.name, json.msg, json.date);
+        addMsg(json[0], json[2], json[1]);
     }
     function msgSendFail(json){
 
