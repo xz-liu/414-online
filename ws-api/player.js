@@ -13,10 +13,10 @@ class Player {
         this.connection = connection;
         this.drawType = [];
     }
-    
-    sendMsgBox(data){
-        if(this.room){
-            this.room.msgPlayerSend(this,data);
+
+    sendMsgBox(data) {
+        if (this.room) {
+            this.room.msgPlayerSend(this, data);
         }
     }
     playerQuit(returnHome = false) {
@@ -34,7 +34,7 @@ class Player {
     }
 
     handleMessage(data) {
-        debug('handling data:'+ data);
+        debug('handling data:' + data);
         if (!data.type) return;
         switch (data.type) {
             case types.DTYPE_CREATEROOM: {
@@ -101,7 +101,7 @@ class Player {
                 this.playerQuit(true);
                 break;
             case msgBox.D_SEND:
-                if(data)this.sendMsgBox(data);
+                if (data) this.sendMsgBox(data);
                 break;
         }
     }
@@ -120,8 +120,8 @@ class Player {
     checkWin() {
         if (this.cards.length === 0) {
             this.room.playerWins(this);
-        }else if(this.cards.length<=3){
-            this.room.playerAlmostWin(this,this.cards.length);
+        } else if (this.cards.length <= 3) {
+            this.room.playerAlmostWin(this, this.cards.length);
         }
     }
 
@@ -188,9 +188,9 @@ class Player {
                         );
                     }
                     debug(this.cards);
-                    this.room.resetLast(this, cards,drawTypeNow);
+                    this.room.resetLast(this, cards, drawTypeNow);
                 } else this.sendFailMessage(errors._CARD_COMB_INVALID);
-            }else this.sendFailMessage(errors._CARD_NOT_POSSESSED_EXISTS);
+            } else this.sendFailMessage(errors._CARD_NOT_POSSESSED_EXISTS);
         } else this.sendFailMessage(errors._NOT_YOUR_ROUND);
     }
 }

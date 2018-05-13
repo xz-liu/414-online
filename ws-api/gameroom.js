@@ -163,10 +163,10 @@ class GameRoom {
         this.nextPlayer();
         // return ret;
     }
-    playerAlmostWin(player,cnt){
-        if(this.playerInRoomCheck(player)){
+    playerAlmostWin(player, cnt) {
+        if (this.playerInRoomCheck(player)) {
             this.sendToAllPlayer(types.STYPE_PLAYERALMOSTWIN,
-                {'name':player.name,'cardsCnt':cnt}
+                { 'name': player.name, 'cardsCnt': cnt }
             );
         }
     }
@@ -300,7 +300,7 @@ class GameRoom {
 
     beginGame(player) {
         if (player) {
-            if (this.gaming) {
+            if (!this.gaming) {
                 if (this.players.length >= 2) {
                     if (player.name === this.players[0].name) {
                         //game begins
