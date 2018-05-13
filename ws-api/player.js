@@ -13,11 +13,15 @@ class Player {
         this.connection = connection;
         this.drawType = [];
     }
-
-
+    
+    sendMsgBox(data){
+        if(this.room){
+            this.room.msgPlayerSend(this,data);
+        }
+    }
     playerQuit(returnHome = false) {
         if (this.room) {
-            sendMsgBox('I QUIT!!!');
+            this.sendMsgBox('I QUIT!!!');
             this.room.playerLeaves(this);
             this.room = undefined;
         } else {
@@ -102,11 +106,6 @@ class Player {
         }
     }
 
-    sendMsgBox(data){
-        if(this.room){
-            this.room.msgPlayerSend(this,data);
-        }
-    }
     autoPass() {
         this.room.passThisRound(this);
     }
