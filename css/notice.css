@@ -1,0 +1,66 @@
+#notice_block{
+    position: absolute;
+    background-color: rgba(0,0,0,0.4);
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+.exit_room_notice{
+    position: absolute;
+    background-color: white;
+    top: -70%;
+    left: 30%;
+    width: 40%;
+    height: 30%;
+    transition: top 0.2s;
+    box-shadow: 5px 5px 10px 1px rgb(41, 41, 41);
+}
+.exit_room_notice_display{
+    top: 30%;
+}
+.exit_room_notice > span{
+    position: absolute;
+    top: 35%;
+    width: 100%;
+    text-align: center;
+}
+.exit_room_notice > div{
+    position: absolute;
+    bottom: 8%;
+    padding: 1% 5%;
+    border: 1px solid rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+.exit_room_notice > div:hover{
+    background-color: black;
+    color: white;
+}
+#exit_room_enter_button{
+    left: 15%;
+}
+#exit_room_cancel_button{
+    right: 15%;
+}
+
+
+.no_oper_notice{
+    position: absolute;
+    background-color: rgba(0,0,0,0.2);
+    top: -35%;
+    left: 30%;
+    width: 30%;
+    height: 20%;
+    transition: top 0.2s;
+
+    box-shadow: 5px 5px 10px 1px rgb(0,0,0,0.3);
+}
+.no_oper_notice_display{
+    top: 20%;
+}
+.no_oper_notice > p{
+    color: white;
+    margin: auto;
+    text-align: center;
+}

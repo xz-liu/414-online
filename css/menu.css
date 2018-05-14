@@ -4,6 +4,7 @@
 }
 
 .horizontal{
+    transform-origin: center;
     transform: rotateZ(90deg);
 }
 body{
@@ -13,15 +14,13 @@ body{
     --pokerMargin:-75px;
     --menuWidth:549px;
     --menuHeight:549px;
-    --menuUpHeight:90px;
-    --menuDownHeight:90px;
-    --userOperWidth:250px;
     --operButtonMargin : 5%;
     --operButtonPadd : 5%;
-    --userOperButtonWidth:calc(var(--userOperWidth)*0.34);
 
     --playerMargin:0px;
     --playerWidth:0px;
+
+    --titleSize:90px;
 
     width: var(--width);
     height: var(--height);
@@ -33,6 +32,7 @@ ul{
 .menu_screen{
     position: absolute;
     background-image: url(../4.jpg);
+    background-size: cover;
     width: 100%;
     height: 100%;
 
@@ -41,7 +41,7 @@ ul{
     position: absolute;
     top: 22%;
     left: 35%;
-    font-size: 90px;
+    font-size:var(--titleSize);
     color: white;
     text-shadow: 2px 2px 10px black;
 }
@@ -68,8 +68,7 @@ ul{
 }
 .menu_input_content{
     display: none;
-    margin: 25px;
-    font-size: 25px;
+    margin: 5% 5%;
     color: white;
     
 }

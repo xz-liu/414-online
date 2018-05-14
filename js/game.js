@@ -101,6 +101,27 @@ Game.prototype = {
         document.getElementById("user_oper").style.display = "none";
         this.isOpen = false;
     },
+    exitRoom : function(){
+        for(var i = 0; i < this.playerList.length; i++){
+            if(this.playerList[i].name !== this.playerName){
+                this.playerList[i].leave();
+            }
+        }
+
+        this.chaButton.classList.remove("user_oper_button_enabled");
+        this.goButton.classList.remove("user_oper_button_enabled");
+        this.passButton.classList.remove("user_oper_button_enabled");
+        this.drawButton.classList.remove("user_oper_button_enabled");
+        this.chaButton.classList.add("user_oper_button_disabled");
+        this.goButton.classList.add("user_oper_button_disabled");
+        this.passButton.classList.add("user_oper_button_disabled");
+        this.drawButton.classList.add("user_oper_button_disabled");
+
+        document.getElementById("user_poker_area").innerHTML = "";
+
+        this.cleanDrawArea();
+        this.exitGameScreen();
+    },
     enterRoom : function(names){
         for(var i = 0; i < names.length; i++){
             this.playerList[i] = new OtherPlayer(names[i],"frontPlayer");
@@ -149,12 +170,14 @@ Game.prototype = {
         margin,
         width;
 
+        var windowWidth = (isM)?736:window.innerWidth;
+
         if(len < 6){
-            margin = window.innerWidth*(8 - len)/8/(len + 1);
-            width = window.innerWidth/8;
+            margin = windowWidth*(8 - len)/8/(len + 1);
+            width = windowWidth/8;
         }else{
-            margin = window.innerWidth/20;
-            width = (window.innerWidth - margin*(len + 1))/len;
+            margin = windowWidth/20;
+            width = (windowWidth - margin*(len + 1))/len;
         }
         document.body.style.setProperty("--playerMargin", margin + "px");
         document.body.style.setProperty("--playerWidth", width + "px");
@@ -274,6 +297,7 @@ Game.prototype = {
         this.drawButton.classList.remove("user_oper_button_enabled");
     
         if(begin === this.playerName){
+            Notice.roundBegin();
             drawEn = true;
             passEn = true;
         }
@@ -370,13 +394,40 @@ Game.prototype = {
     },
     someoneWin : function(name){
         if(name === this.playerName){
-            alert("you defeat");
+            this.win();
         }else{
-            alert(name + "win");
+            Notice.noOperNotice(name + "win");
         }
     },
     lose : function(){
-        alert("you lose");
+        this.chaButton.classList.remove("user_oper_button_enabled");
+        this.goButton.classList.remove("user_oper_button_enabled");
+        this.passButton.classList.remove("user_oper_button_enabled");
+        this.drawButton.classList.remove("user_oper_button_enabled");
+        this.chaButton.classList.add("user_oper_button_disabled");
+        this.goButton.classList.add("user_oper_button_disabled");
+        this.passButton.classList.add("user_oper_button_disabled");
+        this.drawButton.classList.add("user_oper_button_disabled");
+    },
+    win : function(){
+        Notice.win();
+        this.chaButton.classList.remove("user_oper_button_enabled");
+        this.goButton.classList.remove("user_oper_button_enabled");
+        this.passButton.classList.remove("user_oper_button_enabled");
+        this.drawButton.classList.remove("user_oper_button_enabled");
+        this.chaButton.classList.add("user_oper_button_disabled");
+        this.goButton.classList.add("user_oper_button_disabled");
+        this.passButton.classList.add("user_oper_button_disabled");
+        this.drawButton.classList.add("user_oper_button_disabled");
+    },
+    gameEnds : function(){
+        var mod = this;
+        setTimeout(function(){
+            mod.initGameScreen();
+            document.getElementById("user_poker_area").innerHTML = "";
+            mod.cleanDrawArea();
+        },5000);
+        
     }
 };
 Game.prototype.otherGo = function(name, card){

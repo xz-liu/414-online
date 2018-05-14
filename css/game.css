@@ -5,6 +5,7 @@
     width: var(--width);
     height: var(--height);
     background-image: url(../5.jpg);
+    overflow: hidden;
 }
 
 
@@ -39,7 +40,7 @@
     display: none;
 }
 .user_oper_button_enabled{
-    display: block;
+    display: inline;
 }
 .bring_out_button{
     
@@ -68,8 +69,8 @@
 .user_info > *{
 }
 #room_passcode{
-    margin-top: 5px;
-    padding: 10px 10px;
+    margin-top: 1%;
+    padding: 2% 2%;
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -78,12 +79,12 @@
 }
 #player_name{
     background-color:white;
-    padding: 10px 10px;
+    padding: 2% 2%;
 }
 .start_game_button{
     display: none;
-    margin: 10px;
-    padding: 20px 0;
+    margin: 2%;
+    padding: 14% 0;
     text-align: center;
     border-radius: 5px;
     border: 2px solid white;
@@ -98,8 +99,8 @@
 }
 
 .exit_game_button{
-    margin: 35px 10px;
-    padding: 20px 0;
+    margin: 14% 2%;
+    padding: 14% 0;
     text-align: center;
     border-radius: 5px;
     border: 2px solid white;
@@ -126,95 +127,3 @@
     margin-left: var(--playerMargin);
     width: var(--playerWidth);
 }
-
-
-
-.chat_room{
-    position: fixed;
-    
-    width: 15%;
-    right: 0;
-    height: 50%;
-    bottom: 0;
-
-    /* background-color: rgba(0,0,0,0.3); */
-/*  */
-    /* backdrop-filter: blur(10px); */
-    box-shadow: 0 0 10px black;
-/*  */
-}
-.chat_history{
-    height: calc(88% - 10px);
-    /* background-color: gray; */
-    /*  */
-    background-color: transparent;
-    /*  */
-    padding: 5px;
-}
-#chat_list{
-    /* background-color: aquamarine; */
-    background-color: transparent;
-    width: 100%;
-}
-.chat_input_container{
-    position: relative;
-    height: 12%;
-    
-}
-#chat_input{
-    position: absolute;
-    padding-left: 5px;
-    
-    height: 100%;
-    width: 70%;
-    outline: 0;
-    border: 0;
-    font-size: 25px;
-}
-#chat_input_button{
-    position: absolute;
-    right: 0;
-    height: 100%;
-    width: 28%;
-    cursor: pointer;
-    font-size: 25px;
-    transition: background-color 0.1s;
-}
-#chat_input_button:hover{
-    background-color: azure;
-}
-/*  */
-.chat_message{
-    /* background-color: white; */
-    /* position: auto; */
-    /* width: 100%; */
-    /* font-size: large; */
-    /* border-radius: 2px; */
-    /* word-break: all; */
-    /* padding-top: 3px; */
-}
-.chat_name{
-    width: 100%;
-    background-color: aquamarine;
-    border-top-right-radius: 2px;
-    border-top-left-radius: 2px;
-}
-.chat_self{
-    text-align: right;
-}
-.chat_time{
-    width: 100%;
-    text-align: right;
-    color: white;
-}
-.chat_content{
-    width: 100%;
-    word-break: break-all;
-    background-color:floralwhite;
-    border-bottom-right-radius: 2px;
-    border-bottom-left-radius: 2px;
-}
-.chat_break{
-    height: 3px;
-}
-/*  */

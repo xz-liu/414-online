@@ -3,31 +3,33 @@
     <head>
         <meta charset="utf-8">
         <title>puke</title>
+        <link href="css/chat.css" rel="stylesheet">
         <link href="css/menu.css" rel="stylesheet">
         <link href="css/game.css" rel="stylesheet">
         <link href="css/poker.css" rel="stylesheet">
+        <link href="css/notice.css" rel="stylesheet">
+
     </head>
     <body>
         <div id="game_screen" class="game_screen">
             <div id="user_poker_area" class="user_poker_area"></div>
             <div id="user_oper" class="user_oper">
                 <div id="draw_button" class="bring_out_button user_oper_button">出牌</div>
+                <div id="cha_button" class="cha_button user_oper_button">叉</div>
                 <div id="go_button" class="go_button user_oper_button">勾</div>
-                <div id="pass_button" class="pass_button user_oper_button">过</div>
-                <div id="cha_button" class="cha_button user_oper_button">CHA</div>
+                <div id="pass_button" class="pass_button user_oper_button">过</div>  
             </div>
             <div id="player_area"></div>
             <div class="user_info">
                 <input id="clip" style="display:none">
                 <p id="player_name">userName</p>
-                <p id="room_passcode">邀请码 : <span id="invite_passcode">111111</span></p>                
+                <p id="room_passcode">邀请码 : <span id="invite_passcode">111111</span></p>
                 <div id="start_game_button" class="start_game_button">START</div>
                 <div id="exit_game_button" class="exit_game_button">EXIT</div>
             </div>
             <div class="chat_room">
                 <div class="chat_history">
                     <ul id="chat_list">
-                        <li>admin:fuck you</li>
                     </ul>
                 </div>
                 <div class="chat_input_container">
@@ -35,6 +37,7 @@
                     <div id="chat_input_button">send</div>
                 </div>
             </div>
+            
         </div>
         <div id="menu_screen" class="menu_screen">
             <div class="game_title">414-online</div>
@@ -68,12 +71,25 @@
                 <div class="menu_down"></div>
             </div>
         </div>
+        <div id="notice_block">
+            <div class="exit_room_notice">
+                <span>你确认离开吗</span>
+                <div id="exit_room_enter_button">确认离开</div>
+                <div id="exit_room_cancel_button">不离开</div>
+            </div>
+        </div>
+        <div id="no_oper_notice" class="no_oper_notice">
+            <p id="no_oper_notice_content">player ADADADAD enter</p>
+        </div>
     </body>
+    <script src="js/style.js"></script>
+    <script src="js/notice.js"></script>
     <script src="js/chat.js"></script>
     <script src="js/puke.js"></script>
-    <script src="Client.js"></script>
+    <script src="js/Client.js"></script>
     <script src="js/menu.js"></script>
-    <script src="js/style.js"></script>
+    
     <script src="js/game.js"></script>
     <script src="js/entry.js"></script>
+    
 </html>

@@ -1,16 +1,19 @@
 //(function(){
     //test();
+    enterWaitInput();
     var socket = new ClientSocket({
         
         open:enterNameInput,
-        error:enterErrorInput
+        error:enterErrorInput,
+        timeover:linkError
         
         /*open:test,
         error:test*/
     }),
         pCode,
         pName,
-        thisGame;
+        thisGame,
+        thisChat;
     function getQueryString(name) {// game.html?pass=DDDDDD
         var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
         var r = window.location.search.substr(1).match(reg);
@@ -21,38 +24,46 @@
     }
 
     // fail
-    function fail(json){
+    function fail(data){
         console.log("FAILL!!!!!!");
-        //console.log(json)
-        if(json){
-            if(json.reason){
-                switch (json.reason){
-                    case "enterRoomFail":enterRoomFail();break;
+        if(data){
+            if(data.code){
+                switch (data.code){
+                    case 1:setNameFail();break;
+                    case 4:passcodeNotExist();break;
+                    case 5:drawInvalid();break;
+                    case 9:memberNotEnough();break;
                     default:break;
                 }
             }
         }else{ // no data , set name fail
-            setNameFail();
+            //setNameFail();
         }
+    }
+    //
+    function linkError(){
+        //Notice.noOperNotice("连接中断，请刷新重进");
+        enterErrorInput("连接中断，请刷新重进");
     }
     // menu
     function setNameSuccess(){
-        resetInput();
         enterRoomInput();
     }
     function setNameFail(){
-        resetInput();
-        enterErrorInput();
+        enterErrorInput("名字已经存在");
         setTimeout(function(){
-            resetInput();
             enterNameInput();
         },1000);
     }
+    function passcodeNotExist(){
+        enterErrorInput("邀请码不存在");
+        setTimeout(function(){
+            enterRoomInput();
+        },1000);
+    }
     function enterRoomFail(){
-        resetInput();
         enterErrorInput();
         setTimeout(function(){
-            resetInput();
             enterRoomInput();
         },1000);
     }
@@ -61,14 +72,18 @@
     function createRoomSuccess(json){
         var passCode = json.passcode;
         thisGame = new Game(socket, passCode, pName, true);
+        thisChat = new Chat(pName);
+        
     }
     function otherEnter(json){
         console.log(json.name + " enter!!");
+        Notice.otherEnter(json.name);
         if(thisGame){
             thisGame.otherEnter(json.name);
         }
     }
     function otherLeave(json){
+        Notice.otherLeave(json.name);
         console.log(json.name + " leave!!");
         if(thisGame){
             thisGame.otherLeave(json.name);
@@ -76,7 +91,12 @@
     }
     function enterSuccess(json){
         thisGame = new Game(socket, pCode, pName, false);
+
         thisGame.enterRoom(json.names);
+        thisChat = new Chat(pName);
+    }
+    function memberNotEnough(){
+        Notice.memberNotEnough();
     }
 
 
@@ -125,11 +145,13 @@
         }
     }
     function lose(){
+        Notice.lose();
         if(thisGame){
             thisGame.lose();
         }
     }
     function gameEnds(){
+        Notice.noOperNotice("游戏结束");
         if(thisGame){
             thisGame.gameEnds();
         }
@@ -139,17 +161,27 @@
             thisGame.someoneAlmostWin(json.name, json.cardsCnt);
         }
     }
+    function drawInvalid(){
+        Notice.noOperNotice("无效的出牌");
+    }
 
 
     // chat
     function showMsgHistory(json){
-        showHistory(json);
+        if(thisChat){
+            thisChat.showHistory(json);
+        }
     }
     function showNewMsg(json){
-        addMsg(json[0], json[2], json[1]);
+        if(thisChat){
+            thisChat.addMsg(json[0], json[2], json[1]);
+        }
+        
     }
     function msgSendFail(json){
-
+        /*if(thisChat){
+            thisChat.showHistory(json);
+        }*/
     }
 
 
@@ -241,6 +273,11 @@
         enterWaitInput();
         socket.send("create");
     }
+
+    // exit room
+    document.getElementById("exit_game_button").onclick = function(){
+        Notice.exitRoom();
+    }
     
     // host start game
     document.getElementById("start_game_button").onclick = function(){
@@ -311,6 +348,19 @@
             if(this.value.length !== 0){
                 socket.send("msgSendNew",this.value);
             }
+        }
+    }
+
+    // notice
+    Notice.exitRoomEnter = function(){
+        if(thisGame){
+            thisGame.exitRoom();
+            
+            thisGame = null;
+            socket.send("home");
+            thisChat.cleanHistory();
+            thisChat = null;
+            enterRoomInput();
         }
     }
     
