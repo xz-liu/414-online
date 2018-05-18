@@ -28,19 +28,19 @@ module.exports = {
     allPlayers: [],
     allConns: [],
     addPlayer: function (name, player, connIndex) {
-        module.exports.allPlayers[name] = player;
-        module.exports.allConns[connIndex] = name;
+        this.allPlayers[name] = player;
+        this.allConns[connIndex] = name;
     },
     deletePlayer: function (name) {
-        var ind = module.exports.allPlayers.indexOf(name);
-        if (ind >= 0) module.exports.allPlayers.splice(ind, 1);
+        var ind = this.allPlayers.indexOf(name);
+        if (ind >= 0) this.allPlayers.splice(ind, 1);
         return ind >= 0;
     },
     getPlayer: function (name) {
-        return module.exports.allPlayers[name];
+        return this.allPlayers[name];
     },
     playerExists: function (name) {
-        return module.exports.allPlayers[name] != undefined;
+        return this.allPlayers[name] != undefined;
     },
     getRandomPasscode: function () {
         return (Math.floor(Math.random() * 899999) + 100000).toString();
@@ -55,5 +55,10 @@ module.exports = {
     }, getPlayerByConn: function (connection) {
         return this.getPlayer
             (this.allConns[connection]);
+    }
+    , deleteRoom: function (room) {
+        let i = this.allRooms.indexOf(room);
+        if (i >= 0) this.allRooms.splice(i, 1);
+        return i >= 0;
     }
 };

@@ -192,16 +192,25 @@ class GameRoom {
     }
     getNxtNotWonPlayer(nxtPlayer) {
         var playerIndex = this.players.indexOf(nxtPlayer);
+        // playerIndex=parseInt(playerIndex);
         // var nxtPlayer = this.players[nowPlayer];
+        debug_raw('in loop->');
+        debug_raw('[');
+        debug(this.roundNow);
+        debug_players(this.players);
+        debug_players(this.wins);
+        debug_raw(']');
         do {
-            debug('loop');
             nxtPlayer = this.players[(playerIndex + 1) % this.players.length];
+            debug_raw('select next player: '+nxtPlayer.name);
+            playerIndex++;
         } while (this.wins.includes(nxtPlayer));
         debug("select " + nxtPlayer);
         return nxtPlayer;
     }
     nextPlayer() {
         debug('goto nxt player');
+        debug(this.lastPlayer.name);
         debug(this.lastReal.name);
         this.roundNow[DRAW_BEGIN] =
             this.roundNow[DRAW_NEXT] = null;
@@ -229,8 +238,13 @@ class GameRoom {
     }
 
     addNewPlayer(player, passCode) {
+        if(!player)return false;
         if (passCode !== this.passCode) {
             player.sendFailMessage(errros._PASSCODE_INCORRECT);
+            return false;
+        }
+        if(this.gaming){
+            player.sendFailMessage(errors._ROOM_PLAYING);
             return false;
         }
         var names = [];
@@ -252,21 +266,15 @@ class GameRoom {
         this.players.splice(this.players.indexOf(player), 1);
         this.sendToAllPlayer(types.STYPE_LEAVES, { 'name': player.name });
         this.endGame();
+        if(this.players.length===0){
+            config.deleteRoom(this);    
+        }
     }
     endGame() {
         if (this.gaming) {
             this.sendToAllPlayer(types.STYPE_GAMEENDS);
             this.lastNBString = undefined;
-        }
-    }
-    beginAuto() {
-        if (this.beginNotRespond) {
-            this.beginNotRespond.autoDraw();
-        }
-    }
-    nextAuto() {
-        if (this.nextNotRespond) {
-            this.nextNotRespond.autoPass();
+            this.gaming=false;
         }
     }
     roundSendMsg(begin, nxt, cha, go) {
@@ -289,11 +297,19 @@ class GameRoom {
 
         if (begin) {
             this.beginNotRespond = begin;
-            setTimeout(this.beginAuto, this.interval);
+            setTimeout(function(){
+                if (this.beginNotRespond) {
+                    this.beginNotRespond.autoDraw();
+                }
+            }, this.interval);
         }
         if (nxt) {
             this.nextNotRespond = nxt;
-            setTimeout(this.nextAuto, this.interval);
+            setTimeout(function(){
+                if (this.nextNotRespond) {
+                    this.nextNotRespond.autoPass();
+                }
+            }, this.interval);
         }
         // debug('sending!');
         this.sendToAllPlayer(types.STYPE_PLAYERROUND, msg);

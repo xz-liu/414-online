@@ -76,9 +76,15 @@ global.debug_raw = function (e) {
     console.log(e);
 }
 global.debug_array = function (e) {
-    debug(e);
+    this.debug(e);
 }
-
+global.debug_players=function(e){
+    this.debug_raw(e.length+" {");
+    for(var i in e){
+        this.debug_raw(e[i].name);
+    }
+    this.debug_raw("}");
+}
 global.escapeHtml = function (text) {
     return text
         .replace(/&/g, "&amp;")

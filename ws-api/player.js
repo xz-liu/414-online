@@ -75,7 +75,6 @@ class Player {
                     this.playerSelect = null;
                     this.drawCards(data.data.cards);
                 }
-                this.checkWin();
                 break;
             case types.DTYPE_CHA:
                 if (!data.data) return;
@@ -83,7 +82,6 @@ class Player {
                     this.playerSelect = DRAW_CHA;
                     this.drawCards(data.data.cards);
                 }
-                this.checkWin();
                 break;
             case types.DTYPE_GO:
                 if (!data.data) return;
@@ -91,7 +89,6 @@ class Player {
                     this.playerSelect = DRAW_GO;
                     this.drawCards(data.data.cards);
                 }
-                this.checkWin();
                 break;
             case types.DTYPE_PASS:
                 if (this.room) {
@@ -189,6 +186,7 @@ class Player {
                     }
                     debug(this.cards);
                     this.room.resetLast(this, cards, drawTypeNow);
+                    this.checkWin();
                 } else this.sendFailMessage(errors._CARD_COMB_INVALID);
             } else this.sendFailMessage(errors._CARD_NOT_POSSESSED_EXISTS);
         } else this.sendFailMessage(errors._NOT_YOUR_ROUND);
