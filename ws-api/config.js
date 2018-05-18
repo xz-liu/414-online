@@ -1,4 +1,5 @@
 "use strict";
+require('./globals');
 var webSocketsServerPort = 1337;
 var _webSocketServer = require('websocket').server;
 var http = require('http');
@@ -32,9 +33,8 @@ module.exports = {
         this.allConns[connIndex] = name;
     },
     deletePlayer: function (name) {
-        var ind = this.allPlayers.indexOf(name);
-        if (ind >= 0) this.allPlayers.splice(ind, 1);
-        return ind >= 0;
+        var ind = getKeyByVal(this.allPlayers,name);
+        delete this.allPlayers[ind];
     },
     getPlayer: function (name) {
         return this.allPlayers[name];
@@ -51,14 +51,13 @@ module.exports = {
     deleteConnection: function (connection) {
         this.deletePlayer
             (this.allConns[connection]);
-        this.allConns.splice(connection, 1);
+        delete this.allConns[connection];
     }, getPlayerByConn: function (connection) {
         return this.getPlayer
             (this.allConns[connection]);
     }
     , deleteRoom: function (room) {
-        let i = this.allRooms.indexOf(room);
-        if (i >= 0) this.allRooms.splice(i, 1);
-        return i >= 0;
+        let i = getKeyByVal(this.allRooms,room);
+        delete this.allRooms[i];
     }
 };

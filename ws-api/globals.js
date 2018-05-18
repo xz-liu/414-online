@@ -93,3 +93,9 @@ global.escapeHtml = function (text) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+global.getKeyByVal=function(arr,val){
+    for(var i in arr){
+        if(arr[i]===val)return i;
+    }
+    return null;
+}
