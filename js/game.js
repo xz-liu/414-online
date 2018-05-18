@@ -91,6 +91,7 @@ Game.prototype = {
     init : function(){
         this.enterGameScreen();
         this.initGameScreen();
+        this.disableOper();
     },
     open : function(){
         document.getElementById("user_oper").style.display = "block";
@@ -108,15 +109,7 @@ Game.prototype = {
             }
         }
 
-        this.chaButton.classList.remove("user_oper_button_enabled");
-        this.goButton.classList.remove("user_oper_button_enabled");
-        this.passButton.classList.remove("user_oper_button_enabled");
-        this.drawButton.classList.remove("user_oper_button_enabled");
-        this.chaButton.classList.add("user_oper_button_disabled");
-        this.goButton.classList.add("user_oper_button_disabled");
-        this.passButton.classList.add("user_oper_button_disabled");
-        this.drawButton.classList.add("user_oper_button_disabled");
-
+        this.disableOper();
         document.getElementById("user_poker_area").innerHTML = "";
 
         this.cleanDrawArea();
@@ -411,6 +404,9 @@ Game.prototype = {
     },
     win : function(){
         Notice.win();
+        this.disableOper();
+    },
+    disableOper : function(){
         this.chaButton.classList.remove("user_oper_button_enabled");
         this.goButton.classList.remove("user_oper_button_enabled");
         this.passButton.classList.remove("user_oper_button_enabled");
@@ -426,6 +422,7 @@ Game.prototype = {
             mod.initGameScreen();
             document.getElementById("user_poker_area").innerHTML = "";
             mod.cleanDrawArea();
+            mod.disableOper();
         },5000);
         
     }
@@ -434,7 +431,7 @@ Game.prototype.otherGo = function(name, card){
     console.log(name + ": GO!");
     console.log(card);
     if(name !== this.playerName){
-        this.otherBringOut([card]);
+        this.otherBringOut(card);
     }
 }
 Game.prototype.otherDraw = function(name, cards){

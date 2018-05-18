@@ -5,6 +5,9 @@
     height: var(--pokerHeight);
     border-radius: 4px;
 }
+.poker::selection{
+    background-color: transparent;
+}
 .user_poker{
     position: relative;
     margin-left: var(--pokerMargin);

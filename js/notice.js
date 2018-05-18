@@ -49,7 +49,7 @@ var Notice = {
         this.noOperNotice("玩家" + playerName + "离开");
     },
     roundBegin : function(){
-        this.noOperNotice("你的回合", 400);
+        this.noOperNotice("你的回合");
     },
     gameEnd : function(){
         this.noOperNotice("游戏结束");

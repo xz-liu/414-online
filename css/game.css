@@ -22,7 +22,7 @@
     /*display: none;*/
     width: 60%;
     left: 20%;
-    top: 55%;
+    top: 60%;
 }
 .user_oper_button{
     position: relative;
@@ -122,8 +122,16 @@
 }
 .other_player{
     display: inline-block;
-    height: 100%;
-    background-color: aqua;
+    
+    background-color: rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,0,0,0.9);
+    border-radius: 100%;
     margin-left: var(--playerMargin);
     width: var(--playerWidth);
+    height: var(--playerWidth);
+}
+.other_player > p{
+    text-align: center;
+    color : white;
+    height: 50%;
 }

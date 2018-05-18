@@ -121,7 +121,7 @@
     }
     function otherGo(json){
         if(thisGame){
-            thisGame.otherGo(json.name, json.card);
+            thisGame.otherGo(json.name, json.cards);
         }
     }
     function drawSuccess(json){
