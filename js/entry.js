@@ -1,19 +1,29 @@
-//(function(){
-    //test();
     enterWaitInput();
-    var socket = new ClientSocket({
-        
-        open:enterNameInput,
-        error:enterErrorInput,
-        timeover:linkError
-        
-        /*open:test,
-        error:test*/
-    }),
+    var socket,
         pCode,
         pName,
         thisGame,
-        thisChat;
+        thisChat,
+        isInvited;
+    if(isSupportSocket()){
+        var roomIDUrl = getQueryString("room");
+        if(roomIDUrl && roomIDUrl.length > 0){
+            isInvited = true;
+            pCode = roomIDUrl;
+        }
+        socket = new ClientSocket({
+            open:enterNameInput,
+            error:enterErrorInput,
+            timeover:linkError
+            /*open:test,
+            error:test*/
+        });
+    }else{
+        enterErrorInput("浏览器不支持WebSocket");
+    }
+
+
+
     function getQueryString(name) {// game.html?pass=DDDDDD
         var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
         var r = window.location.search.substr(1).match(reg);
@@ -33,21 +43,34 @@
                     case 4:passcodeNotExist();break;
                     case 5:drawInvalid();break;
                     case 9:memberNotEnough();break;
+                    case 10:enterErrorInput("此房间正在进行游戏");break;
                     default:break;
                 }
             }
-        }else{ // no data , set name fail
-            //setNameFail();
+        }else{ // no data
         }
     }
     //
     function linkError(){
-        //Notice.noOperNotice("连接中断，请刷新重进");
+        if(thisChat){
+            thisChat.cleanHistory();
+            thisChat = null;
+        }
+        if(thisGame){
+            thisGame.exitRoom();
+            thisGame = null;
+        }
         enterErrorInput("连接中断，请刷新重进");
     }
     // menu
     function setNameSuccess(){
-        enterRoomInput();
+        if(isInvited){
+            socket.send("room",{passCode:pCode});
+            isInvited = false;
+        }else{
+            enterRoomInput();
+        }
+        
     }
     function setNameFail(){
         enterErrorInput("名字已经存在");
@@ -61,11 +84,8 @@
             enterRoomInput();
         },1000);
     }
-    function enterRoomFail(){
-        enterErrorInput();
-        setTimeout(function(){
-            enterRoomInput();
-        },1000);
+    function memberNotEnough(){
+        document.getElementById("start_game_button").style.display = "block";
     }
 
     // room
@@ -284,17 +304,15 @@
         console.log("begin button clicked!!!!!!!!!!");
         if(thisGame){
             if(thisGame.isRoomHost()){
-                socket.send("begin")
+                this.style.display = "none";
+                socket.send("begin");
             }
         }
     }
     // invite
     document.getElementById("room_passcode").onclick = function(){
-        document.getElementById("clip").focus();
-        document.getElementById("clip").select();
-        /*var span = document.getElementById("invite_passcode");
-        span.focus();*/
-        document.execCommand("copy",false,null);
+        Notice.inviteNotice(document.getElementById("invite_passcode").innerHTML);
+
     }
 
     // user oper
@@ -363,5 +381,3 @@
             enterRoomInput();
         }
     }
-    
-//})()

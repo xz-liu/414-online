@@ -14,6 +14,9 @@
     float: left;
     transition: transform 0.3s;
 }
+.user_poker::selection{
+    background-color: transparent;
+}
 .user_poker:hover{
     /*outline-style: solid;
     outline-width: 5px;
@@ -32,6 +35,9 @@
     left: 5px;
     top: 1px;
 }
+.poker_lu::selection{
+    background-color: transparent;
+}
 .poker_rd{
     display: block;
     position: absolute;
@@ -39,6 +45,9 @@
     right: 5px;
     bottom: 1px;
     transform: rotateZ(180deg);
+}
+.poker_rd::selection{
+    background-color: transparent;
 }
 div[class*='pok']:before {
     position: absolute;

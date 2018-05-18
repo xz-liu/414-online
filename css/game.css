@@ -121,6 +121,7 @@
     height: 15%;
 }
 .other_player{
+    position: relative;
     display: inline-block;
     
     background-color: rgba(0,0,0,0.3);
@@ -130,8 +131,31 @@
     width: var(--playerWidth);
     height: var(--playerWidth);
 }
-.other_player > p{
+.other_player > div{
+    position: relative;
+    height: 60%;
+}
+.other_player > div > span{
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
     text-align: center;
     color : white;
-    height: 50%;
+}
+.other_player > p{
+    position: relative;
+    text-align: center;
+    color : white;
+    
+    height: 40%;
+}
+.other_player_begin{
+    background-color: rgba(255,255,255,0.6);
+    color: black;
+    box-shadow: 0 0 0.5em 0.5em gold;
+}
+.other_player_next{
+    background-color: rgba(255,255,255,0.6);
+    color: black;
+    box-shadow: 0 0 0.5em 0.5em red;
 }

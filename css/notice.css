@@ -60,7 +60,49 @@
     top: 20%;
 }
 .no_oper_notice > p{
+    font-size: 200%;
     color: white;
     margin: auto;
     text-align: center;
+}
+
+#invite_notice{
+    position: absolute;
+    display: none;
+    top: 30%;
+    left: 30%;
+    width: 30%;
+    background-color: rgba(255,255,255,0.8);
+}
+#invite_notice > div{
+    position: relative;
+
+}
+.invite_notice_up{
+}
+.invite_notice_down{
+}
+/*
+.invite_notice_content > hr{
+    transform: rotateZ(90deg);
+}
+*/
+#invite_notice_close{
+    cursor: pointer;
+    text-align: center;
+    color: white;
+    padding: 2% 0;
+    transition: background-color 0.2s;
+    background-color: rgba(0,0,0,0.8);
+}
+#invite_notice_close:hover{
+    background-color: black;
+}
+.invite_notice_click{
+    transition: background-color 0.2s;
+    cursor: pointer;
+    padding: 3%;
+}
+.invite_notice_click:hover{
+    background-color: rgba(0,0,0,0.4);
 }

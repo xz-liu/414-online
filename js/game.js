@@ -2,25 +2,26 @@
 function OtherPlayer(name, classType){
     this.name = name;
     this.dom = this.createPlayerDom(classType);
-    //this.area = null;
     this.area = document.getElementById("player_area");
-    //this.area.appendChild(this.dom);
+    this.isRound = false;
+    this.isNext = false;
     this.enterArea();
-    //this.cardCntSpan = null;
 }
 OtherPlayer.prototype = {
     createPlayerDom : function(classType){
         var dom = document.createElement("div"),
-        nameSpan = document.createElement("p"),
+        upDiv = document.createElement("div"),
+        nameSpan = document.createElement("span"),
         cardCntSpan = document.createElement("p");
 
         dom.classList.add("other_player");
         dom.classList.add(classType);
 
         nameSpan.innerHTML = this.name;
-        dom.appendChild(nameSpan);
+        upDiv.appendChild(nameSpan);
+        dom.appendChild(upDiv);
 
-        cardCntSpan.innerHTML = "TEST";
+        cardCntSpan.innerHTML = "...";
         dom.appendChild(cardCntSpan);
         this.cardCntSpan = cardCntSpan;
 
@@ -44,8 +45,30 @@ OtherPlayer.prototype = {
             this.area.appendChild(this.dom);
         }
     },
+    round : function(name){
+        if(name === this.name){
+            this.isRound = true;
+            this.dom.classList.add("other_player_begin");
+        }else if(this.isRound){
+            this.isRound = false;
+            this.dom.classList.remove("other_player_begin");
+        }
+    },
+    next : function(name){
+        if(name === this.name){
+            this.isNext = true;
+            this.dom.classList.add("other_player_next");
+        }else if(this.isNext){
+            this.isNext = false;
+            this.dom.classList.remove("other_player_next");
+        }
+    },
     almostWin : function(cardsCnt){
         this.cardCntSpan.innerHTML = "剩余" + cardsCnt + "张牌";
+        this.cardCntSpan.style.display = "block";
+    },
+    win : function(){
+        this.cardCntSpan.innerHTML = "WIN";
         this.cardCntSpan.style.display = "block";
     }
 };
@@ -55,7 +78,7 @@ function Game(socket, passcode, playerName, isHost){
     this.playerName = playerName;
     this.passcode = passcode;
     this.isHost = isHost;
-    this.isOpen = false;
+    //this.isOpen = false;
 
     // 房间里玩家列表，与服务器顺序相同
     this.playerList = [];
@@ -96,7 +119,7 @@ Game.prototype = {
     open : function(){
         document.getElementById("user_oper").style.display = "block";
         document.getElementById("start_game_button").style.display = "none";
-        this.isOpen = true;
+        //this.isOpen = true;
     },
     close : function(){
         document.getElementById("user_oper").style.display = "none";
@@ -178,7 +201,7 @@ Game.prototype = {
     initGameScreen : function(){
         document.getElementById("player_name").innerHTML = this.playerName;
         document.getElementById("invite_passcode").innerHTML = this.passcode;
-        document.getElementById("clip").value = this.passcode;
+        //document.getElementById("clip").value = this.passcode;
         if(this.isHost){
             document.getElementsByClassName("start_game_button")[0].style.display = "block";
         }else{
@@ -289,15 +312,23 @@ Game.prototype = {
         this.passButton.classList.remove("user_oper_button_enabled");
         this.drawButton.classList.remove("user_oper_button_enabled");
     
-        if(begin === this.playerName){
-            Notice.roundBegin();
-            drawEn = true;
-            passEn = true;
+        for(var i = 0; i < this.playerList.length; i++){
+            if(this.playerList[i].name === this.playerName){
+                if(begin === this.playerName){
+                    Notice.roundBegin();
+                    drawEn = true;
+                    passEn = true;
+                }
+                if(next === this.playerName){
+                    drawEn = true;
+                    passEn = true;
+                }
+            }else{
+                this.playerList[i].round(begin);
+                this.playerList[i].next(next);
+            }
         }
-        if(next === this.playerName){
-            drawEn = true;
-            passEn = true;
-        }
+
         if(cha === this.playerName){
             chaEn = true;
         }
@@ -386,11 +417,17 @@ Game.prototype = {
         }
     },
     someoneWin : function(name){
-        if(name === this.playerName){
-            this.win();
-        }else{
-            Notice.noOperNotice(name + "win");
+        for(var i = 0; i < this.playerList.length; i++){
+            if(name === this.playerList[i].name){
+                if(name === this.playerName){
+                    this.win();
+                }else{
+                    this.playerList[i].win();
+                    Notice.noOperNotice(name + "win");
+                }
+            }
         }
+        
     },
     lose : function(){
         this.chaButton.classList.remove("user_oper_button_enabled");
@@ -417,33 +454,33 @@ Game.prototype = {
         this.drawButton.classList.add("user_oper_button_disabled");
     },
     gameEnds : function(){
-        var mod = this;
-        setTimeout(function(){
-            mod.initGameScreen();
-            document.getElementById("user_poker_area").innerHTML = "";
-            mod.cleanDrawArea();
-            mod.disableOper();
-        },5000);
+        //var mod = this;
+        this.initGameScreen();
+        document.getElementById("user_poker_area").innerHTML = "";
+        this.cleanDrawArea();
+        this.disableOper();
+    },
+    diableStart : function(){
+
+    },
+    otherGo : function(name, card){
+        console.log(name + ": GO!");
+        console.log(card);
+        if(name !== this.playerName){
+            this.otherBringOut(card);
+        }
+    },
+    otherDraw : function(name, cards){
+        console.log(name + ": DRAW!");
+        console.log(cards);
+        if(name !== this.playerName){
+            this.otherBringOut(cards);
+        }
+    },
+    otherPass : function(name){
+        /*if(name !== this.playerName){
+            this.otherBringOut(cards);
+        }*/
         
     }
 };
-Game.prototype.otherGo = function(name, card){
-    console.log(name + ": GO!");
-    console.log(card);
-    if(name !== this.playerName){
-        this.otherBringOut(card);
-    }
-}
-Game.prototype.otherDraw = function(name, cards){
-    console.log(name + ": DRAW!");
-    console.log(cards);
-    if(name !== this.playerName){
-        this.otherBringOut(cards);
-    }
-}
-Game.prototype.otherPass = function(name){
-    /*if(name !== this.playerName){
-        this.otherBringOut(cards);
-    }*/
-    
-}

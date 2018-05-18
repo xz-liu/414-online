@@ -2,7 +2,8 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>puke</title>
+        <title>414-online</title>
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
         <link href="css/chat.css" rel="stylesheet">
         <link href="css/menu.css" rel="stylesheet">
         <link href="css/game.css" rel="stylesheet">
@@ -21,7 +22,7 @@
             </div>
             <div id="player_area"></div>
             <div class="user_info">
-                <input id="clip" style="display:none">
+                <!--<input id="clip" style="display:none">-->
                 <p id="player_name">userName</p>
                 <p id="room_passcode">邀请码 : <span id="invite_passcode">111111</span></p>
                 <div id="start_game_button" class="start_game_button">START</div>
@@ -34,7 +35,7 @@
                 </div>
                 <div class="chat_input_container">
                     <input id="chat_input">
-                    <div id="chat_input_button">send</div>
+                    <div id="chat_input_button">发送</div>
                 </div>
             </div>
             
@@ -76,6 +77,24 @@
                 <span>你确认离开吗</span>
                 <div id="exit_room_enter_button">确认离开</div>
                 <div id="exit_room_cancel_button">不离开</div>
+            </div>
+        </div>
+        <div id="invite_notice">
+            <div class="invite_notice_content">
+                <hr>
+                <div id="invite_notice_left" class="invite_notice_left invite_notice_click">
+                    <p>点击复制邀请码</p>
+                    <p id="invite_notice_code"></p>
+                </div>
+                <hr>
+                <div id="invite_notice_right" class="invite_notice_right invite_notice_click">
+                    <p>点击复制邀请链接</p>
+                    <p id="invite_notice_url"></p>
+                </div>
+                <hr>
+            </div>
+            <div class="invite_notice_down">
+                <div id="invite_notice_close">CLOSE</div>
             </div>
         </div>
         <div id="no_oper_notice" class="no_oper_notice">

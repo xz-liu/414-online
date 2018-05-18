@@ -19,9 +19,8 @@ function getContentHeight(dom){
     }
 }
 function getContentWidth(dom){
-    console.log(dom.getBoundingClientRect());
+    //console.log(dom.getBoundingClientRect());
     if(!isM){
-        
         return dom.getBoundingClientRect().width;
     }else{
         return dom.getBoundingClientRect().height;

@@ -4,9 +4,16 @@ var doc = document,
     bringOutButton = gameScreen.getElementsByClassName("bring_out_button")[0];
     //doc.body.style.setProperty("--height",window.innerHeight + "px");
 
-    var testGetPoker = ["A1","A2","A3","A4","JB","JS","A1","A1","A1","A1","A1","A1","JB","JB","JB","JB","JB","JB"];
+var testGetPoker = ["A1","A2","A3","A4","JB","JS","A1","A1","A1","A1","A1","A1","JB","JB","JB","JB","JB","JB"];
     // alert(testGetPoker.length);
-     
+    var isMouseDown = false;
+    document.onmousedown = function(){
+        isMouseDown = true;
+    }
+    document.onmouseup = function(){
+        isMouseDown = false;
+    }
+    
      function getPokerClass(str){
          switch (str){
              case '1':return "pok_diamond";
@@ -143,5 +150,19 @@ var doc = document,
              }
          }
      });
+     userPokerArea.addEventListener("mouseover", function(ev){
+        if(ev.target){
+            var dom = ev.target;
+            
+            if(dom.nodeName.toUpperCase() === "SPAN"){
+                dom = dom.parentNode;
+            }
+            if(dom.classList.contains("user_poker")){
+                if(isMouseDown){
+                    clickPoker(dom);
+                }
+            }
+        }
+    });
      //createUserPoker(testGetPoker);
  

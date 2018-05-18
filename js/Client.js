@@ -18,6 +18,7 @@ function ClientSocket(arg){
     this.url = arg.url || defaultServer;
     this.initJSONHandler();
     this.initSocket(arg);
+    this.isTimeover = false;
 }
 ClientSocket.prototype = {
     initJSONHandler : function(){
@@ -31,44 +32,45 @@ ClientSocket.prototype = {
         this.JSONHandlerList[type] = callback;
     },
     send : function(type, data){
-        if(data){
-            this.socket.send(JSON.stringify({
-                type:type,
-                data:data
-            }));
-        }else{
-            this.socket.send(JSON.stringify({type:type}));
+        try{
+            this.socket.send(JSON.stringify(((data)?{type:type, data:data}:{type:type})));
+        }catch(e){
+            console.log("send error");
         }
-        
     },
     initSocket : function(arg){
-        var socket = new WebSocket(this.url),
-        mod = this;
-        socket.onerror = arg.error || function(){
+        that = this;
+        that.socket = new WebSocket(this.url),
+        
+        that.socket.onerror = arg.error || function(){
             console.log("socket error");
         }
-        socket.onopen = arg.open || function(){
+        that.socket.onopen = arg.open || function(){
             console.log("socket open");
         }
     
-        socket.onmessage = function(message){
+        that.socket.onmessage = function(message){
             try {
                 var json = JSON.parse(message.data);
             } catch (e) {
                 console.log('Invalid JSON: ', message.data);
                 return;
             }
-            mod.runJSONHander(json);
+            that.runJSONHander(json);
         }
-          setInterval(function() {
-            if (socket.readyState !== 1) {
-                if(arg.timeover){
-                    arg.timeover();
-                }else{
-                    console.log("connect time over!");
+        setInterval(function() {
+            if (that.socket.readyState !== 1) {
+                if(that.isTimeover === false){
+                    that.isTimeover = true;
+                    if(arg.timeover){
+                        arg.timeover();
+                    }else{
+                        console.log("connect time over!");
+                    }
                 }
+                
             }
         }, 3000);
-        this.socket = socket;
+        //this.socket = socket;
     }
 };
