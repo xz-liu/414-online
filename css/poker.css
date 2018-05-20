@@ -5,27 +5,28 @@
     height: var(--pokerHeight);
     border-radius: 4px;
 }
-.poker::selection{
-    background-color: transparent;
-}
+
 .user_poker{
     position: relative;
     margin-left: var(--pokerMargin);
     float: left;
     transition: transform 0.3s;
 }
-.user_poker::selection{
-    background-color: transparent;
+.user_poker:first-child{
+    margin-left: 0;
 }
-.user_poker:hover{
-    /*outline-style: solid;
-    outline-width: 5px;
-    outline-color: red;*/
+.user_poker_trans{
+    
+}
+.user_poker_anim{
+    
+}
+.user_poker_anim:hover{
     box-shadow: 0 0 2px 1px black;
-    transform: translateY(-50px)
+    transform: translateY(-33%);
 }
 .poker_selected{
-    transform: translateY(-50px);
+    transform: translateY(-33%);
     box-shadow: 0 0 2px 1px blue;
 }
 .poker_lu{
@@ -116,5 +117,4 @@ div[class*='pok']:after {
 .poker_out{
     position: absolute;
     transition: top 0.2s, left 0.2s;
-
 }

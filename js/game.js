@@ -186,7 +186,7 @@ Game.prototype = {
         margin,
         width;
 
-        var windowWidth = (isM)?736:window.innerWidth;
+        var windowWidth = (isM)?window.innerHeight*0.7:window.innerWidth;
 
         if(len < 6){
             margin = windowWidth*(8 - len)/8/(len + 1);
@@ -382,26 +382,24 @@ Game.prototype = {
 
         this.cleanDrawArea();
 
-        
-
         for(; i < cards.length; i++){
             curClass = getPokerClass((cards[i])[1]);
             if(curClass !== "wrong"){
                 newPokerDom = createPokerDom(curClass,(cards[i])[0]);
                 gameScreen.appendChild(newPokerDom);
                 newPokerDom.classList.remove("user_poker");
+                newPokerDom.classList.remove("user_poker_anim");
                 newPokerDom.classList.add("poker_out");
 
-                newPokerDom.style.top = 250 + "px";
-                newPokerDom.style.left = 450 + i*30+ "px";
+                toDrawArea(newPokerDom,i);
             }else{
  
             }
         }
     },
     drawSuccess : function(combtype){
-        console.log("comb!!: " + combtype);
-        console.log(this.pokerSelected);
+        /*console.log("comb!!: " + combtype);
+        console.log(this.pokerSelected);*/
         this.cleanDrawArea();
         test_bringOut(this.pokerSelectedDom);
         this.pokerSelectedDom = null;

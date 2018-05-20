@@ -1,5 +1,4 @@
-var defaultServer = 'ws://127.0.0.1:1337';
-
+// var defaultServer = 'wss://414.joker.im:443/api';
 var testArg = {
     url:"",
     open:function(){},

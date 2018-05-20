@@ -1,8 +1,3 @@
-var menuName = document.getElementById("menu_name"),
-    menuInput = document.getElementById("menu_input"),
-    menuRoom = document.getElementById("menu_room"),
-    menu = document.getElementById("menu"),
-    curInput = null;
 function resetInput(){
     if(curInput){
         curInput.style.display = "none";
@@ -10,16 +5,13 @@ function resetInput(){
     }
 }
 function getContentHeight(dom){
-    console.log(dom.getBoundingClientRect());
-    if(!isM){
-        
+    if(!isM){ 
         return dom.getBoundingClientRect().height;
     }else{
         return dom.getBoundingClientRect().width;
     }
 }
 function getContentWidth(dom){
-    //console.log(dom.getBoundingClientRect());
     if(!isM){
         return dom.getBoundingClientRect().width;
     }else{
@@ -28,38 +20,35 @@ function getContentWidth(dom){
 }
 function enterInput(dom){
     dom.style.display = "block";
+    curInput = dom;
+    menuInput.style.height = getContentHeight(dom) + getContentWidth(menuInput)*0.1 +"px";
 }
 function enterNameInput(){
-    resetInput()
-    menuName.style.display = "block";
-    menuInput.style.height = getContentHeight(menuName) + getContentWidth(menuInput)*0.1 +"px";
-    
-    curInput = menuName;
+    resetInput();
+    enterInput(menuName);
+    document.getElementById("input_name").focus();
 }
 function enterWaitInput(){
-    resetInput()
-    var menuWait = document.getElementById("menu_wait");
-    menuWait.style.display = "block";
-    curInput = menuWait;
-    menuInput.style.height = getContentHeight(menuWait) + getContentWidth(menuInput)*0.1 +"px";
+    resetInput();
+    enterInput(document.getElementById("menu_wait"));
 }
 function enterErrorInput(str){
     str = str || "";
-    resetInput()
+    resetInput();
     var menuError = document.getElementById("menu_error");
-    menuError.style.display = "block";
     menuError.innerHTML = "<p>ERROR: " + str + "</p>";
-    menuInput.style.height = getContentHeight(menuError) + getContentWidth(menuInput)*0.1 +"px";
-    curInput = menuError;
+    enterInput(menuError);
 }
+/*
 function enterNoticeInput(){
-    resetInput()
+    resetInput();
+
     menuName.style.display = "block";
     menuInput.style.height = getContentHeight(menuWait) + getContentWidth(menuInput)*0.1 +"px";
 }
+*/
 function enterRoomInput(){
-    resetInput()
-    menuRoom.style.display = "block";
-    menuInput.style.height = getContentHeight(menuRoom) + getContentWidth(menuInput)*0.1 +"px";
-    curInput = menuRoom;
+    resetInput();
+    enterInput(menuRoom);
+    document.getElementById("input_room").focus();
 }

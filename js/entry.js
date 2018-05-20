@@ -1,10 +1,5 @@
     enterWaitInput();
-    var socket,
-        pCode,
-        pName,
-        thisGame,
-        thisChat,
-        isInvited;
+    
     if(isSupportSocket()){
         var roomIDUrl = getQueryString("room");
         if(roomIDUrl && roomIDUrl.length > 0){
@@ -84,9 +79,6 @@
             enterRoomInput();
         },1000);
     }
-    function memberNotEnough(){
-        document.getElementById("start_game_button").style.display = "block";
-    }
 
     // room
     function createRoomSuccess(json){
@@ -117,6 +109,7 @@
     }
     function memberNotEnough(){
         Notice.memberNotEnough();
+        document.getElementById("start_game_button").style.display = "block";
     }
 
 
@@ -125,6 +118,9 @@
         if(thisGame){
             thisGame.open();
             thisGame.dealPoker(json.cards);
+        }
+        if(isM){
+            mobilePokerManager = new MobilePokerManager();
         }
     }
     function round(json){

@@ -1,3 +1,12 @@
+body{
+    --pokerHeight:150px;
+    --pokerMargin:-75px;
+    --operButtonMargin : 5%;
+    --operButtonPadd : 5%;
+    --playerMargin:0px;
+    --playerWidth:0px;
+    --UPALeft : 0px;
+}
 .game_screen{
 
     display: none;
@@ -5,15 +14,16 @@
     width: var(--width);
     height: var(--height);
     background-image: url(../5.jpg);
+    background-size: cover;
     overflow: hidden;
 }
 
 
 .user_poker_area{
     position: absolute;
-    width: 45%;
-    left: 25%;
-    height: 20%;
+    
+    left: var(--UPALeft);
+    height: var(--pokerHeight);
     bottom: 5%;
 }
 
@@ -119,6 +129,10 @@
     top: 2%;
     width: 100%;
     height: 15%;
+}
+.player_area_mobile{
+    width: 70%;
+    left: 30%;
 }
 .other_player{
     position: relative;

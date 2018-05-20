@@ -1,0 +1,53 @@
+#player_area{
+    width: 70%;
+    left: 15%;
+}
+.chat_room{
+    height: 100%;
+    width: 25%;
+    right: -25%;
+    transition: right 0.2s;
+    box-shadow: 0;
+}
+.chat_room_display{
+    right: 0;
+}
+#chat_room_open{
+    display: block;
+    position: absolute;
+    left: -34%;
+    top: 35%;
+    width: calc(var(--width)*0.08);
+    height: calc(var(--width)*0.08);
+    background-image: url("../newMsg.png");
+    background-size: cover;
+}
+.chat_new_num{
+    position: absolute;
+    display: none;
+    top: -20%;
+    right: 0;
+    border-radius: 2px;
+    background-color: red;
+    padding: 0 2px;
+}
+.user_info{
+    position: absolute;
+    height: 35%;
+    width: 15%;
+    left: 0;
+    top: 35%;
+
+    background-color: rgba(0,0,0,0.3);
+}
+.exit_game_button{
+    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 14%;
+    padding: 2% 0;
+}
+.exit_game_button:hover{
+    background-color: hsl(0, 0%, 50%);
+}

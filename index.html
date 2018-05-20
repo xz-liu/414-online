@@ -9,6 +9,7 @@
         <link href="css/game.css" rel="stylesheet">
         <link href="css/poker.css" rel="stylesheet">
         <link href="css/notice.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0,user-scalable=no">
 
     </head>
     <body>
@@ -28,7 +29,11 @@
                 <div id="start_game_button" class="start_game_button">START</div>
                 <div id="exit_game_button" class="exit_game_button">EXIT</div>
             </div>
+            
             <div class="chat_room">
+                <div id="chat_room_open">
+                    <div class="chat_new_num"></div>
+                </div>
                 <div class="chat_history">
                     <ul id="chat_list">
                     </ul>
@@ -101,10 +106,11 @@
             <p id="no_oper_notice_content">player ADADADAD enter</p>
         </div>
     </body>
+    <script src="js/globals.js"></script>
     <script src="js/style.js"></script>
     <script src="js/notice.js"></script>
     <script src="js/chat.js"></script>
-    <script src="js/puke.js"></script>
+    <script src="js/poker.js"></script>
     <script src="js/Client.js"></script>
     <script src="js/menu.js"></script>
     

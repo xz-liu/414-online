@@ -4,26 +4,23 @@
 }
 
 .horizontal{
-    transform-origin: center;
+    transform-origin: top left;
     transform: rotateZ(90deg);
 }
 body{
     --width:0px;
     --height:0px;
-    --pokerHeight:150px;
-    --pokerMargin:-75px;
+    
     --menuWidth:549px;
     --menuHeight:549px;
-    --operButtonMargin : 5%;
-    --operButtonPadd : 5%;
 
-    --playerMargin:0px;
-    --playerWidth:0px;
+    --inputHeight : 30px;
 
     --titleSize:90px;
 
     width: var(--width);
     height: var(--height);
+    overflow: hidden;
 }
 ul{
     list-style-type: none;
@@ -70,6 +67,7 @@ ul{
     display: none;
     margin: 5% 5%;
     color: white;
+    font-size:calc(var(--inputHeight) * 0.5)
     
 }
 .menu_up{
@@ -95,13 +93,13 @@ ul{
 .input_container{
     position: relative;
     border-radius: 2px;
-    height: 30px;
+    height: var(--inputHeight);
     overflow: hidden;
     background-color: #ff0000;
 }
 .input{
     position: absolute;
-    font-size: 24px;
+    font-size: calc(var(--inputHeight) * 0.8);
     display: block;
     height: 100%;
     width: 68%;
@@ -137,11 +135,10 @@ ul{
 #create_room_button{
     position: relative;
     display: inline-block;
-    margin-top: 10px;
     overflow: hidden;
-    padding: 5px;
     cursor: pointer;
-    font-size: 20px;
+    padding: 0 10px;
+    font-size: calc(var(--inputHeight) * 0.8);
     background-color: gold;
 }
 /*
