@@ -33,8 +33,8 @@ module.exports = {
         this.allConns[connIndex] = name;
     },
     deletePlayer: function (name) {
-        var ind = getKeyByVal(this.allPlayers,name);
-        delete this.allPlayers[ind];
+        // var ind = getKeyByVal(this.allPlayers,name);
+        delete this.allPlayers[name];
     },
     getPlayer: function (name) {
         return this.allPlayers[name];

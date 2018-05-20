@@ -108,7 +108,7 @@ calNB[NBT_TRIAD_W] = function (cards) {
             return [NBT_TRIAD_W, cardNBIndex[char1], cnt2];
         }
         if (cnt2 === 3) {
-            return [NBT_TRIAD_W, cardNBIndex[char2], cnt2];
+            return [NBT_TRIAD_W, cardNBIndex[char2], cnt1];
         }
     }
     return INVALID;
@@ -177,6 +177,9 @@ function calCombNBIndex(cards) {
 //1 is cur , 2 is prev
 //less is cannot, above is can, equal needs more compare
 function combNBTypeCompare(nb1, nb2) {
+    debug_raw("COMB NB TYPE COMPARE ->");
+    debug(nb1);
+    debug(nb2);
     if (nb1[NBI_TYPE] === nb2[NBI_TYPE]) {
         switch (nb1[NBI_TYPE]) {
             case NBT_TRIAD_W:
