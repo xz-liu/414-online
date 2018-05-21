@@ -15,8 +15,9 @@ Chat.prototype = {
             //this.addMsg = ;
         }
     },
-    isTouch : function(y){
-        return this.isChatOpen && y > this.chatRoom.getBoundingClientRect().y;
+    isTouch : function(x, y){
+        
+        return this.isChatOpen && (isFull && x > this.chatRoom.getBoundingClientRect().x) || (y > this.chatRoom.getBoundingClientRect().y);
     },
     cleanHistory : function(){
         this.chatList.innerHTML = "";

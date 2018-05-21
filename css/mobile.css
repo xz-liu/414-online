@@ -51,3 +51,14 @@
 .exit_game_button:hover{
     background-color: hsl(0, 0%, 50%);
 }
+
+
+#full_screen_button{
+    display: block;
+    position: absolute;
+    right: 10%;
+    top: 0;
+    width: 5%;
+    height: 8%;
+    background-color: rebeccapurple;
+;}

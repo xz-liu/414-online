@@ -4,15 +4,19 @@ function resetInput(){
         menuInput.style.height = 0 + "";
     }
 }
+function resetMenu(){
+    resetInput();
+    enterInput(curInput);
+}
 function getContentHeight(dom){
-    if(!isM){ 
+    if((!isM) || isFull){ 
         return dom.getBoundingClientRect().height;
     }else{
         return dom.getBoundingClientRect().width;
     }
 }
 function getContentWidth(dom){
-    if(!isM){
+    if((!isM) || isFull){
         return dom.getBoundingClientRect().width;
     }else{
         return dom.getBoundingClientRect().height;
@@ -51,4 +55,14 @@ function enterRoomInput(){
     resetInput();
     enterInput(menuRoom);
     document.getElementById("input_room").focus();
+}
+function enterLinkErrorInput(){
+    resetInput();
+    enterInput(menuLinkError);
+    document.getElementById("menu_relink").style = "inline";
+}
+function reSucc(){
+    resetInput();
+    enterInput(menuRoom);
+    
 }

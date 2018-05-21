@@ -1,59 +1,6 @@
     var isMouseDown,
     mobilePokerManager = null;
-    function MobilePokerManager(){
-        this.UPARect = userPokerArea.getBoundingClientRect();
-        this.pokerRects = [];
-        this.curPoker = null;
-        this.init();
-    }
-    MobilePokerManager.prototype = {
-        init : function(){
-            var pokers = userPokerArea.getElementsByClassName("user_poker"),
-            len = pokers.length,
-            i = 0,
-            rect;
-            for(; i < len; i++){
-                rect = pokers[i].getBoundingClientRect();
-                this.pokerRects[i] = {
-                    top : rect.top,
-                    bottom : rect.bottom
-                }
-            }
-        },
-        touchedDOM : function(y){
-            var pokers = userPokerArea.getElementsByClassName("user_poker"),
-            len = pokers.length,
-            i = len - 1;
-            if(isM && thisChat && thisChat.isTouch(y)){
-                return null;
-            }
-            for(; i >= 0; i--){
-                if(y > this.pokerRects[i].top && y < this.pokerRects[i].bottom){
-                    return pokers[i];
-                }
-            }
-            return null;
-        },
-        isTouchArea : function(x, y){
-            return (x > this.UPARect.left)&&(x < this.UPARect.right)&&(y > this.UPARect.top)&&(y < this.UPARect.bottom);
-        },
-        handle : function(x, y){
-            if(this.isTouchArea(x, y)){
-                var poker = this.touchedDOM(y);
-                if(poker && this.curPoker !== poker){
-                    this.curPoker = poker;
-                    clickPoker(poker);
-                }
-            }
-        },
-        click : function(DOM){
-            this.curPoker = DOM;
-            clickPoker(DOM);
-        },
-        touchUp : function(){
-            this.curPoker = null;
-        }
-    };
+    
 
     document.onmousedown = function(){
         isMouseDown = true;
@@ -108,28 +55,6 @@
          dom.appendChild(rightDown);
          return dom;
     }
-     /*function createUserPoker(json){
-         var curClass = "",
-         i = 0,
-         newPokerDom;
-         for(; i < json.length; i++){
-             curClass = getPokerClass((json[i])[1]);
-             if(curClass !== "wrong"){
-                 newPokerDom = createPokerDom(curClass,(json[i])[0]);
-                 userPokerArea.appendChild(newPokerDom);
-             }else{
- 
-             }
-         }
-     }*/
-
-     function resetPokerMargin(){
-         var len = userPokerArea.getElementsByClassName("user_poker").length;
-         if(len > 0){
-             doc.body.style.setProperty("--pokerMargin",75 + "px");
-         }
-     }
- 
      function clickPoker(dom){
          if(dom.classList.contains("poker_selected")){
              dom.classList.remove("poker_selected");
@@ -162,7 +87,7 @@
              poker.classList.remove("user_poker");
              poker.classList.remove("user_poker_anim");
              poker.classList.remove("poker_selected");
-             if(isM){
+             if(isM && (!isFull)){
                 poker.style.top = (window.innerWidth - rect.right) + "px";
                 poker.style.left = rect.top + "px";
              }else{
@@ -238,7 +163,6 @@
             }
         }
     }
-    
     
     gameScreen.ondragstart = function(){
         return false;

@@ -3,7 +3,8 @@ var testArg = {
     url:"",
     open:function(){},
     error:function(){},
-    timeover:function(){}
+    timeover:function(){},
+    reSuccess:function(){}
 };
 
 function isSupportSocket(){
@@ -13,15 +14,38 @@ function isSupportSocket(){
 
 
 function ClientSocket(arg){
-    arg = arg || {};
+    this.arg = arg || {};
     this.url = arg.url || defaultServer;
     this.initJSONHandler();
-    this.initSocket(arg);
+    this.initSocket();
     this.isTimeover = false;
+    this.token = null;
+    this.isReconnect = false;
+    this.isReconnecting = false;
 }
 ClientSocket.prototype = {
     initJSONHandler : function(){
         this.JSONHandlerList = {};
+        var that = this;
+        this.JSONHandlerList["hb"] = function(){
+            if(!that.isReconnecting){
+                that.socket.send(JSON.stringify({type : "hb"}));
+            }else{
+                that.isReconnecting = false;
+                that.socket.send(JSON.stringify({type : "hb", data : that.token}));
+            }
+        };
+        this.JSONHandlerList["renewalSucc"] = this.arg.reSuccess || function(){
+            console.log("re succ");
+        }
+    },
+    setToken : function(token){
+        this.token = token;
+    },
+    reconnect : function(){
+        this.initSocket();
+        this.isReconnect = true;
+        this.isReconnecting = true;
     },
     runJSONHander : function(json){
         console.log(json);
@@ -37,8 +61,10 @@ ClientSocket.prototype = {
             console.log("send error");
         }
     },
-    initSocket : function(arg){
+    initSocket : function(){
+        var arg = this.arg;
         that = this;
+        this.isTimeover = false;
         that.socket = new WebSocket(this.url),
         
         that.socket.onerror = arg.error || function(){
@@ -57,7 +83,7 @@ ClientSocket.prototype = {
             }
             that.runJSONHander(json);
         }
-        setInterval(function() {
+        var timer = setInterval(function() {
             if (that.socket.readyState !== 1) {
                 if(that.isTimeover === false){
                     that.isTimeover = true;
@@ -66,10 +92,12 @@ ClientSocket.prototype = {
                     }else{
                         console.log("connect time over!");
                     }
+                }else{
+                    clearInterval(timer);
+                    timer = null;
                 }
                 
             }
         }, 3000);
-        //this.socket = socket;
     }
 };

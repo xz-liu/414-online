@@ -92,8 +92,10 @@ module.exports = {
                 this.allConns[index] = this.allConns[newIndex];
                 delete this.allConns[newIndex];
                 index = newIndex;
+                this.sendTypeDataMsg(connection,types.STYPE_RENEWALSUCC);
             } else {
-                connection.sendTypeDataMsg('failed', errors._PLAYER_ALREADY_DELETED);
+                this.sendTypeDataMsg(connection,'failed', errors._PLAYER_ALREADY_DELETED);
+                // sendTypeDataMsg();
             }
         }
         this.connLastCheck[index] = this.maxHeartbeatCheckTime;

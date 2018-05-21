@@ -9,15 +9,16 @@
         }
         return false;
     }
+    
     function fullScreen(elem){
         if(elem.requestFullscreen){
             elem.requestFullscreen();
         }else if(elem.mozRequestFullscreen){
-            elem.mozRequestFullScreen();alert("1");
+            elem.mozRequestFullScreen();
         }else if(elem.msRequestFullscreen){
-            elem.msRequestFullscreen();alert("2");
+            elem.msRequestFullscreen();
         } else if(elem.webkitRequestFullscreen) {
-            elem.webkitRequestFullScreen();alert("3");
+            elem.webkitRequestFullScreen();
         }
     }
 
@@ -37,10 +38,9 @@
         var cssVars = document.body.style,
         width = window.innerWidth,//1536
         height = window.innerHeight;//759
+        
         cssVars.setProperty("--width",width + "px");
         cssVars.setProperty("--height",height + "px");
-        // cssVars.setProperty("--userOperWidth",Math.floor(686*width/1920) + "px");
-        // cssVars.setProperty("--userOperHeight",Math.floor(686*width/1920) + "px");
         cssVars.setProperty("--menuWidth",Math.floor(686*width/1920) + "px");
         cssVars.setProperty("--menuHeight",Math.floor(400*height/1080) + "px");
         cssVars.setProperty("--pokerHeight",Math.floor(150*width/1536) + "px");
@@ -60,18 +60,51 @@
         link.href = url;
         document.head.appendChild(link);
     }
-    function MobileStyle(){
+    function MobileFullStyle(){
         var cssVars = document.body.style,
-        height = window.innerWidth,//1536
-        width = window.innerHeight;//759
-        
+        height = window.innerHeight,//1536
+        width = window.innerWidth;//759
+
+
         cssVars.width = width + "px";
         cssVars.height = height + "px";
         cssVars.setProperty("--width",width + "px");
         cssVars.setProperty("--height",height + "px");
         cssVars.position = "absolute";
-        /*cssVars.left = (width - height)/2 + "px";
-        cssVars.top = (width - height)/2 + "px";*/
+
+        cssVars.left = 0 + "px";
+        cssVars.setProperty("--menuWidth",Math.floor(686*width/1920) + "px");
+        cssVars.setProperty("--menuHeight",Math.floor(350*height/1080) + "px");
+        cssVars.setProperty("--pokerHeight",Math.floor(210*width/1536) + "px");
+        cssVars.setProperty("--pokerMargin",Math.floor(-80*height/759) + "px");
+        cssVars.setProperty("--titleSize",Math.floor(90*height/759) + "px");
+        cssVars.setProperty("--inputHeight",Math.floor(40*height/759) + "px");
+        cssVars.setProperty("--UPALeft",Math.floor(width*0.04) + "px");
+
+        doc.body.classList.remove("horizontal");
+
+        var exitRoom = document.getElementById("exit_game_button");
+        exitRoom.parentNode.removeChild(exitRoom);
+        gameScreen.appendChild(exitRoom);
+
+        drawInfo = {
+            x : 450*width/1536,
+            y : 220*height/759,
+            interval : 30*width/1536
+        };
+        
+    }
+    function MobileStyle(){
+        var cssVars = document.body.style,
+        height = window.innerWidth,//1536
+        width = window.innerHeight;//759
+
+        cssVars.width = width + "px";
+        cssVars.height = height + "px";
+        cssVars.setProperty("--width",width + "px");
+        cssVars.setProperty("--height",height + "px");
+        cssVars.position = "absolute";
+
         cssVars.left = height + "px";
         cssVars.setProperty("--menuWidth",Math.floor(686*width/1920) + "px");
         cssVars.setProperty("--menuHeight",Math.floor(350*height/1080) + "px");
@@ -81,15 +114,12 @@
         cssVars.setProperty("--inputHeight",Math.floor(40*height/759) + "px");
         cssVars.setProperty("--UPALeft",Math.floor(width*0.04) + "px");
 
-        /*document.getElementById("player_area").style.width = "70%";
-        document.getElementById("player_area").style.left = "15%";*/
         doc.body.classList.add("horizontal");
 
 
         var exitRoom = document.getElementById("exit_game_button");
         exitRoom.parentNode.removeChild(exitRoom);
         gameScreen.appendChild(exitRoom);
-
 
         loadStyleSheet("css/mobile.css");
         drawInfo = {

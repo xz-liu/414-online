@@ -1,5 +1,14 @@
     enterWaitInput();
-    
+    document.getElementById("full_screen_button").onclick = function(){
+        isFull = true;
+        fullScreen(document.body);
+        setTimeout(function(){
+            MobileFullStyle();
+            if(!thisGame){
+                resetMenu();
+            }        
+        },1000);
+    };
     if(isSupportSocket()){
         var roomIDUrl = getQueryString("room");
         if(roomIDUrl && roomIDUrl.length > 0){
@@ -8,10 +17,10 @@
         }
         socket = new ClientSocket({
             open:enterNameInput,
-            error:enterErrorInput,
-            timeover:linkError
-            /*open:test,
-            error:test*/
+            error:linkError,
+            timeover:linkError,
+            reSuccess:reSucc
+            //url : "wss://414.joker.im:3001/api"
         });
     }else{
         enterErrorInput("浏览器不支持WebSocket");
@@ -55,14 +64,17 @@
             thisGame.exitRoom();
             thisGame = null;
         }
-        enterErrorInput("连接中断，请刷新重进");
+        enterLinkErrorInput();
+        //enterErrorInput("连接中断，请刷新重进");
     }
     // menu
-    function setNameSuccess(){
+    function setNameSuccess(json){
         if(isInvited){
             socket.send("room",{passCode:pCode});
             isInvited = false;
         }else{
+            pName = json.name;
+            socket.setToken(json.token);
             enterRoomInput();
         }
         
@@ -200,16 +212,11 @@
         }*/
     }
 
-
-
     function test(){
         document.getElementById("menu_screen").style.display = "none";
         document.getElementById("game_screen").style.display = "block";
     }
 
-    
-    
-    
     // name
     socket.set("success",setNameSuccess);
     socket.set("failed",fail);
@@ -288,6 +295,13 @@
         resetInput();
         enterWaitInput();
         socket.send("create");
+    }
+    // relink
+    document.getElementById("menu_relink").onclick = function(){
+        if(socket){
+            socket.reconnect();
+            this.style.display = "none";
+        }
     }
 
     // exit room

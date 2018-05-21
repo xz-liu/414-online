@@ -141,25 +141,20 @@ ul{
     font-size: calc(var(--inputHeight) * 0.8);
     background-color: gold;
 }
-/*
-#create_room_button div{
-    position: absolute;
-    transform: rotateZ(135deg);
-    top: 2px;
-    width: 80px;
-    height: 20px;
-    background-color: red;
 
-    border: 1px solid black;
-    left: -50px;
-    transition: left 0.2s;
-}
-*/
 #create_room_button:hover{
 
 }
-/*
-#create_room_button:hover div{
-    left: 120px;
+
+
+#menu_relink{
+    cursor: pointer;
+    margin-left: 10%;
+    color: #ff0000;
 }
-*/
+#menu_relink:hover{
+    background-color: beige;
+}
+#full_screen_button{
+    display: none;
+}

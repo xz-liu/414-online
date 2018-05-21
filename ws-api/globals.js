@@ -27,6 +27,7 @@ global.types = {
     STYPE_GAMEENDS: 'gameEnds',//no data
     STYPE_PLAYERALMOSTWIN: 'almostWin',//{'name':name,'cardsCnt':cnt}
     STYPE_HEARTBEAT: 'hb',//
+    STYPE_RENEWALSUCC:'renewalSucc',
 };
 global.nbTypes = {
     NBT_SINGLE: 'single',
