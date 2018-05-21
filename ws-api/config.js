@@ -1,20 +1,16 @@
 "use strict";
 require('./globals');
-var webSocketsServerPort = 1337;
+var webSocketsServerPort = 3001;
 var _webSocketServer = require('websocket').server;
 var http = require('http');
 var thisServer = http.createServer(function (request, response) {
-    // Not important for us. We're writing WebSocket server,
-    // not HTTP server
+
 });
 thisServer.listen(webSocketsServerPort, function () {
     console.log((new Date()) + " Server is listening on port "
         + webSocketsServerPort);
 });
 var _wsServer = new _webSocketServer({
-    // WebSocket server is tied to a HTTP server. WebSocket
-    // request is just an enhanced HTTP request. For more info 
-    // http://tools.ietf.org/html/rfc6455#page-6
     httpServer: thisServer
 });
 // var idNow = 0;
@@ -28,9 +24,20 @@ module.exports = {
     allRooms: [],
     allPlayers: [],
     allConns: [],
+    connLastCheck: [],
+    tokens: [],
+    maxHeartbeatCheckTime: 5,
+    heartbeatInterval: 15000,
     addPlayer: function (name, player, connIndex) {
         this.allPlayers[name] = player;
         this.allConns[connIndex] = name;
+        this.connLastCheck[connIndex] = 5;
+        var tkNow;
+        do {
+            tkNow = this.getRandomToken();
+        } while (this.tokens[tkNow]);
+        this.tokens[tkNow] = connIndex;
+        return tkNow;
     },
     deletePlayer: function (name) {
         // var ind = getKeyByVal(this.allPlayers,name);
@@ -48,16 +55,49 @@ module.exports = {
     sendMessage: function (connection, msg) {
         connection.sendUTF(JSON.stringify(msg));
     },
-    deleteConnection: function (connection) {
-        this.deletePlayer
-            (this.allConns[connection]);
-        delete this.allConns[connection];
-    }, getPlayerByConn: function (connection) {
-        return this.getPlayer
-            (this.allConns[connection]);
+    sendTypeDataMsg: function (conn, type, data) {
+        this.sendMessage(conn, { 'type': type, 'data': data });
+    }, getRandomToken: function () {
+        return Math.random().toString(36).substr(2);
+    }, getIndexByToken: function (token) {
+        return this.tokens[token];
+    },
+    deleteConnection: function (index) {
+        this.deletePlayer(this.allConns[index]);
+        delete this.allConns[index];
+        delete this.connLastCheck[index];
+        let tk = getKeyByVal(index);
+        delete this.tokens[tk];
+    }, getPlayerByConn: function (index) {
+        return this.getPlayer(this.allConns[index]);
     }
     , deleteRoom: function (room) {
-        let i = getKeyByVal(this.allRooms,room);
+        let i = getKeyByVal(this.allRooms, room);
         delete this.allRooms[i];
+    }
+    , heartbeatCheck: function (index) {
+        this.sendTypeDataMsg(this.allConns[index], types.STYPE_HEARTBEAT);
+        // this.connLastCheck[i]--;
+        if (this.connLastCheck[index]-- === 0) {
+            this.deleteConnection(index);
+        }
+    }, heartbeatReset: function (connection, timeoutObj, index, token) {
+        let newIndex = this.tokens[token];
+        if (newIndex && newIndex !== index) {
+
+            this.allConns[index];
+            if (this.allConns[newIndex]) {
+                // if (this.getPlayerByConn(newIndex))
+                this.getPlayerByConn(newIndex).connectionRenewal(connection);
+                this.allConns[index] = this.allConns[newIndex];
+                delete this.allConns[newIndex];
+                index = newIndex;
+            } else {
+                connection.sendTypeDataMsg('failed', errors._PLAYER_ALREADY_DELETED);
+            }
+        }
+        this.connLastCheck[index] = this.maxHeartbeatCheckTime;
+        if (timeoutObj) clearTimeout(timeoutObj);
+        this.heartbeatCheck(index);
     }
 };

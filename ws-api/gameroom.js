@@ -55,8 +55,9 @@ class GameRoom {
             if (drawType === DRAW_GO) {
                 good = this.lastType == DRAW_CHA &&
                     (cards.length === 1 && cards[0][0] === this.lastNBString[0]);
-                if (good) virtualLast = nbTypes.VIRTUAL_CHA;
             }
+            if (this.lastType === DRAW_CHA) virtualLast = nbTypes.VIRTUAL_CHA;
+            if (this.lastType === DRAW_GO) virtualLast = nbTypes.VIRTUAL_GO;
             debug_raw('draw next!!!' + drawType);
             debug_raw('last_NBSTRING:' + this.lastNBString + " " + good);
             // if(drawType === DRAW_BEGIN)drawType
@@ -202,7 +203,7 @@ class GameRoom {
         debug_raw(']');
         do {
             nxtPlayer = this.players[(playerIndex + 1) % this.players.length];
-            debug_raw('select next player: '+nxtPlayer.name);
+            debug_raw('select next player: ' + nxtPlayer.name);
             playerIndex++;
         } while (this.wins.includes(nxtPlayer));
         debug("select " + nxtPlayer);
@@ -238,12 +239,12 @@ class GameRoom {
     }
 
     addNewPlayer(player, passCode) {
-        if(!player)return false;
+        if (!player) return false;
         if (passCode !== this.passCode) {
             player.sendFailMessage(errros._PASSCODE_INCORRECT);
             return false;
         }
-        if(this.gaming){
+        if (this.gaming) {
             player.sendFailMessage(errors._ROOM_PLAYING);
             return false;
         }
@@ -266,15 +267,15 @@ class GameRoom {
         this.players.splice(this.players.indexOf(player), 1);
         this.sendToAllPlayer(types.STYPE_LEAVES, { 'name': player.name });
         this.endGame();
-        if(this.players.length===0){
-            config.deleteRoom(this);    
+        if (this.players.length === 0) {
+            config.deleteRoom(this);
         }
     }
     endGame() {
         if (this.gaming) {
             this.sendToAllPlayer(types.STYPE_GAMEENDS);
             this.lastNBString = undefined;
-            this.gaming=false;
+            this.gaming = false;
         }
     }
     roundSendMsg(begin, nxt, cha, go) {
@@ -297,7 +298,7 @@ class GameRoom {
 
         if (begin) {
             this.beginNotRespond = begin;
-            setTimeout(function(){
+            setTimeout(function () {
                 if (this.beginNotRespond) {
                     this.beginNotRespond.autoDraw();
                 }
@@ -305,7 +306,7 @@ class GameRoom {
         }
         if (nxt) {
             this.nextNotRespond = nxt;
-            setTimeout(function(){
+            setTimeout(function () {
                 if (this.nextNotRespond) {
                     this.nextNotRespond.autoPass();
                 }

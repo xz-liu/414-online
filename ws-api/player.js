@@ -121,11 +121,16 @@ class Player {
             this.room.playerAlmostWin(this, this.cards.length);
         }
     }
+    
+    connectionRenewal(conn){
+        this.connection=conn;
+    }
 
     sendMessage(msg) {
         // console.log("Msg :" + msg);
         debug('Send Message ' + JSON.stringify(msg));
-        this.connection.sendUTF(JSON.stringify(msg));
+        websocket.sendMessage(this.connection,msg);
+        // this.connection.sendUTF(JSON.stringify(msg));
     }
     sendMsgWithType(type, data) {
         // var msgX=[];

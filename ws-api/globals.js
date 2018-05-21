@@ -7,6 +7,7 @@ global.types = {
     DTYPE_CHA: 'cha',//{'cards':[card1,card2]}
     DTYPE_GO: 'go',//{'cards':[card1]}
     DTYPE_RETURNHOME: 'home',//return to homepage(leave current room)
+    DTYPE_HEARTBEAT: 'hb',
     STYPE_CREATESUCCESS: 'create',//{'passcode':passCode}
     STYPE_ENTERSUCCESS: 'enterSucc',//{'names':[names...]}
     STYPE_ENTERFAILED: 'failed',//{'reason':reason}
@@ -24,7 +25,8 @@ global.types = {
     STYPE_GETCARD: 'card',//{'cards':[cards...]} 
     STYPE_LOSE: 'lose',//no data
     STYPE_GAMEENDS: 'gameEnds',//no data
-    STYPE_PLAYERALMOSTWIN: 'almostWin'//{'name':name,'cardsCnt':cnt}
+    STYPE_PLAYERALMOSTWIN: 'almostWin',//{'name':name,'cardsCnt':cnt}
+    STYPE_HEARTBEAT: 'hb',//
 };
 global.nbTypes = {
     NBT_SINGLE: 'single',
@@ -57,6 +59,7 @@ global.DRAW_CHA = 'cha';
 global.DRAW_GO = 'go';
 
 global.errors = {
+    _NAME_TOO_LONG: 0,
     _NAME_ALREADY_EXISTS: 1,
     _NOT_IN_ROOM: 2,
     _ALREADY_IN_ROOM: 3,
@@ -67,6 +70,7 @@ global.errors = {
     _ONLY_HOST_CAN_START: 8,
     _ROOM_MEMBER_NOT_ENOUGH: 9,
     _ROOM_PLAYING: 10,
+    _PLAYER_ALREADY_DELETED: 11,
 };
 
 global.debug = function (e) {
@@ -78,9 +82,9 @@ global.debug_raw = function (e) {
 global.debug_array = function (e) {
     this.debug(e);
 }
-global.debug_players=function(e){
-    this.debug_raw(e.length+" {");
-    for(var i in e){
+global.debug_players = function (e) {
+    this.debug_raw(e.length + " {");
+    for (var i in e) {
         this.debug_raw(e[i].name);
     }
     this.debug_raw("}");
@@ -93,9 +97,9 @@ global.escapeHtml = function (text) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
-global.getKeyByVal=function(arr,val){
-    for(var i in arr){
-        if(arr[i]===val)return i;
+global.getKeyByVal = function (arr, val) {
+    for (var i in arr) {
+        if (arr[i] === val) return i;
     }
     return null;
 }
