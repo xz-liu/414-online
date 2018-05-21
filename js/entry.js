@@ -1,13 +1,21 @@
     enterWaitInput();
+    document.onfullscreenchange = fullScreenChange;
+    document.onwebkitfullscreenchange = fullScreenChange;
+    document.onmozfullscreenchange = fullScreenChange;
+    document.onmsfullscreenchange = fullScreenChange;
+    document.onorientationchange = function(){
+        
+    }
     document.getElementById("full_screen_button").onclick = function(){
         isFull = true;
         fullScreen(document.body);
-        setTimeout(function(){
+        
+        /*setTimeout(function(){
             MobileFullStyle();
             if(!thisGame){
                 resetMenu();
             }        
-        },1000);
+        },1000);*/
     };
     if(isSupportSocket()){
         var roomIDUrl = getQueryString("room");
@@ -19,7 +27,7 @@
             open:enterNameInput,
             error:linkError,
             timeover:linkError,
-            reSuccess:reSucc
+            reSuccess:reSucc,
             //url : "wss://414.joker.im:3001/api"
         });
     }else{
@@ -27,6 +35,22 @@
     }
 
 
+    function fullScreenChange(){
+        setTimeout(function(){
+            if(isFull){
+                MobileFullStyle();
+                if(!thisGame){
+                    resetMenu();
+                }
+            }else{
+                MobileStyle();
+                if(!thisGame){
+                    resetMenu();
+                }
+            }
+        },500);
+        
+    }
 
     function getQueryString(name) {// game.html?pass=DDDDDD
         var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
@@ -95,6 +119,7 @@
     // room
     function createRoomSuccess(json){
         var passCode = json.passcode;
+        window.history.pushState(null, null, "?room="+passCode);
         thisGame = new Game(socket, passCode, pName, true);
         thisChat = new Chat(pName);
         
@@ -116,6 +141,7 @@
     function enterSuccess(json){
         thisGame = new Game(socket, pCode, pName, false);
 
+        window.history.pushState(null, null, "?room="+pCode);
         thisGame.enterRoom(json.names);
         thisChat = new Chat(pName);
     }

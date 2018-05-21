@@ -1,4 +1,4 @@
-var defaultServer = 'ws://127.0.0.1:1337',//
+var defaultServer = 'ws://127.0.0.1:3001',//
     menuName = document.getElementById("menu_name"),
     menuInput = document.getElementById("menu_input"),
     menuRoom = document.getElementById("menu_room"),

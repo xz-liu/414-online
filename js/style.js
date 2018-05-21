@@ -21,6 +21,17 @@
             elem.webkitRequestFullScreen();
         }
     }
+    function exitScreen(elem){
+        if(elem.exitFullscreen){
+            elem.exitFullscreen();
+        }else if(elem.mozCancelFullscreen){
+            elem.mozCancelFullScreen();
+        }else if(elem.msExitFullscreen){
+            elem.msExitFullscreen();
+        } else if(elem.webkitExitFullscreen) {
+            elem.webkitExitFullScreen();
+        }
+    }
 
     function reStyle(){
         if(isM){
