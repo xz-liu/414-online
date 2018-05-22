@@ -126,6 +126,10 @@ class Player {
         this.connection=conn;
     }
 
+    getConnection(){
+        return this.connection;
+    }
+
     sendMessage(msg) {
         // console.log("Msg :" + msg);
         debug('Send Message ' + JSON.stringify(msg));

@@ -5,7 +5,6 @@ var Player = require('./player').Player;
 var config = require('./config');
 // var realConns=[];
 global.connNxt = 0;
-var timeoutObj;
 config.wsServer.on('request', function (request) {
     var connection;
     connection = request.accept(null, request.origin);
@@ -14,9 +13,9 @@ config.wsServer.on('request', function (request) {
     var connIndex = connNxt++;
     console.log(connIndex);
 
-    timeoutObj=setTimeout(function(){
-        config.heartbeatCheck(connIndex);
-    },config.heartbeatInterval);
+    config.heartbeatCheck(connIndex, connection);
+    // var needReset = false;
+
     // name
     // type:"success"
     // type:"failed"
@@ -35,8 +34,8 @@ config.wsServer.on('request', function (request) {
                                     { 'code': errors._NAME_TOO_LONG }
                             });
                         } else if (!config.playerExists(playerName)) {
-                            var newPlayer = new Player(playerName,timeoutObj, connIndex);
-                            let token = config.addPlayer(playerName,timeoutObj, newPlayer, connIndex);
+                            var newPlayer = new Player(playerName, connection);
+                            let token = config.addPlayer(playerName, newPlayer, connIndex);
                             newPlayer.sendMessage({ 'type': 'success', 'data': { 'name': playerName, 'token': token } });
                         } else {
                             config.sendMessage(connection, {
@@ -47,21 +46,22 @@ config.wsServer.on('request', function (request) {
                     }
                 } else if (msg.type === types.DTYPE_HEARTBEAT) {
                     if (msg.data) {
+                        // needReset = false;
                         config.heartbeatReset(connection, connIndex, msg.data);
-                    } else config.heartbeatReset(connection, connIndex);
+                    }
                 } else {
                     if (config.getPlayerByConn(connIndex)) {
                         config.getPlayerByConn(connIndex).handleMessage(msg);
                     }
                 }
-                config.heartbeatReset(connection,timeoutObj, connIndex);
             }
         }
+        config.heartbeatReset(connection, connIndex);
+        // needReset = true;
     });
     connection.on('close', function (connection) {
-        if (config.getPlayerByConn(connIndex)) {
-            config.getPlayerByConn(connIndex).playerQuit();
-            config.deleteConnection(connIndex);
-        }
+        // setTimeout(()=>{
+        config.checkDeleteUser(connIndex);
+        // },config.heartbeatInterval);
     });
 });

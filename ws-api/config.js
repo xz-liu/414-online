@@ -21,17 +21,19 @@ module.exports = {
     wsServer: _wsServer,
     http: http,
     server: thisServer,
-    allRooms: [],
-    allPlayers: [],
-    allConns: [],
-    connLastCheck: [],
-    tokens: [],
+    allRooms: [],//[code:string]=room:GameRoom
+    allPlayers: [],//[name:string]=player:Player
+    allConns: [],//[index:int]=name:string
+    tokens: [],//[token:string]=index:int
     maxHeartbeatCheckTime: 5,
     heartbeatInterval: 15000,
+    deleteUserCountDown: 120000,
+    heartbeatTimeoutObjs: [],
+
     addPlayer: function (name, player, connIndex) {
         this.allPlayers[name] = player;
         this.allConns[connIndex] = name;
-        this.connLastCheck[connIndex] = 5;
+        // this.connLastCheck[connIndex] = 5;
         var tkNow;
         do {
             tkNow = this.getRandomToken();
@@ -53,53 +55,77 @@ module.exports = {
         return (Math.floor(Math.random() * 899999) + 100000).toString();
     },
     sendMessage: function (connection, msg) {
+        debug(msg);
         connection.sendUTF(JSON.stringify(msg));
     },
     sendTypeDataMsg: function (conn, type, data) {
         this.sendMessage(conn, { 'type': type, 'data': data });
-    }, getRandomToken: function () {
+    },
+    getRandomToken: function () {
         return Math.random().toString(36).substr(2);
-    }, getIndexByToken: function (token) {
+    },
+    getIndexByToken: function (token) {
         return this.tokens[token];
     },
     deleteConnection: function (index) {
         this.deletePlayer(this.allConns[index]);
         delete this.allConns[index];
-        delete this.connLastCheck[index];
+        // delete this.connLastCheck[index];
         let tk = getKeyByVal(index);
         delete this.tokens[tk];
-    }, getPlayerByConn: function (index) {
+    },
+    getPlayerByConn: function (index) {
         return this.getPlayer(this.allConns[index]);
-    }
-    , deleteRoom: function (room) {
+    },
+    deleteRoom: function (room) {
         let i = getKeyByVal(this.allRooms, room);
         delete this.allRooms[i];
-    }
-    , heartbeatCheck: function (index) {
-        this.sendTypeDataMsg(this.allConns[index], types.STYPE_HEARTBEAT);
-        // this.connLastCheck[i]--;
-        if (this.connLastCheck[index]-- === 0) {
-            this.deleteConnection(index);
+    },
+    getConnByIndex: function (index) {
+        if (this.getPlayerByConn(index))
+            return this.getPlayerByConn(index).getConnection();
+        return null;
+    },
+
+    heartbeatCheck: function (index, conn) {
+        let defaultConn = this.getConnByIndex(index);
+        if (defaultConn) conn = defaultConn;
+        if (conn) {
+            this.sendTypeDataMsg(conn, types.STYPE_HEARTBEAT);
+            // this.connLastCheck[i]--;
+            // debug_raw('Conn last check of #' + index + " = " + this.connLastCheck);
+            this.heartbeatTimeoutObjs[index] = setTimeout(() => {
+                this.checkDeleteUser(index);
+            }, this.deleteUserCountDown);
         }
-    }, heartbeatReset: function (connection, timeoutObj, index, token) {
+    }, checkDeleteUser: function (connIndex) {
+        if (this.getPlayerByConn(connIndex)) {
+            this.getPlayerByConn(connIndex).playerQuit();
+            this.deleteConnection(connIndex);
+        }
+    },
+    heartbeatReset: function (connection, index, token) {
         let newIndex = this.tokens[token];
         if (newIndex && newIndex !== index) {
-
-            this.allConns[index];
+            // this.allConns[index];
             if (this.allConns[newIndex]) {
                 // if (this.getPlayerByConn(newIndex))
                 this.getPlayerByConn(newIndex).connectionRenewal(connection);
                 this.allConns[index] = this.allConns[newIndex];
                 delete this.allConns[newIndex];
                 index = newIndex;
-                this.sendTypeDataMsg(connection,types.STYPE_RENEWALSUCC);
+                this.sendTypeDataMsg(connection, types.STYPE_RENEWALSUCC);
             } else {
-                this.sendTypeDataMsg(connection,'failed', errors._PLAYER_ALREADY_DELETED);
+                this.sendTypeDataMsg(connection, 'failed', errors._PLAYER_ALREADY_DELETED);
                 // sendTypeDataMsg();
             }
         }
-        this.connLastCheck[index] = this.maxHeartbeatCheckTime;
-        if (timeoutObj) clearTimeout(timeoutObj);
-        this.heartbeatCheck(index);
+        // this.connLastCheck[index] = this.maxHeartbeatCheckTime;
+        if (this.heartbeatTimeoutObjs[index]) {
+            clearTimeout(this.heartbeatTimeoutObjs[index]);
+        }
+        setTimeout(() => {
+            this.heartbeatCheck(index, connection);
+        }, this.heartbeatInterval);
     }
 };
