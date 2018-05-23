@@ -109,12 +109,14 @@ module.exports = {
         if (newIndex && newIndex !== index) {
             // this.allConns[index];
             if (this.allConns[newIndex]) {
+                if (this.heartbeatTimeoutObjs[newIndex])
+                    clearTimeout(this.heartbeatTimeoutObjs[newIndex]);
                 // if (this.getPlayerByConn(newIndex))
-                this.getPlayerByConn(newIndex).connectionRenewal(connection);
                 this.allConns[index] = this.allConns[newIndex];
                 delete this.allConns[newIndex];
-                index = newIndex;
-                this.sendTypeDataMsg(connection, types.STYPE_RENEWALSUCC);
+                this.tokens[token] = index;
+                this.getPlayerByConn(index).connectionRenewal(connection);
+                // index = newIndex;
             } else {
                 this.sendTypeDataMsg(connection, 'failed', errors._PLAYER_ALREADY_DELETED);
                 // sendTypeDataMsg();

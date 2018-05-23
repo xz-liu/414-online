@@ -4,7 +4,7 @@ var cardOps = require('./cards');
 var rules = require('./gamerules');
 var websocket = require('./config');
 var room = require('./gameroom');
-module.exports.types = types;
+// module.exports.types = types;
 class Player {
     constructor(name, connection) {
         this.name = name;
@@ -121,19 +121,41 @@ class Player {
             this.room.playerAlmostWin(this, this.cards.length);
         }
     }
-    
-    connectionRenewal(conn){
-        this.connection=conn;
+
+    getCardsCount() {
+        if (this.cards.length > 3) return 4;
+        return this.cards.length;
     }
 
-    getConnection(){
+    connectionRenewal(conn) {
+        this.connection = conn;
+        let inRoom = playerStatus.IN_MENU;
+        let data = {};
+        if (this.room && this.room.playerInRoomCheck(this)) {
+            inRoom = playerStatus.IN_ROOM;
+            let players=this.room.getAllPlayers();
+            data.players=players[0];
+            if (this.room.roomPlaying()){
+                inRoom = playerStatus.IN_GAME;
+                data.cardsCnt=players[1];
+                data.roundInfo=this.room.getRoundInfo();
+            }
+        }
+        data.state = inRoom;
+        this.sendMsgWithType(types.STYPE_RENEWALSUCC, data);
+        if (this.room){
+            this.room.msgSendHistory(this);
+        }
+    }
+
+    getConnection() {
         return this.connection;
     }
 
     sendMessage(msg) {
         // console.log("Msg :" + msg);
         debug('Send Message ' + JSON.stringify(msg));
-        websocket.sendMessage(this.connection,msg);
+        websocket.sendMessage(this.connection, msg);
         // this.connection.sendUTF(JSON.stringify(msg));
     }
     sendMsgWithType(type, data) {

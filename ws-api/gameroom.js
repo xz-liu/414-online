@@ -28,6 +28,27 @@ class GameRoom {
     playerInRoomCheck(player) {
         return player && this.players.includes(player);
     }
+    roomPlaying() {
+        return this.gaming;
+    }
+
+    getAllPlayers() {
+        let all = [], cardsCnt = [];
+        for (let x in this.players) {
+            all[x] = this.players[x];
+            if (this.gaming) {
+                cardsCnt[x] = this.players[x].getCardsCount();
+            }
+        }
+        if (this.gaming) {
+            return [all, cardsCnt];
+        } else return [all];
+    }
+
+    getRoundInfo() {
+        return [this.roundNow, this.lastReal, this.lastCards];
+    }
+
     msgPlayerSend(player, msg) {
         if (this.playerInRoomCheck(player)) {
             msg = escapeHtml(msg);
@@ -91,6 +112,7 @@ class GameRoom {
                 this.lastPlayer = player;
                 this.lastReal = player;
                 this.lastType = drawType;
+                this.lastCards = cards;
                 return true;
             }
         }
@@ -117,6 +139,7 @@ class GameRoom {
                     this.lastPlayer = player;
                     this.lastReal = player;
                     this.lastType = DRAW_BEGIN;
+                    this.lastCards = cards;
                     return true;
                 case DRAW_CHA:
                     return this.drawNext(nbTypes.VIRTUAL_CHA,

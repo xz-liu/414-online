@@ -59,8 +59,13 @@ config.wsServer.on('request', function (request) {
         config.heartbeatReset(connection, connIndex);
         // needReset = true;
     });
-    connection.on('close', function (connection) {
+    connection.on('close', function (code,desc) {
         // setTimeout(()=>{
+        debug_raw(code+" "+desc);
+        debug_raw('onclose!! ->'+connIndex);
+        if(desc.search("Peer not responding")>=0){
+            return;
+        }
         config.checkDeleteUser(connIndex);
         // },config.heartbeatInterval);
     });

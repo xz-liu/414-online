@@ -7,7 +7,7 @@ global.types = {
     DTYPE_CHA: 'cha',//{'cards':[card1,card2]}
     DTYPE_GO: 'go',//{'cards':[card1]}
     DTYPE_RETURNHOME: 'home',//return to homepage(leave current room)
-    DTYPE_HEARTBEAT: 'hb',
+    DTYPE_HEARTBEAT: 'hb',//heartbeat
     STYPE_CREATESUCCESS: 'create',//{'passcode':passCode}
     STYPE_ENTERSUCCESS: 'enterSucc',//{'names':[names...]}
     STYPE_ENTERFAILED: 'failed',//{'reason':reason}
@@ -27,8 +27,17 @@ global.types = {
     STYPE_GAMEENDS: 'gameEnds',//no data
     STYPE_PLAYERALMOSTWIN: 'almostWin',//{'name':name,'cardsCnt':cnt}
     STYPE_HEARTBEAT: 'hb',//
-    STYPE_RENEWALSUCC:'renewalSucc',
+    STYPE_RENEWALSUCC: 'renewalSucc',//data:{state:playerState,players:[name1,name2....],
+                                    // cardsCnt:[0,1,4,4,4...],roundInfo:[roundNow,lastPlayer,lastCards]}
 };
+
+global.msgBox = {
+    S_NEWMSG: 'msgNew',//[name,date,msg]
+    S_HISTORY: 'msgHistory',//[[name1,date1,msg1],[name2,date2,msg2]....]
+    S_SENDFAIL: 'msgSendFailed',//no data
+    D_SEND: 'msgSendNew',//msg
+}
+
 global.nbTypes = {
     NBT_SINGLE: 'single',
     NBT_PAIR: 'pair',
@@ -46,13 +55,6 @@ global.nbTypes = {
     VIRTUAL_CHA: ['cha'],
     VIRTUAL_GO: ['go']
 };
-
-global.msgBox = {
-    S_NEWMSG: 'msgNew',//[name,date,msg]
-    S_HISTORY: 'msgHistory',//[[name1,date1,msg1],[name2,date2,msg2]....]
-    S_SENDFAIL: 'msgSendFailed',//no data
-    D_SEND: 'msgSendNew',//msg
-}
 
 global.DRAW_BEGIN = 'begin';
 global.DRAW_NEXT = 'next';
@@ -73,6 +75,12 @@ global.errors = {
     _ROOM_PLAYING: 10,
     _PLAYER_ALREADY_DELETED: 11,
 };
+
+global.playerStatus = {
+    IN_MENU: 0,
+    IN_ROOM: 1,
+    IN_GAME: 2,
+}
 
 global.debug = function (e) {
     console.log(JSON.stringify(e));
