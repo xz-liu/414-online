@@ -31,7 +31,15 @@ class GameRoom {
     roomPlaying() {
         return this.gaming;
     }
-
+    getRoomPasscode() {
+        return this.passCode;
+    }
+    getRoundRemainingTime() {
+        let now = new Date();
+        if (this.roundTimeNow)
+            return this.interval - (now - this.roundTimeNow);
+        else return 0;
+    }
     getAllPlayers() {
         let all = [], cardsCnt = [];
         for (let x in this.players) {
@@ -107,7 +115,6 @@ class GameRoom {
                             this.roundNow[DRAW_GO].sendMsgWithType
                                 (types.STYPE_ROUNDENDS);
                         }
-
                 }
                 this.lastPlayer = player;
                 this.lastReal = player;
@@ -135,6 +142,10 @@ class GameRoom {
                         { 'combtype': combtype }
                     );
                     this.beginNotRespond = null;
+                    if (this.beginAuto) {
+                        clearTimeout(this.beginAuto);
+                        this.beginAuto = null;
+                    }
 
                     this.lastPlayer = player;
                     this.lastReal = player;
@@ -151,9 +162,12 @@ class GameRoom {
                     if (this.drawNext(nbComb,
                         types.STYPE_PLAYERDRAW, cards, player)) {
                         this.nextNotRespond = null;
+                        if (this.nextAuto) {
+                            clearTimeout(this.nextAuto);
+                            this.nextAuto = null;
+                        }
                         return true;
                     }
-
             }
         }
         return false;
@@ -318,10 +332,10 @@ class GameRoom {
             if (this.roundNow[i])
                 this.roundNow[i].drawType.push(i);
         }
-
+        this.roundTimeNow = new Date();
         if (begin) {
             this.beginNotRespond = begin;
-            setTimeout(function () {
+            this.beginAuto = setTimeout(() => {
                 if (this.beginNotRespond) {
                     this.beginNotRespond.autoDraw();
                 }
@@ -329,7 +343,7 @@ class GameRoom {
         }
         if (nxt) {
             this.nextNotRespond = nxt;
-            setTimeout(function () {
+            this.nextAuto = setTimeout(() => {
                 if (this.nextNotRespond) {
                     this.nextNotRespond.autoPass();
                 }

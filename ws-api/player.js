@@ -134,17 +134,20 @@ class Player {
         let data = {};
         if (this.room && this.room.playerInRoomCheck(this)) {
             inRoom = playerStatus.IN_ROOM;
-            let players=this.room.getAllPlayers();
-            data.players=players[0];
-            if (this.room.roomPlaying()){
+            data.roomCode = this.room.getRoomPasscode();
+            let players = this.room.getAllPlayers();
+            data.players = players[0];
+            if (this.room.roomPlaying()) {
                 inRoom = playerStatus.IN_GAME;
-                data.cardsCnt=players[1];
-                data.roundInfo=this.room.getRoundInfo();
+                data.cardsCnt = players[1];
+                data.roundInfo = this.room.getRoundInfo();
+                data.cards = this.cards;
+                data.time = this.getRoundRemainingTime();
             }
         }
         data.state = inRoom;
         this.sendMsgWithType(types.STYPE_RENEWALSUCC, data);
-        if (this.room){
+        if (this.room) {
             this.room.msgSendHistory(this);
         }
     }
@@ -160,12 +163,6 @@ class Player {
         // this.connection.sendUTF(JSON.stringify(msg));
     }
     sendMsgWithType(type, data) {
-        // var msgX=[];
-        // msgX['type']=type;
-        // msgX['data']=data;
-        // this.sendMessage(msgX);
-        // console.log(type);
-        // console.log(data);
         this.sendMessage({ 'type': type, 'data': data });
     }
     getCards(cards) {

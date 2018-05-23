@@ -27,8 +27,10 @@ global.types = {
     STYPE_GAMEENDS: 'gameEnds',//no data
     STYPE_PLAYERALMOSTWIN: 'almostWin',//{'name':name,'cardsCnt':cnt}
     STYPE_HEARTBEAT: 'hb',//
-    STYPE_RENEWALSUCC: 'renewalSucc',//data:{state:playerState,players:[name1,name2....],
-                                    // cardsCnt:[0,1,4,4,4...],roundInfo:[roundNow,lastPlayer,lastCards]}
+    STYPE_RENEWALSUCC: 'renewalSucc',
+    //data:{state:playerState,roomCode:passcode,players:[name1,name2....],
+    // cardsCnt:[0,1,4,4,4...],roundInfo:[roundNow,lastPlayer,lastCards],
+    // cards:[card1,card2,...],time:mileseconds}
 };
 
 global.msgBox = {
