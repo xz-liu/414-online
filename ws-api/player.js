@@ -128,6 +128,7 @@ class Player {
     }
 
     connectionRenewal(conn) {
+        debug_raw("renewal!!");
         this.connection = conn;
         let inRoom = playerStatus.IN_MENU;
         let data = {};

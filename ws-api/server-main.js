@@ -47,6 +47,7 @@ config.wsServer.on('request', function (request) {
                 } else if (msg.type === types.DTYPE_HEARTBEAT) {
                     if (msg.data) {
                         // needReset = false;
+                        debug_raw('renewal calling reset');
                         config.heartbeatReset(connection, connIndex, msg.data);
                     }
                 } else {

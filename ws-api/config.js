@@ -106,7 +106,8 @@ module.exports = {
     },
     heartbeatReset: function (connection, index, token) {
         let newIndex = this.tokens[token];
-        if (newIndex && newIndex !== index) {
+        debug_raw(token+" -> "+newIndex);
+        if (newIndex!==undefined && newIndex !== index) {
             // this.allConns[index];
             if (this.allConns[newIndex]) {
                 if (this.heartbeatTimeoutObjs[newIndex])
