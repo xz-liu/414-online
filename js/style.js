@@ -17,6 +17,14 @@
             PCStyle();
         }
     }
+    function isHorizontalScreen(){
+        switch (window.orientation){
+            case 90:return true;
+            case -90:return true;
+            case 0:return false;
+            case 180:return false;
+        }
+    }
     
     
 
@@ -48,44 +56,13 @@
         link.href = url;
         document.head.appendChild(link);
     }
-    function MobileFullStyle(){
-        var cssVars = document.body.style,
-        height = window.innerHeight,//1536
-        width = window.innerWidth;//759
-
-
-        cssVars.width = width + "px";
-        cssVars.height = height + "px";
-        cssVars.setProperty("--width",width + "px");
-        cssVars.setProperty("--height",height + "px");
-        cssVars.position = "absolute";
-
-        cssVars.left = 0 + "px";
-        cssVars.setProperty("--menuWidth",Math.floor(686*width/1920) + "px");
-        cssVars.setProperty("--menuHeight",Math.floor(350*height/1080) + "px");
-        cssVars.setProperty("--pokerHeight",Math.floor(210*width/1536) + "px");
-        cssVars.setProperty("--pokerMargin",Math.floor(-80*height/759) + "px");
-        cssVars.setProperty("--titleSize",Math.floor(90*height/759) + "px");
-        cssVars.setProperty("--inputHeight",Math.floor(40*height/759) + "px");
-        cssVars.setProperty("--UPALeft",Math.floor(width*0.04) + "px");
-
-        doc.body.classList.remove("horizontal");
-
-        var exitRoom = document.getElementById("exit_game_button");
-        exitRoom.parentNode.removeChild(exitRoom);
-        gameScreen.appendChild(exitRoom);
-
-        drawInfo = {
-            x : 450*width/1536,
-            y : 220*height/759,
-            interval : 30*width/1536
-        };
-        
+    function initMS(){
+        MobileStyle(window.innerWidth, window.innerHeight);
     }
-    function MobileStyle(){
+    function MobileStyle(width, height){
         var cssVars = document.body.style,
-        height = window.innerWidth,//1536
-        width = window.innerHeight;//759
+        height = height || window.innerWidth,//1536
+        width = width || window.innerHeight;//759
 
         cssVars.width = width + "px";
         cssVars.height = height + "px";
@@ -93,7 +70,6 @@
         cssVars.setProperty("--height",height + "px");
         cssVars.position = "absolute";
 
-        cssVars.left = height + "px";
         cssVars.setProperty("--menuWidth",Math.floor(686*width/1920) + "px");
         cssVars.setProperty("--menuHeight",Math.floor(350*height/1080) + "px");
         cssVars.setProperty("--pokerHeight",Math.floor(210*width/1536) + "px");
@@ -102,12 +78,13 @@
         cssVars.setProperty("--inputHeight",Math.floor(40*height/759) + "px");
         cssVars.setProperty("--UPALeft",Math.floor(width*0.04) + "px");
 
-        doc.body.classList.add("horizontal");
-
-
         var exitRoom = document.getElementById("exit_game_button");
         exitRoom.parentNode.removeChild(exitRoom);
         gameScreen.appendChild(exitRoom);
+
+        var startButton = document.getElementById("start_game_button");
+        startButton.parentNode.removeChild(startButton);
+        gameScreen.appendChild(startButton);
 
         loadStyleSheet("css/mobile.css");
         drawInfo = {
@@ -115,7 +92,6 @@
             y : 220*height/759,
             interval : 30*width/1536
         };
-        
     }
     function adjustPokerMargin(){
         var len = userPokerArea.getElementsByClassName("user_poker"),
@@ -130,4 +106,4 @@
     }
 
     isM = isMobile();
-    reStyle();
+    

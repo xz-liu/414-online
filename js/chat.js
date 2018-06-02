@@ -12,12 +12,10 @@ Chat.prototype = {
             this.newMsgNumDOM.innerHTML = "0";
             this.newMsgNum = 0;
             this.isChatOpen = false;
-            //this.addMsg = ;
         }
     },
     isTouch : function(x, y){
-        
-        return this.isChatOpen && (isFull && x > this.chatRoom.getBoundingClientRect().x) || (y > this.chatRoom.getBoundingClientRect().y);
+        return this.isChatOpen && x > this.chatRoom.getBoundingClientRect().x;
     },
     cleanHistory : function(){
         this.chatList.innerHTML = "";

@@ -3,6 +3,7 @@ var Notice = {
     exitRoomNoticeDOM : document.getElementsByClassName("exit_room_notice")[0],
     noOperNoticeDOM : document.getElementById("no_oper_notice"),
     noOperNotcieContentDOM : document.getElementById("no_oper_notice_content"),
+    hsNoticeDOM : document.getElementById("hs_notice"),
     showBlock : function(){
         this.block.style.display = "block";
     },
@@ -67,6 +68,14 @@ var Notice = {
     },
     win : function(){
         this.noOperNotice("you defeat");
+    },
+    openHSNotice : function(){// 横屏提示
+        this.showBlock();
+        this.hsNoticeDOM.style.display = "block";
+    },
+    closeHSNotice : function(){
+        this.hiddenBlock();
+        this.hsNoticeDOM.style.display = "none";
     },
     initEvent : function(){
         document.getElementById("exit_room_enter_button").onclick = function(){

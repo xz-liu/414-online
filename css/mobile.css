@@ -33,13 +33,18 @@
 }
 .user_info{
     position: absolute;
-    height: 35%;
+    height: 0;
     width: 15%;
     left: 0;
     top: 35%;
 
     background-color: rgba(0,0,0,0.3);
 }
+#room_passcode{
+    background-color: rgba(0,0,0,0.3);
+}
+
+
 .exit_game_button{
     margin: 0;
     position: absolute;
@@ -52,13 +57,14 @@
     background-color: hsl(0, 0%, 50%);
 }
 
-
-#full_screen_button{
-    display: block;
+.start_game_button{
+    margin: 0;
     position: absolute;
-    right: 10%;
     top: 0;
-    width: 5%;
-    height: 8%;
-    background-color: rebeccapurple;
-;}
+    right: 0;
+    width: 14%;
+    padding: 2% 0;
+}
+.start_game_button:hover{
+    background-color: hsl(0, 0%, 50%);
+}

@@ -9,18 +9,10 @@ function resetMenu(){
     enterInput(curInput);
 }
 function getContentHeight(dom){
-    if((!isM) || isFull){ 
-        return dom.getBoundingClientRect().height;
-    }else{
-        return dom.getBoundingClientRect().width;
-    }
+    return dom.getBoundingClientRect().height;
 }
 function getContentWidth(dom){
-    if((!isM) || isFull){
-        return dom.getBoundingClientRect().width;
-    }else{
-        return dom.getBoundingClientRect().height;
-    }
+    return dom.getBoundingClientRect().width;
 }
 function enterInput(dom){
     dom.style.display = "block";

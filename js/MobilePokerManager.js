@@ -11,7 +11,7 @@ MobilePokerManager.prototype = {
         len = pokers.length,
         i = 0,
         rect;
-        if(!isFull){
+        if(isFull){
             for(; i < len; i++){
                 rect = pokers[i].getBoundingClientRect();
                 this.pokerRects[i] = {
@@ -35,9 +35,15 @@ MobilePokerManager.prototype = {
         len = pokers.length,
         i = len - 1;
         if(isM && thisChat && thisChat.isTouch(x, y)){
+            console.log("chat");
             return null;
         }
-        if(!isFull){
+        for(; i >= 0; i--){
+            if(x > this.pokerRects[i].left && x < this.pokerRects[i].right){
+                return pokers[i];
+            }
+        }
+        /*if(isFull){
             for(; i >= 0; i--){
                 if(y > this.pokerRects[i].top && y < this.pokerRects[i].bottom){
                     return pokers[i];
@@ -49,7 +55,7 @@ MobilePokerManager.prototype = {
                     return pokers[i];
                 }
             }
-        }
+        }*/
         
         return null;
     },
@@ -58,6 +64,7 @@ MobilePokerManager.prototype = {
     },
     handle : function(x, y){
         if(this.isTouchArea(x, y)){
+            console.log("isTouch");
             var poker = this.touchedDOM(x, y);
             if(poker && this.curPoker !== poker){
                 this.curPoker = poker;

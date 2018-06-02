@@ -35,11 +35,9 @@ ClientSocket.prototype = {
             if(!that.isReconnecting){
                 console.log("send hb");
                 that.send("hb");
-                //that.socket.send(JSON.stringify({type : "hb"}));
             }else{
-                console.log("re send hb" + that.token);
+                //console.log("re send hb" + that.token);
                 that.send("hb",that.token);
-                //that.socket.send(JSON.stringify({type : "hb", data : that.token}));
             }
         };
         

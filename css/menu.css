@@ -3,10 +3,7 @@
     padding: 0;
 }
 
-.horizontal{
-    transform-origin: top left;
-    transform: rotateZ(90deg);
-}
+
 body{
     --width:0px;
     --height:0px;

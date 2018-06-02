@@ -1,6 +1,20 @@
     enterWaitInput();
-    document.onorientationchange = function(){
-        
+    window.onorientationchange = function(){
+        if(isHorizontalScreen()){
+            MobileStyle();
+            Notice.closeHSNotice();
+        }else{
+            Notice.openHSNotice();
+        }
+    }
+    if(!isM){
+        PCStyle();
+    }else{
+        if(isHorizontalScreen()){
+            initMS();
+        }else{
+            Notice.openHSNotice();
+        }
     }
     if(isSupportSocket()){
         var roomIDUrl = getQueryString("room");
@@ -32,15 +46,25 @@
         switch (data.state){
             case 0:enterRoomInput();console.log("0");break;
             case 1:
+            var playerIndex = data.players.indexOf(pName),
+            i = playerIndex + 1;
             thisGame = new Game(socket, data.roomCode, pName, false);
             window.history.pushState(null, null, "?room=" + data.roomCode);
-            thisGame.enterRoom(data.players);
+            thisGame.enterRoom(data.players.slice(0, playerIndex));
+            for(; i < data.players.length; i++){
+                thisGame.otherEnter(data.players[i]);
+            }
             thisChat = new Chat(pName);
             break;
             case 2:
+            var playerIndex = data.players.indexOf(pName),
+            i = playerIndex + 1;
             thisGame = new Game(socket, data.roomCode, pName, false);
             window.history.pushState(null, null, "?room=" + data.roomCode);
-            thisGame.enterRoom(data.players);
+            thisGame.enterRoom(data.players.slice(0, playerIndex));
+            for(; i < data.players.length; i++){
+                thisGame.otherEnter(data.players[i]);
+            }
             thisChat = new Chat(pName);
             thisGame.restore(data.cardsCnt, data.cards, data.time, data.roundInfo[0], data.roundInfo[1], data.roundInfo[2]);
             break;

@@ -106,3 +106,9 @@
 .invite_notice_click:hover{
     background-color: rgba(0,0,0,0.4);
 }
+
+
+#hs_notice{
+    display: none;
+    background-color: aqua;
+}
