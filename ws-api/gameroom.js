@@ -43,7 +43,7 @@ class GameRoom {
     getAllPlayers() {
         let all = [], cardsCnt = [];
         for (let x in this.players) {
-            all[x] = this.players[x];
+            all[x] = this.players[x].name;
             if (this.gaming) {
                 cardsCnt[x] = this.players[x].getCardsCount();
             }
