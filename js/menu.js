@@ -61,8 +61,8 @@ function enterLinkErrorInput(){
     enterInput(menuLinkError);
     document.getElementById("menu_relink").style = "inline";
 }
+/*
 function reSucc(){
     resetInput();
     enterInput(menuRoom);
-    
-}
+}*/

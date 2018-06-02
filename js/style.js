@@ -9,29 +9,6 @@
         }
         return false;
     }
-    
-    function fullScreen(elem){
-        if(elem.requestFullscreen){
-            elem.requestFullscreen();
-        }else if(elem.mozRequestFullscreen){
-            elem.mozRequestFullScreen();
-        }else if(elem.msRequestFullscreen){
-            elem.msRequestFullscreen();
-        } else if(elem.webkitRequestFullscreen) {
-            elem.webkitRequestFullScreen();
-        }
-    }
-    function exitScreen(elem){
-        if(elem.exitFullscreen){
-            elem.exitFullscreen();
-        }else if(elem.mozCancelFullscreen){
-            elem.mozCancelFullScreen();
-        }else if(elem.msExitFullscreen){
-            elem.msExitFullscreen();
-        } else if(elem.webkitExitFullscreen) {
-            elem.webkitExitFullScreen();
-        }
-    }
 
     function reStyle(){
         if(isM){
@@ -45,7 +22,7 @@
 
     function PCStyle(){
         
-        fullScreen(document);
+        //fullScreen(document);
         var cssVars = document.body.style,
         width = window.innerWidth,//1536
         height = window.innerHeight;//759

@@ -479,6 +479,12 @@ Game.prototype = {
         /*if(name !== this.playerName){
             this.otherBringOut(cards);
         }*/
-        
+    },
+    restore : function(cardsCnt, cards, time, roundNow, lastPlayer, lastCards){
+        this.open();
+        this.dealPoker(cards);
+        this.round(roundNow[0], roundNow[1], roundNow[2], roundNow[3]);
+        this.otherBringOut(lastCards);
+        //for(var i = 0; i <= this.playerList.length; i++)
     }
 };

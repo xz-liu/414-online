@@ -22,29 +22,56 @@ function ClientSocket(arg){
     this.token = null;
     this.isReconnect = false;
     this.isReconnecting = false;
+    this.waitHB = null;
+    that.startWaitHB();
 }
 ClientSocket.prototype = {
     initJSONHandler : function(){
         this.JSONHandlerList = {};
         var that = this;
         this.JSONHandlerList["hb"] = function(){
+            that.closeWaitHB();
+            that.startWaitHB();
             if(!that.isReconnecting){
-                that.socket.send(JSON.stringify({type : "hb"}));
+                console.log("send hb");
+                that.send("hb");
+                //that.socket.send(JSON.stringify({type : "hb"}));
             }else{
-                that.isReconnecting = false;
-                that.socket.send(JSON.stringify({type : "hb", data : that.token}));
+                console.log("re send hb" + that.token);
+                that.send("hb",that.token);
+                //that.socket.send(JSON.stringify({type : "hb", data : that.token}));
             }
         };
-        this.JSONHandlerList["renewalSucc"] = this.arg.reSuccess || function(){
-            console.log("re succ");
-        }
+        
+        this.JSONHandlerList["renewalSucc"] = function(data){
+            that.isReconnecting = false;
+            if(that.arg.reSuccess){
+                that.arg.reSuccess(data);
+            }else{
+                console.log("re succ");
+            }
+        };
+    },
+    startWaitHB : function(){
+        var that = this;
+        this.waitHB = setTimeout(function(){
+            if(that.arg.timeover){            
+                that.arg.timeover();
+            }
+        }, 17000);
+    },
+    closeWaitHB : function(){
+        clearTimeout(this.waitHB);
     },
     setToken : function(token){
         this.token = token;
     },
     reconnect : function(){
-        this.initSocket();
+        
+        this.isTimeover = false;
         this.isReconnect = true;
+        
+        this.initSocket();
         this.isReconnecting = true;
     },
     runJSONHander : function(json){
@@ -65,13 +92,44 @@ ClientSocket.prototype = {
         var arg = this.arg;
         that = this;
         this.isTimeover = false;
-        that.socket = new WebSocket(this.url),
+        that.socket = new WebSocket(this.url);
         
         that.socket.onerror = arg.error || function(){
             console.log("socket error");
         }
-        that.socket.onopen = arg.open || function(){
+        if(arg.open && (!this.isReconnect)){
+            that.socket.onopen = function(){
+                arg.open();
+                /*var timer = setInterval(function() {
+                    console.log(that.socket.readyState);
+                    if (that.socket.readyState !== 1) {
+                        
+                        if(that.isTimeover === false){
+                            that.isTimeover = true;
+                            if(arg.timeover){
+                                arg.timeover();
+                            }else{
+                                console.log("connect time over!");
+                            }
+                        }else{
+                            clearInterval(timer);
+                            timer = null;
+                        }
+                        
+                    }
+                }, 300);*/
+            }
+        }
+        /*that.socket.onopen = arg.open || function(){
             console.log("socket open");
+        }*/
+        that.socket.onclose = function(){
+            if(that.arg.timeover){
+                that.arg.timeover();
+            }else{
+                console.log("CLOSE");
+            }
+            
         }
     
         that.socket.onmessage = function(message){
@@ -83,21 +141,6 @@ ClientSocket.prototype = {
             }
             that.runJSONHander(json);
         }
-        var timer = setInterval(function() {
-            if (that.socket.readyState !== 1) {
-                if(that.isTimeover === false){
-                    that.isTimeover = true;
-                    if(arg.timeover){
-                        arg.timeover();
-                    }else{
-                        console.log("connect time over!");
-                    }
-                }else{
-                    clearInterval(timer);
-                    timer = null;
-                }
-                
-            }
-        }, 3000);
+        
     }
 };

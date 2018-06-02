@@ -1,22 +1,7 @@
     enterWaitInput();
-    document.onfullscreenchange = fullScreenChange;
-    document.onwebkitfullscreenchange = fullScreenChange;
-    document.onmozfullscreenchange = fullScreenChange;
-    document.onmsfullscreenchange = fullScreenChange;
     document.onorientationchange = function(){
         
     }
-    document.getElementById("full_screen_button").onclick = function(){
-        isFull = true;
-        fullScreen(document.body);
-        
-        /*setTimeout(function(){
-            MobileFullStyle();
-            if(!thisGame){
-                resetMenu();
-            }        
-        },1000);*/
-    };
     if(isSupportSocket()){
         var roomIDUrl = getQueryString("room");
         if(roomIDUrl && roomIDUrl.length > 0){
@@ -28,28 +13,10 @@
             error:linkError,
             timeover:linkError,
             reSuccess:reSucc,
-            //url : "wss://414.joker.im:3001/api"
+            url : "wss://414.joker.im:443/api" 
         });
     }else{
         enterErrorInput("浏览器不支持WebSocket");
-    }
-
-
-    function fullScreenChange(){
-        setTimeout(function(){
-            if(isFull){
-                MobileFullStyle();
-                if(!thisGame){
-                    resetMenu();
-                }
-            }else{
-                MobileStyle();
-                if(!thisGame){
-                    resetMenu();
-                }
-            }
-        },500);
-        
     }
 
     function getQueryString(name) {// game.html?pass=DDDDDD
@@ -61,6 +28,24 @@
         return null;
     }
 
+    function reSucc(data){
+        switch (data.state){
+            case 0:enterRoomInput();console.log("0");break;
+            case 1:
+            thisGame = new Game(socket, data.roomCode, pName, false);
+            window.history.pushState(null, null, "?room=" + data.roomCode);
+            thisGame.enterRoom(data.players);
+            thisChat = new Chat(pName);
+            break;
+            case 2:
+            thisGame = new Game(socket, data.roomCode, pName, false);
+            window.history.pushState(null, null, "?room=" + data.roomCode);
+            thisGame.enterRoom(data.players);
+            thisChat = new Chat(pName);
+            thisGame.restore(data.cardsCnt, data.cards, data.time, data.roundInfo[0], data.roundInfo[1], data.roundInfo[2]);
+            break;
+        } 
+    }
     // fail
     function fail(data){
         console.log("FAILL!!!!!!");
@@ -94,6 +79,7 @@
     // menu
     function setNameSuccess(json){
         if(isInvited){
+            socket.setToken(json.token);
             socket.send("room",{passCode:pCode});
             isInvited = false;
         }else{
@@ -122,7 +108,6 @@
         window.history.pushState(null, null, "?room="+passCode);
         thisGame = new Game(socket, passCode, pName, true);
         thisChat = new Chat(pName);
-        
     }
     function otherEnter(json){
         console.log(json.name + " enter!!");
@@ -140,7 +125,6 @@
     }
     function enterSuccess(json){
         thisGame = new Game(socket, pCode, pName, false);
-
         window.history.pushState(null, null, "?room="+pCode);
         thisGame.enterRoom(json.names);
         thisChat = new Chat(pName);
