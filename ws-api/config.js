@@ -29,6 +29,7 @@ module.exports = {
     heartbeatInterval: 15000,
     deleteUserCountDown: 120000,
     heartbeatTimeoutObjs: [],
+    heartbeatResetObjs:[],
 
     addPlayer: function (name, player, connIndex) {
         this.allPlayers[name] = player;
@@ -126,8 +127,12 @@ module.exports = {
         // this.connLastCheck[index] = this.maxHeartbeatCheckTime;
         if (this.heartbeatTimeoutObjs[index]) {
             clearTimeout(this.heartbeatTimeoutObjs[index]);
+            this.heartbeatTimeoutObjs[index]=null;
         }
-        setTimeout(() => {
+        if(this.heartbeatResetObjs[index]){
+            clearTimeout(this.heartbeatResetObjs[index]);
+        }
+        this.heartbeatResetObjs[index]= setTimeout(() => {
             this.heartbeatCheck(index, connection);
         }, this.heartbeatInterval);
     }
