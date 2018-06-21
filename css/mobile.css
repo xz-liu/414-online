@@ -68,3 +68,10 @@
 .start_game_button:hover{
     background-color: hsl(0, 0%, 50%);
 }
+
+.user_poker_area{
+    width: 90%;
+}
+.user_poker{
+    margin-left: -6.7%;
+}

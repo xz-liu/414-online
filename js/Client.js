@@ -30,8 +30,7 @@ ClientSocket.prototype = {
         this.JSONHandlerList = {};
         var that = this;
         this.JSONHandlerList["hb"] = function(){
-            that.closeWaitHB();
-            that.startWaitHB();
+            
             if(!that.isReconnecting){
                 console.log("send hb");
                 that.send("hb");
@@ -53,7 +52,8 @@ ClientSocket.prototype = {
     startWaitHB : function(){
         var that = this;
         this.waitHB = setTimeout(function(){
-            if(that.arg.timeover){            
+            if(that.arg.timeover){
+                console.log("HB timeover");            
                 that.arg.timeover();
             }
         }, 17000);
@@ -74,6 +74,8 @@ ClientSocket.prototype = {
     },
     runJSONHander : function(json){
         console.log(json);
+        this.closeWaitHB();
+        this.startWaitHB();
         this.JSONHandlerList[json.type](json.data);
     },
     set : function(type, callback){
@@ -123,6 +125,7 @@ ClientSocket.prototype = {
         }*/
         that.socket.onclose = function(){
             if(that.arg.timeover){
+                console.log("onclose timeover");  
                 that.arg.timeover();
             }else{
                 console.log("CLOSE");

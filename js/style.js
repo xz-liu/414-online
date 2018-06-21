@@ -73,7 +73,7 @@
         cssVars.setProperty("--menuWidth",Math.floor(686*width/1920) + "px");
         cssVars.setProperty("--menuHeight",Math.floor(350*height/1080) + "px");
         cssVars.setProperty("--pokerHeight",Math.floor(210*width/1536) + "px");
-        cssVars.setProperty("--pokerMargin",Math.floor(-80*height/759) + "px");
+        cssVars.setProperty("--pokerMargin",Math.floor(-80*width/1536) + "px");
         cssVars.setProperty("--titleSize",Math.floor(90*height/759) + "px");
         cssVars.setProperty("--inputHeight",Math.floor(40*height/759) + "px");
         cssVars.setProperty("--UPALeft",Math.floor(width*0.04) + "px");
@@ -84,7 +84,7 @@
 
         var startButton = document.getElementById("start_game_button");
         startButton.parentNode.removeChild(startButton);
-        gameScreen.appendChild(startButton);
+        gameScreen.insertBefore(startButton, gameScreen.getElementsByClassName("chat_room")[0]);
 
         loadStyleSheet("css/mobile.css");
         drawInfo = {

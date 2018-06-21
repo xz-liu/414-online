@@ -1,12 +1,15 @@
     enterWaitInput();
+
+    // 手机横屏
     window.onorientationchange = function(){
         if(isHorizontalScreen()){
-            MobileStyle();
+            setTimeout(initMS, 300);
             Notice.closeHSNotice();
         }else{
             Notice.openHSNotice();
         }
     }
+
     if(!isM){
         PCStyle();
     }else{
@@ -22,12 +25,22 @@
             isInvited = true;
             pCode = roomIDUrl;
         }
+        // test
+        /*
+        thisGame = new Game(null, pCode, pName, false);
+        window.history.pushState(null, null, "?room="+pCode);
+        thisGame.enterRoom(json.names);
+        thisChat = new Chat(pName);
+        */
+
+
+
         socket = new ClientSocket({
             open:enterNameInput,
             error:linkError,
             timeover:linkError,
             reSuccess:reSucc,
-            url : "wss://414.joker.im:443/api" 
+            url : "wss://414.joker.im:443/api" //"ws:127.0.0.1:3001"
         });
     }else{
         enterErrorInput("浏览器不支持WebSocket");
@@ -45,6 +58,7 @@
     function reSucc(data){
         switch (data.state){
             case 0:enterRoomInput();console.log("0");break;
+
             case 1:
             var playerIndex = data.players.indexOf(pName),
             i = playerIndex + 1;
@@ -56,6 +70,7 @@
             }
             thisChat = new Chat(pName);
             break;
+
             case 2:
             var playerIndex = data.players.indexOf(pName),
             i = playerIndex + 1;
@@ -81,6 +96,7 @@
                     case 5:drawInvalid();break;
                     case 9:memberNotEnough();break;
                     case 10:enterErrorInput("此房间正在进行游戏");break;
+                    case 11:Notice.noOperNotice("断连超时，用户已被删除，请重新命名");enterNameInput();break;
                     default:break;
                 }
             }
